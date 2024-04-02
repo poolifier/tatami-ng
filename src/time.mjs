@@ -1,58 +1,49 @@
-import { isDeno } from './runtime.mjs';
+import { runtime } from './runtime.mjs';
 
 const time = (() => {
   const ceil = Math.ceil;
-
-  try {
-    Bun.nanoseconds();
-
-    return {
-      diff: (a, b) => a - b,
-      now: Bun.nanoseconds,
-    };
-  } catch {}
-
-  try {
-    if (isDeno) throw 0;
-    process.hrtime.bigint();
-
-    return {
-      diff: (a, b) => a - b,
-      now: () => Number(process.hrtime.bigint()),
-    };
-  } catch {}
-
-  try {
-    Deno.core.opSync('op_bench_now');
-
-    return {
-      diff: (a, b) => a - b,
-      now: () => Deno.core.opSync('op_bench_now'),
-    };
-  } catch {}
-
-  try {
-    Deno.core.opSync('op_now');
-
-    return {
-      diff: (a, b) => a - b,
-      now: () => ceil(1e6 * Deno.core.opSync('op_now')),
-    };
-  } catch {}
-
-  try {
-    $.agent.monotonicNow();
-
-    return {
-      diff: (a, b) => a - b,
-      now: () => ceil(1e6 * $.agent.monotonicNow()),
-    };
-  } catch {}
-
   return {
-    diff: (a, b) => a - b,
-    now: () => ceil(1e6 * performance.now()),
-  };
+    unknown: () => {
+      return {
+        diff: (a, b) => a - b,
+        now: () => ceil(1e6 * performance.now()),
+      };
+    },
+    browser: () => {
+      try {
+        $.agent.monotonicNow();
+
+        return {
+          diff: (a, b) => a - b,
+          now: () => ceil(1e6 * $.agent.monotonicNow()),
+        };
+      } catch {}
+
+      return {
+        diff: (a, b) => a - b,
+        now: () => ceil(1e6 * performance.now()),
+      };
+    },
+    node: () => {
+      return {
+        diff: (a, b) => a - b,
+        now: () => Number(process.hrtime.bigint()),
+      };
+    },
+    deno: () => {
+      return {
+        diff: (a, b) => a - b,
+        // FIXME: use Deno HR time
+        now: () => ceil(1e6 * performance.now()),
+      };
+    },
+    bun: () => {
+      return {
+        diff: (a, b) => a - b,
+        now: Bun.nanoseconds,
+      };
+    },
+  }[runtime()]();
 })();
 
 export const now = time.now;

@@ -5,10 +5,10 @@ const runtimes = {
   browser: 'browser',
 };
 
-export const isBun = 'Bun' in globalThis;
-export const isDeno = 'Deno' in globalThis;
-export const isNode = 'process' in globalThis;
-export const isBrowser = 'navigator' in globalThis;
+export const isBun = !!globalThis.Bun || !!globalThis.process?.versions?.bun;
+export const isDeno = !!globalThis.Deno;
+export const isNode = globalThis.process?.release?.name === 'node';
+export const isBrowser = !!globalThis.navigator;
 
 export function runtime() {
   if (isBun) return runtimes.bun;

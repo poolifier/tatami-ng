@@ -94,19 +94,19 @@ function os() {
   return {
     unknown: () => 'unknown',
     browser: () => 'unknown',
+    node: () => `${process.arch}-${process.platform}`,
     deno: () => Deno.build.target,
     bun: () => `${process.arch}-${process.platform}`,
-    node: () => `${process.arch}-${process.platform}`,
   }[runtime()]();
 }
 
 function no_color() {
   return {
-    browser: () => true,
     unknown: () => false,
+    browser: () => true,
+    node: () => !!process.env.NO_COLOR,
     deno: () => Deno.noColor,
     bun: () => !!process.env.NO_COLOR,
-    node: () => !!process.env.NO_COLOR,
   }[runtime()]();
 }
 
@@ -114,7 +114,57 @@ async function cpu() {
   return await {
     unknown: () => 'unknown',
     browser: () => 'unknown',
-    node: () => import('node:os').then(x => x.cpus()[0].model),
+    node: () => import('node:os').then(v => v.cpus()[0].model),
+
+    deno: async () => {
+      try {
+        try {
+          const os = await import('node:os');
+          if (os?.cpus?.()?.[0]?.model) return os.cpus()[0].model;
+        } catch {}
+
+        if ('darwin' === Deno.build.os) {
+          try {
+            const p = new Deno.Command('sysctl', {
+              args: ['-n', 'machdep.cpu.brand_string'],
+            });
+
+            const { code, stdout } = await p.output();
+            if (0 === code) return new TextDecoder().decode(stdout).trim();
+          } catch {}
+        }
+
+        if ('linux' === Deno.build.os) {
+          const info = new TextDecoder()
+            .decode(Deno.readFileSync('/proc/cpuinfo'))
+            .split('\n');
+
+          for (const line of info) {
+            const [key, value] = line.split(':');
+            if (
+              /model name|Hardware|Processor|^cpu model|chip type|^cpu type/.test(
+                key,
+              )
+            )
+              return value.trim();
+          }
+        }
+
+        if ('windows' === Deno.build.os) {
+          try {
+            const p = new Deno.Command('wmic', {
+              args: ['cpu', 'get', 'name'],
+            });
+
+            const { code, stdout } = await p.output();
+            if (0 === code)
+              return new TextDecoder().decode(stdout).split('\n').at(-1).trim();
+          } catch {}
+        }
+      } catch {}
+
+      return 'unknown';
+    },
 
     bun: async () => {
       try {
@@ -129,9 +179,7 @@ async function cpu() {
           const fd = fs.openSync('/proc/cpuinfo', 'r');
           const info = new TextDecoder()
             .decode(buf.subarray(0, fs.readSync(fd, buf)))
-            .trim()
             .split('\n');
-
           fs.closeSync(fd);
 
           for (const line of info) {
@@ -165,81 +213,7 @@ async function cpu() {
         }
       } catch {}
 
-      return 'unknown';
-    },
-
-    deno: async () => {
-      try {
-        try {
-          const os = await import('node:os');
-          if (os?.cpus?.()?.[0]?.model) return os.cpus()[0].model;
-        } catch {}
-
-        if ('darwin' === Deno.build.os) {
-          try {
-            const p = Deno.run({
-              stdin: 'null',
-              stderr: 'null',
-              stdout: 'piped',
-              cmd: ['sysctl', '-n', 'machdep.cpu.brand_string'],
-            });
-
-            return Deno.core.decode(await p.output()).trim();
-          } catch {}
-
-          try {
-            const p = new Deno.Command('sysctl', {
-              args: ['-n', 'machdep.cpu.brand_string'],
-            });
-
-            const { code, stdout } = await p.output();
-            if (0 === code) return new TextDecoder().decode(stdout).trim();
-          } catch {}
-        }
-
-        if ('linux' === Deno.build.os) {
-          const info = new TextDecoder()
-            .decode(Deno.readFileSync('/proc/cpuinfo'))
-            .split('\n');
-
-          for (const line of info) {
-            const [key, value] = line.split(':');
-            if (
-              /model name|Hardware|Processor|^cpu model|chip type|^cpu type/.test(
-                key,
-              )
-            )
-              return value.trim();
-          }
-        }
-
-        if ('windows' === Deno.build.os) {
-          try {
-            const p = Deno.run({
-              stdin: 'null',
-              stderr: 'null',
-              stdout: 'piped',
-              cmd: ['wmic', 'cpu', 'get', 'name'],
-            });
-
-            return Deno.core
-              .decode(await p.output())
-              .split('\n')
-              .at(-1)
-              .trim();
-          } catch {}
-
-          try {
-            const p = new Deno.Command('wmic', {
-              args: ['cpu', 'get', 'name'],
-            });
-
-            const { code, stdout } = await p.output();
-            if (0 === code)
-              return new TextDecoder().decode(stdout).split('\n').at(-1).trim();
-          } catch {}
-        }
-      } catch {}
+      // TODO: add Windows support
 
       return 'unknown';
     },
@@ -268,14 +242,42 @@ export async function run(opts = {}) {
     log(table.br(opts));
   }
 
-  {
-    let _f = false;
-    let _b = false;
-    for (const b of benchmarks) {
-      if (b.group) continue;
-      if (b.baseline) _b = true;
+  let _f = false;
+  let _b = false;
+  for (const b of benchmarks) {
+    if (b.group) continue;
+    if (b.baseline) _b = true;
 
-      _f = true;
+    _f = true;
+
+    try {
+      b.stats = (await measure(b.fn, {})).stats;
+      if (!json) log(table.benchmark(b.name, b.stats, opts));
+    } catch (err) {
+      b.error = { stack: err.stack, message: err.message };
+      if (!json) log(table.benchmark_error(b.name, err, opts));
+    }
+  }
+
+  if (_b && !json)
+    log(
+      `\n${table.summary(
+        benchmarks.filter(b => null === b.group),
+        opts,
+      )}`,
+    );
+
+  for (const group of groups) {
+    if (!json) {
+      if (_f) log('');
+      if (!group.startsWith('$mitata_group')) log(`• ${group}`);
+      if (_f || !group.startsWith('$mitata_group'))
+        log(kleur.gray(colors, table.br(opts)));
+    }
+
+    _f = true;
+    for (const b of benchmarks) {
+      if (group !== b.group) continue;
 
       try {
         b.stats = (await measure(b.fn, {})).stats;
@@ -286,54 +288,24 @@ export async function run(opts = {}) {
       }
     }
 
-    if (_b && !json)
+    if (summaries[group] && !json)
       log(
         `\n${table.summary(
-          benchmarks.filter(b => null === b.group),
+          benchmarks.filter(b => group === b.group),
           opts,
         )}`,
       );
-
-    for (const group of groups) {
-      if (!json) {
-        if (_f) log('');
-        if (!group.startsWith('$mitata_group')) log(`• ${group}`);
-        if (_f || !group.startsWith('$mitata_group'))
-          log(kleur.gray(colors, table.br(opts)));
-      }
-
-      _f = true;
-      for (const b of benchmarks) {
-        if (group !== b.group) continue;
-
-        try {
-          b.stats = (await measure(b.fn, {})).stats;
-          if (!json) log(table.benchmark(b.name, b.stats, opts));
-        } catch (err) {
-          b.error = { stack: err.stack, message: err.message };
-          if (!json) log(table.benchmark_error(b.name, err, opts));
-        }
-      }
-
-      if (summaries[group] && !json)
-        log(
-          `\n${table.summary(
-            benchmarks.filter(b => group === b.group),
-            opts,
-          )}`,
-        );
-    }
-
-    if (!json && opts.units) log(table.units(opts));
-    if (json)
-      log(
-        JSON.stringify(
-          report,
-          null,
-          'number' !== typeof opts.json ? 0 : opts.json,
-        ),
-      );
-
-    return report;
   }
+
+  if (!json && opts.units) log(table.units(opts));
+  if (json)
+    log(
+      JSON.stringify(
+        report,
+        null,
+        'number' !== typeof opts.json ? 0 : opts.json,
+      ),
+    );
+
+  return report;
 }

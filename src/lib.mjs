@@ -23,8 +23,7 @@ export function measure(fn, ctx, _ = {}) {
     _.spc = true;
     const r = fn();
     _.t = now() - t0;
-    if (!(r instanceof Promise)) {
-    } else
+    if (r instanceof Promise)
       return r.then(
         () => ((_.a = true), (_.t = now() - t0), measure(fn, ctx, _)),
       );
@@ -52,19 +51,19 @@ export function measure(fn, ctx, _ = {}) {
             if (_.t > 250_000_000) return '';
 
             return `
-        warmup: {
-          const samples = new Array(${warmup.samples - 1});
+              warmup: {
+                const samples = new Array(${warmup.samples - 1});
 
-          for (let o = 0; o < ${warmup.samples - 1}; o++) {
-            const t0 = $now();
-            const t1 = (${!async ? '' : 'await'} $fn(), $now());
+                for (let o = 0; o < ${warmup.samples - 1}; o++) {
+                  const t0 = $now();
+                  const t1 = (${!async ? '' : 'await'} $fn(), $now());
 
-            samples[o] = t1 - t0;
-          }
+                  samples[o] = t1 - t0;
+                }
 
-          $w = (samples.sort((a, b) => a - b), samples[1]);
-        }
-      `;
+                $w = (samples.sort((a, b) => a - b), samples[1]);
+              }
+            `;
           })()
     }
 

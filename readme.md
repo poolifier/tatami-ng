@@ -39,8 +39,9 @@ import {
 ```
 
 ## Example
+
 ```js
-import { run, bench, group, baseline, clear } from 'mitata';
+import { baseline, bench, clear, group, run } from 'mitata';
 
 // deno
 // import { ... } from 'npm:mitata';
@@ -72,9 +73,8 @@ await run({
   percentiles: false, // enable/disable percentiles column (default: true)
 });
 
-clear()
+clear();
 ```
-
 
 ## License
 
