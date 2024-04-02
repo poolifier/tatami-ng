@@ -1,4 +1,4 @@
-import { run, bench, group, baseline, clear } from '..';
+import { run, bench, group, baseline, clear } from '../src/cli.mjs';
 
 bench('noop', () => {});
 baseline('aaa', () => {});
