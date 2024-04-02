@@ -24,7 +24,6 @@
       "allowComments": true
     }
   },
-
   "vcs": {
     "enabled": true,
     "clientKind": "git",

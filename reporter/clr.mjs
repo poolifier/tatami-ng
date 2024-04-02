@@ -24,14 +24,14 @@
 
 function init(x, y) {
   const rgx = new RegExp(`\\x1b\\[${y}m`, 'g');
-  const open = `\x1b[${x}m`,
-    close = `\x1b[${y}m`;
+  const open = `\x1b[${x}m`;
+  const close = `\x1b[${y}m`;
 
   return (e, txt) => {
     if (!e || txt == null) return txt;
     return (
       open +
-      (!!~('' + txt).indexOf(close) ? txt.replace(rgx, close + open) : txt) +
+      (!!~`${txt}`.indexOf(close) ? txt.replace(rgx, close + open) : txt) +
       close
     );
   };

@@ -20,12 +20,15 @@ export function group(name, cb) {
   g = o.name;
   groups.add(o.name);
   summaries[g] = o.summary;
-  (cb || name)(), (g = null);
+  (cb || name)();
+  g = null;
 }
 
 export function bench(name, fn) {
-  if ([Function, AsyncFunction].includes(name.constructor))
-    (fn = name), (name = fn.name);
+  if ([Function, AsyncFunction].includes(name.constructor)) {
+    fn = name;
+    name = fn.name;
+  }
   if (![Function, AsyncFunction].includes(fn.constructor))
     throw new TypeError(`expected function, got ${fn.constructor.name}`);
 
@@ -41,8 +44,10 @@ export function bench(name, fn) {
 }
 
 export function baseline(name, fn) {
-  if ([Function, AsyncFunction].includes(name.constructor))
-    (fn = name), (name = fn.name);
+  if ([Function, AsyncFunction].includes(name.constructor)) {
+    fn = name;
+    name = fn.name;
+  }
   if (![Function, AsyncFunction].includes(fn.constructor))
     throw new TypeError(`expected function, got ${fn.constructor.name}`);
 
@@ -259,7 +264,8 @@ export async function run(opts = {}) {
     log(kleur.gray(colors, `runtime: ${report.runtime}`));
 
     log('');
-    log(table.header(opts)), log(table.br(opts));
+    log(table.header(opts));
+    log(table.br(opts));
   }
 
   {
@@ -282,11 +288,10 @@ export async function run(opts = {}) {
 
     if (_b && !json)
       log(
-        '\n' +
-          table.summary(
-            benchmarks.filter(b => null === b.group),
-            opts,
-          ),
+        `\n${table.summary(
+          benchmarks.filter(b => null === b.group),
+          opts,
+        )}`,
       );
 
     for (const group of groups) {
@@ -312,11 +317,10 @@ export async function run(opts = {}) {
 
       if (summaries[group] && !json)
         log(
-          '\n' +
-            table.summary(
-              benchmarks.filter(b => group === b.group),
-              opts,
-            ),
+          `\n${table.summary(
+            benchmarks.filter(b => group === b.group),
+            opts,
+          )}`,
         );
     }
 
