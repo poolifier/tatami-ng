@@ -1,4 +1,4 @@
-import { run, bench, group, baseline, clear } from '../src/cli.mjs';
+import { baseline, bench, clear, group, run } from '../src/cli.mjs';
 
 bench('noop', () => {});
 baseline('aaa', () => {});
@@ -7,7 +7,9 @@ bench('noop2', () => Promise.resolve(1));
 group(() => {
   bench('a', () => {});
   bench('b', () => {});
-  bench('e', () => { throw 1; })
+  bench('e', () => {
+    throw 1;
+  });
 });
 
 group('group', () => {
@@ -26,7 +28,9 @@ group({ name: 'group2', summary: false }, () => {
   bench('new Array(1024)', () => new Array(1024));
 });
 
-bench('error', () => { throw new Error('error'); });
+bench('error', () => {
+  throw new Error('error');
+});
 
 const report = await run({
   avg: true, // enable/disable avg column (default: true)

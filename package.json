@@ -11,6 +11,28 @@
   },
   "description": "cross-runtime benchmarking lib",
   "homepage": "https://github.com/evanwashere/mitata#readme",
-  "bugs": { "url": "https://github.com/evanwashere/mitata/issues" },
-  "repository": { "type": "git", "url": "git+https://github.com/evanwashere/mitata.git" }
+  "bugs": {
+    "url": "https://github.com/evanwashere/mitata/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evanwashere/mitata.git"
+  },
+  "scripts": {
+    "format": "biome format . --write",
+    "lint": "biome lint .",
+    "lint:apply": "biome lint . --apply",
+    "check": "biome check .",
+    "check:apply": "biome check . --apply",
+    "test:node": "node tests/test.js",
+    "test:deno": "deno run -A tests/test.js && deno run -A tests/test.ts",
+    "test:bun": "bun run tests/test.js && bun run tests/test.ts"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.6.3",
+    "@types/bun": "^1.0.12"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
 }

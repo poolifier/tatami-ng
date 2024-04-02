@@ -23,13 +23,18 @@
 // THE SOFTWARE.
 
 function init(x, y) {
-	let rgx = new RegExp(`\\x1b\\[${y}m`, 'g');
-	let open = `\x1b[${x}m`, close = `\x1b[${y}m`;
+  const rgx = new RegExp(`\\x1b\\[${y}m`, 'g');
+  const open = `\x1b[${x}m`,
+    close = `\x1b[${y}m`;
 
-	return function (e, txt) {
-		if (!e || txt == null) return txt;
-		return open + (!!~('' + txt).indexOf(close) ? txt.replace(rgx, close + open) : txt) + close;
-	};
+  return (e, txt) => {
+    if (!e || txt == null) return txt;
+    return (
+      open +
+      (!!~('' + txt).indexOf(close) ? txt.replace(rgx, close + open) : txt) +
+      close
+    );
+  };
 }
 
 // modifiers

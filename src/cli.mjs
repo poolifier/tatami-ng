@@ -1,30 +1,33 @@
-import { measure } from './lib.mjs';
 import * as kleur from '../reporter/clr.mjs';
 import * as table from '../reporter/table.mjs';
+import { measure } from './lib.mjs';
 import { runtime } from './runtime.mjs';
 
 let _gc = 0;
 let g = null;
 const summaries = {};
 const benchmarks = [];
-const groups = new Set;
-const AsyncFunction = (async () => { }).constructor;
+const groups = new Set();
+const AsyncFunction = (async () => {}).constructor;
 
 export function group(name, cb) {
   const o = {
     summary: name.summary ?? true,
-    name: ('string' === typeof name ? name : name.name) || `$mitata_group${++_gc}`,
+    name:
+      ('string' === typeof name ? name : name.name) || `$mitata_group${++_gc}`,
   };
 
   g = o.name;
   groups.add(o.name);
   summaries[g] = o.summary;
-  ((cb || name)(), g = null);
+  (cb || name)(), (g = null);
 }
 
 export function bench(name, fn) {
-  if ([Function, AsyncFunction].includes(name.constructor)) (fn = name, name = fn.name);
-  if (![Function, AsyncFunction].includes(fn.constructor)) throw new TypeError(`expected function, got ${fn.constructor.name}`);
+  if ([Function, AsyncFunction].includes(name.constructor))
+    (fn = name), (name = fn.name);
+  if (![Function, AsyncFunction].includes(fn.constructor))
+    throw new TypeError(`expected function, got ${fn.constructor.name}`);
 
   benchmarks.push({
     fn,
@@ -35,11 +38,13 @@ export function bench(name, fn) {
     baseline: false,
     async: AsyncFunction === fn.constructor,
   });
-};
+}
 
 export function baseline(name, fn) {
-  if ([Function, AsyncFunction].includes(name.constructor)) (fn = name, name = fn.name);
-  if (![Function, AsyncFunction].includes(fn.constructor)) throw new TypeError(`expected function, got ${fn.constructor.name}`);
+  if ([Function, AsyncFunction].includes(name.constructor))
+    (fn = name), (name = fn.name);
+  if (![Function, AsyncFunction].includes(fn.constructor))
+    throw new TypeError(`expected function, got ${fn.constructor.name}`);
 
   benchmarks.push({
     fn,
@@ -50,7 +55,7 @@ export function baseline(name, fn) {
     baseline: true,
     async: AsyncFunction === fn.constructor,
   });
-};
+}
 
 let _print;
 
@@ -70,61 +75,68 @@ export function clear() {
   groups.clear();
 }
 
-
 function version() {
-  return ({
+  return {
     unknown: () => '',
     browser: () => '',
     node: () => process.version,
     deno: () => Deno.version.deno,
     bun: () => process.versions.bun,
-  })[runtime()]();
+  }[runtime()]();
 }
 
 function os() {
-  return ({
+  return {
     unknown: () => 'unknown',
     browser: () => 'unknown',
     deno: () => Deno.build.target,
     bun: () => `${process.arch}-${process.platform}`,
     node: () => `${process.arch}-${process.platform}`,
-  })[runtime()]();
+  }[runtime()]();
 }
 
 function no_color() {
-  return ({
+  return {
     browser: () => true,
     unknown: () => false,
     deno: () => Deno.noColor,
     bun: () => !!process.env.NO_COLOR,
     node: () => !!process.env.NO_COLOR,
-  })[runtime()]();
+  }[runtime()]();
 }
 
 async function cpu() {
-  return await ({
+  return await {
     unknown: () => 'unknown',
     browser: () => 'unknown',
-    node: () => import('os').then(x => x.cpus()[0].model),
+    node: () => import('node:os').then(x => x.cpus()[0].model),
 
     bun: async () => {
       try {
         const os = await import('node:os');
         if (os?.cpus?.()?.[0]?.model) return os.cpus()[0].model;
-      } catch { }
+      } catch {}
 
       try {
         if ('linux' === process.platform) {
-          const fs = await import('fs');
+          const fs = await import('node:fs');
           const buf = new Uint8Array(64 * 1024);
           const fd = fs.openSync('/proc/cpuinfo', 'r');
-          const info = new TextDecoder().decode(buf.subarray(0, fs.readSync(fd, buf))).trim().split('\n');
+          const info = new TextDecoder()
+            .decode(buf.subarray(0, fs.readSync(fd, buf)))
+            .trim()
+            .split('\n');
 
           fs.closeSync(fd);
 
           for (const line of info) {
             const [key, value] = line.split(':');
-            if (/model name|Hardware|Processor|^cpu model|chip type|^cpu type/.test(key)) return value.trim();
+            if (
+              /model name|Hardware|Processor|^cpu model|chip type|^cpu type/.test(
+                key,
+              )
+            )
+              return value.trim();
           }
         }
 
@@ -132,17 +144,21 @@ async function cpu() {
           const { ptr, dlopen, CString } = Bun.FFI;
 
           const sysctlbyname = dlopen('libc.dylib', {
-            sysctlbyname: { args: ['ptr', 'ptr', 'ptr', 'ptr', 'isize'], returns: 'isize' },
+            sysctlbyname: {
+              args: ['ptr', 'ptr', 'ptr', 'ptr', 'isize'],
+              returns: 'isize',
+            },
           }).symbols.sysctlbyname;
 
           const buf = new Uint8Array(256);
           const len = new BigInt64Array([256n]);
           const cmd = new TextEncoder().encode('machdep.cpu.brand_string\0');
-          if (-1 === Number(sysctlbyname(ptr(cmd), ptr(buf), ptr(len), 0, 0))) throw 0;
+          if (-1 === Number(sysctlbyname(ptr(cmd), ptr(buf), ptr(len), 0, 0)))
+            throw 0;
 
           return new CString(ptr(buf));
         }
-      } catch { }
+      } catch {}
 
       return 'unknown';
     },
@@ -152,7 +168,7 @@ async function cpu() {
         try {
           const os = await import('node:os');
           if (os?.cpus?.()?.[0]?.model) return os.cpus()[0].model;
-        } catch { }
+        } catch {}
 
         if ('darwin' === Deno.build.os) {
           try {
@@ -164,7 +180,7 @@ async function cpu() {
             });
 
             return Deno.core.decode(await p.output()).trim();
-          } catch { }
+          } catch {}
 
           try {
             const p = new Deno.Command('sysctl', {
@@ -173,15 +189,22 @@ async function cpu() {
 
             const { code, stdout } = await p.output();
             if (0 === code) return new TextDecoder().decode(stdout).trim();
-          } catch { }
+          } catch {}
         }
 
         if ('linux' === Deno.build.os) {
-          const info = new TextDecoder().decode(Deno.readFileSync('/proc/cpuinfo')).split('\n');
+          const info = new TextDecoder()
+            .decode(Deno.readFileSync('/proc/cpuinfo'))
+            .split('\n');
 
           for (const line of info) {
             const [key, value] = line.split(':');
-            if (/model name|Hardware|Processor|^cpu model|chip type|^cpu type/.test(key)) return value.trim();
+            if (
+              /model name|Hardware|Processor|^cpu model|chip type|^cpu type/.test(
+                key,
+              )
+            )
+              return value.trim();
           }
         }
 
@@ -194,8 +217,12 @@ async function cpu() {
               cmd: ['wmic', 'cpu', 'get', 'name'],
             });
 
-            return Deno.core.decode(await p.output()).split('\n').at(-1).trim();
-          } catch { }
+            return Deno.core
+              .decode(await p.output())
+              .split('\n')
+              .at(-1)
+              .trim();
+          } catch {}
 
           try {
             const p = new Deno.Command('wmic', {
@@ -203,22 +230,22 @@ async function cpu() {
             });
 
             const { code, stdout } = await p.output();
-            if (0 === code) return new TextDecoder().decode(stdout).split('\n').at(-1).trim();
-          } catch { }
+            if (0 === code)
+              return new TextDecoder().decode(stdout).split('\n').at(-1).trim();
+          } catch {}
         }
-      } catch { }
-
+      } catch {}
 
       return 'unknown';
     },
-  })[runtime()]();
+  }[runtime()]();
 }
 
 export async function run(opts = {}) {
   const silent = opts.silent || false;
-  const log = silent ? () => { } : _print;
-  const colors = opts.colors ??= !no_color();
-  const json = !!opts.json || (0 === opts.json);
+  const log = silent ? () => {} : _print;
+  const colors = (opts.colors ??= !no_color());
+  const json = !!opts.json || 0 === opts.json;
   opts.size = table.size(benchmarks.map(b => b.name));
 
   const report = {
@@ -235,7 +262,7 @@ export async function run(opts = {}) {
     log(table.header(opts)), log(table.br(opts));
   }
 
-  b: {
+  {
     let _f = false;
     let _b = false;
     for (const b of benchmarks) {
@@ -247,21 +274,27 @@ export async function run(opts = {}) {
       try {
         b.stats = (await measure(b.fn, {})).stats;
         if (!json) log(table.benchmark(b.name, b.stats, opts));
-      }
-
-      catch (err) {
+      } catch (err) {
         b.error = { stack: err.stack, message: err.message };
         if (!json) log(table.benchmark_error(b.name, err, opts));
       }
     }
 
-    if (_b && !json) log('\n' + table.summary(benchmarks.filter(b => null === b.group), opts));
+    if (_b && !json)
+      log(
+        '\n' +
+          table.summary(
+            benchmarks.filter(b => null === b.group),
+            opts,
+          ),
+      );
 
     for (const group of groups) {
       if (!json) {
         if (_f) log('');
         if (!group.startsWith('$mitata_group')) log(`• ${group}`);
-        if (_f || !group.startsWith('$mitata_group')) log(kleur.gray(colors, table.br(opts)));
+        if (_f || !group.startsWith('$mitata_group'))
+          log(kleur.gray(colors, table.br(opts)));
       }
 
       _f = true;
@@ -271,19 +304,31 @@ export async function run(opts = {}) {
         try {
           b.stats = (await measure(b.fn, {})).stats;
           if (!json) log(table.benchmark(b.name, b.stats, opts));
-        }
-
-        catch (err) {
+        } catch (err) {
           b.error = { stack: err.stack, message: err.message };
           if (!json) log(table.benchmark_error(b.name, err, opts));
         }
       }
 
-      if (summaries[group] && !json) log('\n' + table.summary(benchmarks.filter(b => group === b.group), opts));
+      if (summaries[group] && !json)
+        log(
+          '\n' +
+            table.summary(
+              benchmarks.filter(b => group === b.group),
+              opts,
+            ),
+        );
     }
 
     if (!json && opts.units) log(table.units(opts));
-    if (json) log(JSON.stringify(report, null, 'number' !== typeof opts.json ? 0 : opts.json));
+    if (json)
+      log(
+        JSON.stringify(
+          report,
+          null,
+          'number' !== typeof opts.json ? 0 : opts.json,
+        ),
+      );
 
     return report;
   }

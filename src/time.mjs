@@ -10,7 +10,7 @@ const time = (() => {
       diff: (a, b) => a - b,
       now: Bun.nanoseconds,
     };
-  } catch { }
+  } catch {}
 
   try {
     if (isDeno) throw 0;
@@ -20,7 +20,7 @@ const time = (() => {
       diff: (a, b) => a - b,
       now: () => Number(process.hrtime.bigint()),
     };
-  } catch { }
+  } catch {}
 
   try {
     Deno.core.opSync('op_bench_now');
@@ -29,7 +29,7 @@ const time = (() => {
       diff: (a, b) => a - b,
       now: () => Deno.core.opSync('op_bench_now'),
     };
-  } catch { }
+  } catch {}
 
   try {
     Deno.core.opSync('op_now');
@@ -38,7 +38,7 @@ const time = (() => {
       diff: (a, b) => a - b,
       now: () => ceil(1e6 * Deno.core.opSync('op_now')),
     };
-  } catch { }
+  } catch {}
 
   try {
     $.agent.monotonicNow();

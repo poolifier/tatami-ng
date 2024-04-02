@@ -1,9 +1,9 @@
-import { run, bench, group, baseline } from '../src/cli.mjs';
+import { baseline, bench, group, run } from '../src/cli.mjs';
 
 group(() => {
   bench('noop()', () => {});
   baseline('async noop()', async () => {});
-})
+});
 
 group('getting time', () => {
   bench('Date.now()', () => Date.now());

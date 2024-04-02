@@ -1,6 +1,9 @@
 export function group(fn: () => void): void;
 export function group(name: string, fn: () => void): void;
-export function group(options: { name?: string, summary?: boolean }, fn: () => void): void;
+export function group(
+  options: { name?: string; summary?: boolean },
+  fn: () => void,
+): void;
 export function bench(name: string, fn: () => any): void;
 
 export function baseline(name: string, fn: () => any): void;
@@ -8,18 +11,18 @@ export function baseline(name: string, fn: () => any): void;
 export function clear(): void;
 
 export function run(options?: {
-  avg?: boolean,
-  silent?: boolean,
-  colors?: boolean,
-  min_max?: boolean,
-  percentiles?: boolean,
-  json?: number | boolean,
-  units?: boolean,
+  avg?: boolean;
+  silent?: boolean;
+  colors?: boolean;
+  min_max?: boolean;
+  percentiles?: boolean;
+  json?: number | boolean;
+  units?: boolean;
 
   /**
-  * @deprecated does not do anything since 0.1.7
-  */
-  collect?: boolean,
+   * @deprecated does not do anything since 0.1.7
+   */
+  collect?: boolean;
 }): Promise<Report>;
 
 export interface Report {

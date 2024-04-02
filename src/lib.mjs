@@ -1,18 +1,21 @@
 import * as time from './time.mjs';
 
 const now = time.now;
-const AsyncFunction = (async () => { }).constructor;
-const GeneratorFunction = (function* () { }).constructor;
-const AsyncGeneratorFunction = (async function* () { }).constructor;
+const AsyncFunction = (async () => {}).constructor;
+const GeneratorFunction = function* () {}.constructor;
+const AsyncGeneratorFunction = async function* () {}.constructor;
 
 // doesn't actually support generators yet (1.0.0 feature)
 export function measure(fn, ctx, _ = {}) {
-  if (!(
-    fn instanceof Function
-    || fn instanceof AsyncFunction
-    || fn instanceof GeneratorFunction
-    || fn instanceof AsyncGeneratorFunction
-  )) throw new Error('fn must be a function or generator');
+  if (
+    !(
+      fn instanceof Function ||
+      fn instanceof AsyncFunction ||
+      fn instanceof GeneratorFunction ||
+      fn instanceof AsyncGeneratorFunction
+    )
+  )
+    throw new Error('fn must be a function or generator');
 
   if (!_.spc) {
     const t0 = now();
@@ -20,22 +23,35 @@ export function measure(fn, ctx, _ = {}) {
     _.spc = true;
     const r = fn();
     _.t = now() - t0;
-    if (!(r instanceof Promise)) {}
-    else return r.then(() => (_.a = true, _.t = now() - t0, measure(fn, ctx, _)));
+    if (!(r instanceof Promise)) {
+    } else
+      return r.then(
+        () => ((_.a = true), (_.t = now() - t0), measure(fn, ctx, _)),
+      );
   }
 
   _.t ||= 0;
-  const warmup = false === ctx.warmup ? false : { samples: ctx.warmup?.samples || 128 };
-  const async = _.a || [AsyncFunction, AsyncGeneratorFunction].includes(fn.constructor);
-  const generator = [GeneratorFunction, AsyncGeneratorFunction].includes(fn.constructor);
+  const warmup =
+    false === ctx.warmup ? false : { samples: ctx.warmup?.samples || 128 };
+  const async =
+    _.a || [AsyncFunction, AsyncGeneratorFunction].includes(fn.constructor);
+  const generator = [GeneratorFunction, AsyncGeneratorFunction].includes(
+    fn.constructor,
+  );
 
-  const b = new (!async ? Function : AsyncFunction)('$fn', '$now', `
+  const b = new (!async ? Function : AsyncFunction)(
+    '$fn',
+    '$now',
+    `
     let $w = ${_.t};
 
-    ${!warmup ? '' : (() => {
-      if (_.t > 250_000_000) return '';
+    ${
+      !warmup
+        ? ''
+        : (() => {
+            if (_.t > 250_000_000) return '';
 
-      return `
+            return `
         warmup: {
           const samples = new Array(${warmup.samples - 1});
 
@@ -49,7 +65,8 @@ export function measure(fn, ctx, _ = {}) {
           $w = (samples.sort((a, b) => a - b), samples[1]);
         }
       `;
-    })()}
+          })()
+    }
 
     let s = 0;
     let t = 600_000_000;
@@ -92,10 +109,11 @@ export function measure(fn, ctx, _ = {}) {
       p999: samples[(.999 * samples.length) | 0],
       avg: samples.reduce((a, b) => a + b, 0) / samples.length,
     };
-  `);
+  `,
+  );
 
   const stats = b(fn, now);
   return !(stats instanceof Promise)
-    ? ({ stats, async, warmup, generator })
+    ? { stats, async, warmup, generator }
     : stats.then(stats => ({ stats, async, warmup, generator }));
 }
