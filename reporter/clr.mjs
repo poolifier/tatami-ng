@@ -29,10 +29,10 @@ function init(x, y) {
 
   return (e, txt) => {
     if (!e || txt == null) return txt;
-    const outTxt = txt.toString();
+    txt = txt.toString();
     return (
       open +
-      (!!~outTxt.indexOf(close) ? outTxt.replace(rgx, close + open) : outTxt) +
+      (!!~txt.indexOf(close) ? txt.replace(rgx, close + open) : txt) +
       close
     );
   };

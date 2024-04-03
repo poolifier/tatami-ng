@@ -1,6 +1,6 @@
 import * as clr from '../reporter/clr.mjs';
 import * as table from '../reporter/table.mjs';
-import { measure } from './lib.mjs';
+import { os, AsyncFunction, cpu, measure, no_color, version } from './lib.mjs';
 import { logger } from './logger.mjs';
 import { runtime } from './runtime.mjs';
 
@@ -9,7 +9,6 @@ let g = null;
 const summaries = {};
 const benchmarks = [];
 const groups = new Set();
-const AsyncFunction = (async () => {}).constructor;
 
 export function group(name, cb) {
   if ('function' === typeof name) {
@@ -76,146 +75,6 @@ export function clear() {
   benchmarks.length = 0;
   groups.clear();
 }
-
-const version = (() => {
-  return {
-    unknown: () => '',
-    browser: () => '',
-    node: () => process.version,
-    deno: () => Deno.version.deno,
-    bun: () => process.versions.bun,
-  }[runtime]();
-})();
-
-const os = (() => {
-  return {
-    unknown: () => 'unknown',
-    browser: () => 'unknown',
-    node: () => `${process.arch}-${process.platform}`,
-    deno: () => Deno.build.target,
-    bun: () => `${process.arch}-${process.platform}`,
-  }[runtime]();
-})();
-
-const no_color = (() => {
-  return {
-    unknown: () => false,
-    browser: () => true,
-    node: () => !!process.env.NO_COLOR,
-    deno: () => Deno.noColor,
-    bun: () => !!process.env.NO_COLOR,
-  }[runtime]();
-})();
-
-const cpu = await (async () => {
-  return await {
-    unknown: () => 'unknown',
-    browser: () => 'unknown',
-    node: () => import('node:os').then(v => v.cpus()[0].model),
-
-    deno: async () => {
-      try {
-        try {
-          const os = await import('node:os');
-          if (os?.cpus?.()?.[0]?.model) return os.cpus()[0].model;
-        } catch {}
-
-        if ('darwin' === Deno.build.os) {
-          try {
-            const p = new Deno.Command('sysctl', {
-              args: ['-n', 'machdep.cpu.brand_string'],
-            });
-
-            const { code, stdout } = await p.output();
-            if (0 === code) return new TextDecoder().decode(stdout).trim();
-          } catch {}
-        }
-
-        if ('linux' === Deno.build.os) {
-          const info = new TextDecoder()
-            .decode(Deno.readFileSync('/proc/cpuinfo'))
-            .split('\n');
-
-          for (const line of info) {
-            const [key, value] = line.split(':');
-            if (
-              /model name|Hardware|Processor|^cpu model|chip type|^cpu type/.test(
-                key,
-              )
-            )
-              return value.trim();
-          }
-        }
-
-        if ('windows' === Deno.build.os) {
-          try {
-            const p = new Deno.Command('wmic', {
-              args: ['cpu', 'get', 'name'],
-            });
-
-            const { code, stdout } = await p.output();
-            if (0 === code)
-              return new TextDecoder().decode(stdout).split('\n').at(-1).trim();
-          } catch {}
-        }
-      } catch {}
-
-      return 'unknown';
-    },
-
-    bun: async () => {
-      try {
-        const os = await import('node:os');
-        if (os?.cpus?.()?.[0]?.model) return os.cpus()[0].model;
-      } catch {}
-
-      try {
-        if ('linux' === process.platform) {
-          const fs = await import('node:fs');
-          const buf = new Uint8Array(64 * 1024);
-          const fd = fs.openSync('/proc/cpuinfo', 'r');
-          const info = new TextDecoder()
-            .decode(buf.subarray(0, fs.readSync(fd, buf)))
-            .split('\n');
-          fs.closeSync(fd);
-
-          for (const line of info) {
-            const [key, value] = line.split(':');
-            if (
-              /model name|Hardware|Processor|^cpu model|chip type|^cpu type/.test(
-                key,
-              )
-            )
-              return value.trim();
-          }
-        }
-
-        if ('darwin' === process.platform) {
-          const { ptr, dlopen, CString } = Bun.FFI;
-
-          const sysctlByName = dlopen('libc.dylib', {
-            sysctlbyname: {
-              args: ['ptr', 'ptr', 'ptr', 'ptr', 'isize'],
-              returns: 'isize',
-            },
-          }).symbols.sysctlbyname;
-
-          const buf = new Uint8Array(256);
-          const len = new BigInt64Array([256n]);
-          const cmd = new TextEncoder().encode('machdep.cpu.brand_string\0');
-          if (-1 === Number(sysctlByName(ptr(cmd), ptr(buf), ptr(len), 0, 0)))
-            throw 0;
-
-          return new CString(ptr(buf));
-        }
-      } catch {}
-
-      // TODO: add Windows support
-
-      return 'unknown';
-    },
-  }[runtime]();
-})();
 
 export async function run(opts = {}) {
   opts.silent ??= false;

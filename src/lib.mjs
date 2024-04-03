@@ -1,8 +1,65 @@
+import { runtime } from './runtime.mjs';
 import { now } from './time.mjs';
 
-const AsyncFunction = (async () => {}).constructor;
+export const AsyncFunction = (async () => {}).constructor;
 const GeneratorFunction = function* () {}.constructor;
 const AsyncGeneratorFunction = async function* () {}.constructor;
+
+export const version = (() => {
+  return {
+    unknown: () => '',
+    browser: () => '',
+    node: () => process.version,
+    deno: () => Deno.version.deno,
+    bun: () => process.versions.bun,
+  }[runtime]();
+})();
+
+export const os = (() => {
+  return {
+    unknown: () => 'unknown',
+    browser: () => 'unknown',
+    node: () => `${process.arch}-${process.platform}`,
+    deno: () => Deno.build.target,
+    bun: () => `${process.arch}-${process.platform}`,
+  }[runtime]();
+})();
+
+export const cpu = await (async () => {
+  return await {
+    unknown: () => 'unknown',
+    browser: () => 'unknown',
+    node: () => import('node:os').then(os => os.cpus()[0].model),
+
+    deno: async () => {
+      try {
+        const os = await import('node:os');
+        if (os?.cpus?.()?.[0]?.model) return os.cpus()[0].model;
+      } catch {}
+
+      return 'unknown';
+    },
+
+    bun: async () => {
+      try {
+        const os = await import('node:os');
+        if (os?.cpus?.()?.[0]?.model) return os.cpus()[0].model;
+      } catch {}
+
+      return 'unknown';
+    },
+  }[runtime]();
+})();
+
+export const no_color = (() => {
+  return {
+    unknown: () => false,
+    browser: () => true,
+    node: () => !!process.env.NO_COLOR,
+    deno: () => Deno.noColor,
+    bun: () => !!process.env.NO_COLOR,
+  }[runtime]();
+})();
 
 // doesn't actually support generators yet (1.0.0 feature)
 export function measure(fn, ctx, _ = {}) {
