@@ -1,6 +1,7 @@
-import * as kleur from '../reporter/clr.mjs';
+import * as clr from '../reporter/clr.mjs';
 import * as table from '../reporter/table.mjs';
 import { measure } from './lib.mjs';
+import { logger } from './logger.mjs';
 import { runtime } from './runtime.mjs';
 
 let _gc = 0;
@@ -11,6 +12,11 @@ const groups = new Set();
 const AsyncFunction = (async () => {}).constructor;
 
 export function group(name, cb) {
+  if ('function' === typeof name) {
+    cb = name;
+  }
+  if (cb != null && ![Function, AsyncFunction].includes(cb.constructor))
+    throw new TypeError(`expected function, got ${cb.constructor.name}`);
   const o = {
     summary: name.summary ?? true,
     name:
@@ -18,9 +24,9 @@ export function group(name, cb) {
   };
 
   g = o.name;
-  groups.add(o.name);
+  groups.add(g);
   summaries[g] = o.summary;
-  (cb || name)();
+  cb();
   g = null;
 }
 
@@ -60,15 +66,6 @@ export function baseline(name, fn) {
     baseline: true,
     async: AsyncFunction === fn.constructor,
   });
-}
-
-let _print;
-
-try {
-  _print = console.log;
-  if ('function' !== typeof _print) throw 1;
-} catch {
-  _print = print;
 }
 
 export function clear() {
@@ -221,11 +218,12 @@ async function cpu() {
 }
 
 export async function run(opts = {}) {
-  const silent = opts.silent || false;
-  const log = silent ? () => {} : _print;
-  const colors = (opts.colors ??= !no_color());
-  const json = !!opts.json || 0 === opts.json;
+  opts.silent ??= false;
+  opts.colors ??= !no_color();
+  opts.json = !!opts.json ?? 0 === opts.json;
   opts.size = table.size(benchmarks.map(b => b.name));
+
+  const log = opts.silent ? () => {} : logger;
 
   const report = {
     benchmarks,
@@ -233,9 +231,9 @@ export async function run(opts = {}) {
     runtime: `${`${runtime()} ${version()}`.trim()} (${os()})`,
   };
 
-  if (!json) {
-    log(kleur.gray(colors, `cpu: ${report.cpu}`));
-    log(kleur.gray(colors, `runtime: ${report.runtime}`));
+  if (!opts.json) {
+    log(clr.gray(opts.colors, `cpu: ${report.cpu}`));
+    log(clr.gray(opts.colors, `runtime: ${report.runtime}`));
 
     log('');
     log(table.header(opts));
@@ -252,14 +250,14 @@ export async function run(opts = {}) {
 
     try {
       b.stats = (await measure(b.fn, {})).stats;
-      if (!json) log(table.benchmark(b.name, b.stats, opts));
+      if (!opts.json) log(table.benchmark(b.name, b.stats, opts));
     } catch (err) {
       b.error = { stack: err.stack, message: err.message };
-      if (!json) log(table.benchmark_error(b.name, err, opts));
+      if (!opts.json) log(table.benchmark_error(b.name, err, opts));
     }
   }
 
-  if (_b && !json)
+  if (_b && !opts.json)
     log(
       `\n${table.summary(
         benchmarks.filter(b => null === b.group),
@@ -268,11 +266,11 @@ export async function run(opts = {}) {
     );
 
   for (const group of groups) {
-    if (!json) {
+    if (!opts.json) {
       if (_f) log('');
       if (!group.startsWith('$mitata_group')) log(`• ${group}`);
       if (_f || !group.startsWith('$mitata_group'))
-        log(kleur.gray(colors, table.br(opts)));
+        log(clr.gray(opts.colors, table.br(opts)));
     }
 
     _f = true;
@@ -281,14 +279,14 @@ export async function run(opts = {}) {
 
       try {
         b.stats = (await measure(b.fn, {})).stats;
-        if (!json) log(table.benchmark(b.name, b.stats, opts));
+        if (!opts.json) log(table.benchmark(b.name, b.stats, opts));
       } catch (err) {
         b.error = { stack: err.stack, message: err.message };
-        if (!json) log(table.benchmark_error(b.name, err, opts));
+        if (!opts.json) log(table.benchmark_error(b.name, err, opts));
       }
     }
 
-    if (summaries[group] && !json)
+    if (summaries[group] && !opts.json)
       log(
         `\n${table.summary(
           benchmarks.filter(b => group === b.group),
@@ -297,8 +295,8 @@ export async function run(opts = {}) {
       );
   }
 
-  if (!json && opts.units) log(table.units(opts));
-  if (json)
+  if (!opts.json && opts.units) log(table.units(opts));
+  if (opts.json)
     log(
       JSON.stringify(
         report,

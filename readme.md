@@ -16,6 +16,8 @@
 bun add mitata
 ```
 
+Bun versions >= 1.x are supported.
+
 ### Node
 
 ```shell
@@ -27,6 +29,8 @@ npm install mitata
 ```shell
 deno add npm:mitata
 ```
+
+Deno versions >= 1.40.x are supported.
 
 ### Browser
 

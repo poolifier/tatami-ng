@@ -1,11 +1,12 @@
 import { runtime } from './runtime.mjs';
 
 const time = (() => {
+  const diff = (a, b) => a - b;
   const ceil = Math.ceil;
   return {
     unknown: () => {
       return {
-        diff: (a, b) => a - b,
+        diff,
         now: () => ceil(1e6 * performance.now()),
       };
     },
@@ -14,32 +15,31 @@ const time = (() => {
         $.agent.monotonicNow();
 
         return {
-          diff: (a, b) => a - b,
+          diff,
           now: () => ceil(1e6 * $.agent.monotonicNow()),
         };
       } catch {}
 
       return {
-        diff: (a, b) => a - b,
+        diff,
         now: () => ceil(1e6 * performance.now()),
       };
     },
     node: () => {
       return {
-        diff: (a, b) => a - b,
+        diff,
         now: () => Number(process.hrtime.bigint()),
       };
     },
     deno: () => {
       return {
-        diff: (a, b) => a - b,
-        // FIXME: use Deno HR time
+        diff,
         now: () => ceil(1e6 * performance.now()),
       };
     },
     bun: () => {
       return {
-        diff: (a, b) => a - b,
+        diff,
         now: Bun.nanoseconds,
       };
     },

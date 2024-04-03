@@ -4,9 +4,9 @@ export function group(
   options: { name?: string; summary?: boolean },
   fn: () => void,
 ): void;
-export function bench(name: string, fn: () => any): void;
+export function bench(name: string, fn: () => void | Promise<void>): void;
 
-export function baseline(name: string, fn: () => any): void;
+export function baseline(name: string, fn: () => void | Promise<void>): void;
 
 export function clear(): void;
 
@@ -32,16 +32,13 @@ export interface Report {
   benchmarks: {
     name: string;
     time: number;
-    fn: () => any;
+    fn: () => void | Promise<void>;
     async: boolean;
     warmup: boolean;
     baseline: boolean;
     group: string | null;
 
-    error?: {
-      stack: string;
-      message: string;
-    };
+    error?: Error;
 
     stats?: {
       avg: number;

@@ -1,6 +1,5 @@
-import * as time from './time.mjs';
+import { now } from './time.mjs';
 
-const now = time.now;
 const AsyncFunction = (async () => {}).constructor;
 const GeneratorFunction = function* () {}.constructor;
 const AsyncGeneratorFunction = async function* () {}.constructor;
@@ -29,11 +28,11 @@ export function measure(fn, ctx, _ = {}) {
       );
   }
 
-  _.t ||= 0;
-  const warmup =
-    false === ctx.warmup ? false : { samples: ctx.warmup?.samples || 128 };
+  _.t ??= 0;
+  ctx.warmup =
+    false === ctx.warmup ? false : { samples: ctx.warmup?.samples ?? 128 };
   const async =
-    _.a || [AsyncFunction, AsyncGeneratorFunction].includes(fn.constructor);
+    _.a ?? [AsyncFunction, AsyncGeneratorFunction].includes(fn.constructor);
   const generator = [GeneratorFunction, AsyncGeneratorFunction].includes(
     fn.constructor,
   );
@@ -45,16 +44,16 @@ export function measure(fn, ctx, _ = {}) {
     let $w = ${_.t};
 
     ${
-      !warmup
+      !ctx.warmup
         ? ''
         : (() => {
             if (_.t > 250_000_000) return '';
 
             return `
               warmup: {
-                const samples = new Array(${warmup.samples - 1});
+                const samples = new Array(${ctx.warmup.samples - 1});
 
-                for (let o = 0; o < ${warmup.samples - 1}; o++) {
+                for (let o = 0; o < ${ctx.warmup.samples - 1}; o++) {
                   const t0 = $now();
                   const t1 = (${!async ? '' : 'await'} $fn(), $now());
 
@@ -112,7 +111,7 @@ export function measure(fn, ctx, _ = {}) {
   );
 
   const stats = b(fn, now);
-  return !(stats instanceof Promise)
-    ? { stats, async, warmup, generator }
-    : stats.then(stats => ({ stats, async, warmup, generator }));
+  return stats instanceof Promise
+    ? stats.then(stats => ({ stats, async, warmup: ctx.warmup, generator }))
+    : { stats, async, warmup: ctx.warmup, generator };
 }
