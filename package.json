@@ -21,6 +21,7 @@
     "url": "git+https://github.com/evanwashere/mitata.git"
   },
   "scripts": {
+    "prepare": "bun run prepare.mjs",
     "format": "biome format . --write",
     "lint": "biome lint .",
     "lint:apply": "biome lint . --apply",
@@ -33,7 +34,10 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.6.4",
-    "@types/bun": "^1.0.12"
+    "@types/bun": "^1.0.12",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
+    "prettier": "^3.2.5"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
