@@ -89,6 +89,7 @@ export function benchmark(
 }
 
 export function summary(benchmarks, { colors = true } = {}) {
+  // biome-ignore lint/style/noParameterAssign: <explanation>
   benchmarks = benchmarks.filter(b => !b.error);
   benchmarks.sort((a, b) => a.stats.avg - b.stats.avg);
   const baseline = benchmarks.find(b => b.baseline) ?? benchmarks[0];

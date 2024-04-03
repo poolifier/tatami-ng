@@ -10,14 +10,6 @@
 
 ## Install
 
-### Bun
-
-```shell
-bun add mitata
-```
-
-Bun versions >= 1.x are supported.
-
 ### Node
 
 ```shell
@@ -31,6 +23,14 @@ deno add npm:mitata
 ```
 
 Deno versions >= 1.40.x are supported.
+
+### Bun
+
+```shell
+bun add mitata
+```
+
+Bun versions >= 1.x are supported.
 
 ### Browser
 
@@ -46,12 +46,6 @@ import {
 
 ```js
 import { baseline, bench, clear, group, run } from 'mitata';
-
-// deno
-// import { ... } from 'npm:mitata';
-
-// d8/jsc
-// import { ... } from '<path to mitata>/src/cli.mjs';
 
 bench('noop', () => {});
 bench('noop2', () => {});

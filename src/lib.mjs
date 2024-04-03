@@ -30,7 +30,6 @@ export const cpu = await (async () => {
     unknown: () => 'unknown',
     browser: () => 'unknown',
     node: () => import('node:os').then(os => os.cpus()[0].model),
-
     deno: async () => {
       try {
         const os = await import('node:os');
@@ -39,7 +38,6 @@ export const cpu = await (async () => {
 
       return 'unknown';
     },
-
     bun: async () => {
       try {
         const os = await import('node:os');
@@ -81,6 +79,8 @@ export function measure(fn, ctx, _ = {}) {
     _.t = now() - t0;
     if (r instanceof Promise)
       return r.then(
+        // biome-ignore lint/suspicious/noAssignInExpressions: <explanation>
+        // biome-ignore lint/style/noCommaOperator: <explanation>
         () => ((_.a = true), (_.t = now() - t0), measure(fn, ctx, _)),
       );
   }

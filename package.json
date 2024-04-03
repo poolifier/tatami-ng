@@ -1,8 +1,10 @@
 {
+  "$schema": "https://json.schemastore.org/package",
   "name": "mitata",
   "type": "module",
   "license": "MIT",
   "version": "0.1.11",
+  "packageManager": "bun@1.1.0",
   "main": "./src/cli.mjs",
   "types": "./src/cli.d.ts",
   "exports": {
@@ -24,12 +26,13 @@
     "lint:apply": "biome lint . --apply",
     "check": "biome check .",
     "check:apply": "biome check . --apply",
+    "check:ci": "biome ci .",
     "test:node": "node tests/test.js",
     "test:deno": "deno run -A tests/test.js && deno run -A tests/test.ts",
     "test:bun": "bun run tests/test.js && bun run tests/test.ts"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.6.3",
+    "@biomejs/biome": "^1.6.4",
     "@types/bun": "^1.0.12"
   },
   "peerDependencies": {

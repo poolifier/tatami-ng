@@ -12,6 +12,7 @@ const groups = new Set();
 
 export function group(name, cb) {
   if ('function' === typeof name) {
+    // biome-ignore lint/style/noParameterAssign: <explanation>
     cb = name;
   }
   if (cb != null && ![Function, AsyncFunction].includes(cb.constructor))
@@ -31,7 +32,9 @@ export function group(name, cb) {
 
 export function bench(name, fn) {
   if ([Function, AsyncFunction].includes(name.constructor)) {
+    // biome-ignore lint/style/noParameterAssign: <explanation>
     fn = name;
+    // biome-ignore lint/style/noParameterAssign: <explanation>
     name = fn.name;
   }
   if (![Function, AsyncFunction].includes(fn.constructor))
@@ -50,7 +53,9 @@ export function bench(name, fn) {
 
 export function baseline(name, fn) {
   if ([Function, AsyncFunction].includes(name.constructor)) {
+    // biome-ignore lint/style/noParameterAssign: <explanation>
     fn = name;
+    // biome-ignore lint/style/noParameterAssign: <explanation>
     name = fn.name;
   }
   if (![Function, AsyncFunction].includes(fn.constructor))
