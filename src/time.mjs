@@ -43,7 +43,7 @@ const time = (() => {
         now: Bun.nanoseconds,
       };
     },
-  }[runtime()]();
+  }[runtime]();
 })();
 
 export const now = time.now;

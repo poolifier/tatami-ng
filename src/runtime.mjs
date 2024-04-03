@@ -10,11 +10,11 @@ export const isDeno = !!globalThis.Deno;
 export const isNode = globalThis.process?.release?.name === 'node';
 export const isBrowser = !!globalThis.navigator;
 
-export const runtime = () => {
+export const runtime = (() => {
   if (isBun) return runtimes.bun;
   if (isDeno) return runtimes.deno;
   if (isNode) return runtimes.node;
   if (isBrowser) return runtimes.browser;
 
   return 'unknown';
-};
+})();

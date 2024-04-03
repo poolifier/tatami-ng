@@ -77,37 +77,37 @@ export function clear() {
   groups.clear();
 }
 
-function version() {
+const version = (() => {
   return {
     unknown: () => '',
     browser: () => '',
     node: () => process.version,
     deno: () => Deno.version.deno,
     bun: () => process.versions.bun,
-  }[runtime()]();
-}
+  }[runtime]();
+})();
 
-function os() {
+const os = (() => {
   return {
     unknown: () => 'unknown',
     browser: () => 'unknown',
     node: () => `${process.arch}-${process.platform}`,
     deno: () => Deno.build.target,
     bun: () => `${process.arch}-${process.platform}`,
-  }[runtime()]();
-}
+  }[runtime]();
+})();
 
-function no_color() {
+const no_color = (() => {
   return {
     unknown: () => false,
     browser: () => true,
     node: () => !!process.env.NO_COLOR,
     deno: () => Deno.noColor,
     bun: () => !!process.env.NO_COLOR,
-  }[runtime()]();
-}
+  }[runtime]();
+})();
 
-async function cpu() {
+const cpu = await (async () => {
   return await {
     unknown: () => 'unknown',
     browser: () => 'unknown',
@@ -193,7 +193,7 @@ async function cpu() {
         if ('darwin' === process.platform) {
           const { ptr, dlopen, CString } = Bun.FFI;
 
-          const sysctlbyname = dlopen('libc.dylib', {
+          const sysctlByName = dlopen('libc.dylib', {
             sysctlbyname: {
               args: ['ptr', 'ptr', 'ptr', 'ptr', 'isize'],
               returns: 'isize',
@@ -203,7 +203,7 @@ async function cpu() {
           const buf = new Uint8Array(256);
           const len = new BigInt64Array([256n]);
           const cmd = new TextEncoder().encode('machdep.cpu.brand_string\0');
-          if (-1 === Number(sysctlbyname(ptr(cmd), ptr(buf), ptr(len), 0, 0)))
+          if (-1 === Number(sysctlByName(ptr(cmd), ptr(buf), ptr(len), 0, 0)))
             throw 0;
 
           return new CString(ptr(buf));
@@ -214,12 +214,12 @@ async function cpu() {
 
       return 'unknown';
     },
-  }[runtime()]();
-}
+  }[runtime]();
+})();
 
 export async function run(opts = {}) {
   opts.silent ??= false;
-  opts.colors ??= !no_color();
+  opts.colors ??= !no_color;
   opts.json = !!opts.json ?? 0 === opts.json;
   opts.size = table.size(benchmarks.map(b => b.name));
 
@@ -227,8 +227,8 @@ export async function run(opts = {}) {
 
   const report = {
     benchmarks,
-    cpu: await cpu(),
-    runtime: `${`${runtime()} ${version()}`.trim()} (${os()})`,
+    cpu,
+    runtime: `${`${runtime} ${version}`.trim()} (${os})`,
   };
 
   if (!opts.json) {
