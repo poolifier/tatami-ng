@@ -1,7 +1,7 @@
-import * as clr from '../reporter/clr.mjs';
-import * as table from '../reporter/table.mjs';
 import { os, AsyncFunction, cpu, measure, no_color, version } from './lib.mjs';
 import { logger } from './logger.mjs';
+import * as clr from './reporter/clr.mjs';
+import * as table from './reporter/table.mjs';
 import { runtime } from './runtime.mjs';
 
 let _gc = 0;

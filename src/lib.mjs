@@ -29,7 +29,7 @@ export const cpu = await (async () => {
   return await {
     unknown: () => 'unknown',
     browser: () => 'unknown',
-    node: () => import('node:os').then(os => os.cpus()[0].model),
+    node: async () => (await import('node:os')).cpus()[0].model,
     deno: async () => {
       try {
         const os = await import('node:os');
