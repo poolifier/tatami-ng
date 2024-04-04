@@ -8,7 +8,7 @@ group(() => {
   bench('a', () => {});
   bench('b', () => {});
   bench('e', () => {
-    throw 1;
+    throw new Error("error 'e'");
   });
 });
 

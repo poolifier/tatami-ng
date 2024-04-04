@@ -92,7 +92,7 @@ export async function run(opts = {}) {
   const report = {
     benchmarks,
     cpu,
-    runtime: `${`${runtime} ${version}`.trim()} (${os})`,
+    runtime: `${runtime} ${version} (${os})`,
   };
 
   if (!opts.json) {
