@@ -77,6 +77,10 @@ await run({
 clear();
 ```
 
+## Development
+
+The JavaScript runtime environment used for development is Bun.
+
 ## License
 
 MIT © [Evan](https://github.com/evanwashere)
