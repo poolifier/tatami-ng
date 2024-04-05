@@ -1,8 +1,8 @@
-export function group(fn: () => void): void;
-export function group(name: string, fn: () => void): void;
+export function group(cb: () => void): void;
+export function group(name: string, cb: () => void): void;
 export function group(
   options: { name?: string; summary?: boolean },
-  fn: () => void,
+  cb: () => void,
 ): void;
 export function bench(name: string, fn: () => void | Promise<void>): void;
 
