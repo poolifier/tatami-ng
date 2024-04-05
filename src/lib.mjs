@@ -164,6 +164,9 @@ export async function measure(fn, opts = {}) {
       }
     }
 
+    const rawAvg = samples.reduce((a, b) => a + b, 0) / samples.length;
+    const rawStd = Math.sqrt(samples.reduce((a, b) => a + (b - rawAvg) ** 2, 0) / (samples.length - 1))
+
     samples.sort((a, b) => a - b);
 
     const q1 = quantile(samples, .25);
@@ -185,6 +188,8 @@ export async function measure(fn, opts = {}) {
       p999: quantile(samples, .999),
       avg,
       std: Math.sqrt(samples.reduce((a, b) => a + (b - avg) ** 2, 0) / (samples.length - 1)),
+      rawAvg,
+      rawStd,
     };
   `,
   );

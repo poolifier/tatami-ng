@@ -18,7 +18,6 @@ export function run(options?: {
   percentiles?: boolean;
   json?: number | boolean;
   units?: boolean;
-
   /**
    * @deprecated does not do anything since 0.1.7
    */
@@ -49,6 +48,8 @@ export interface Report {
       p999: number;
       avg: number;
       std: number;
+      rawAvg: number;
+      rawStd: number;
     };
   }[];
 }
