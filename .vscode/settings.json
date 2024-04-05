@@ -10,5 +10,5 @@
     "quickfix.biome": "explicit",
     "source.organizeImports.biome": "explicit"
   },
-  "cSpell.words": ["mitata", "quantile", "runtimes"]
+  "cSpell.words": ["commitlint", "mitata", "quantile", "runtimes"]
 }
