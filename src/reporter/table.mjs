@@ -30,9 +30,9 @@ export function units({ colors = true } = {}) {
     colors,
     `
       1 ps = 1 picosecond = 1e-12s
-      1 ns = 1 nanosecond = 0.000000001s
-      1 μs = 1 microsecond = 1'000ns = 0.000001s
-      1 ms = 1 millisecond = 1'000μs = 1'000'000ns = 0.001s
+      1 ns = 1 nanosecond = 1'000ps = 1e-9s
+      1 μs = 1 microsecond = 1'000ns = 1'000'000ps = 1e-6s
+      1 ms = 1 millisecond = 1'000μs = 1'000'000ns = 1e-9ps = 1e-3s
     `,
   );
 }
