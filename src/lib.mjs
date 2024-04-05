@@ -62,12 +62,10 @@ export const no_color = (() => {
 // doesn't actually support generators yet (1.0.0 feature)
 export function measure(fn, ctx, _ = {}) {
   if (
-    !(
-      fn instanceof Function ||
-      fn instanceof AsyncFunction ||
-      fn instanceof GeneratorFunction ||
-      fn instanceof AsyncGeneratorFunction
-    )
+    !(fn instanceof Function) &&
+    !(fn instanceof AsyncFunction) &&
+    !(fn instanceof GeneratorFunction) &&
+    !(fn instanceof AsyncGeneratorFunction)
   )
     throw new Error('fn must be a function or generator');
 
