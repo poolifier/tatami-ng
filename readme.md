@@ -3,7 +3,7 @@
 <br />
 
 <div align="center">
-  <img width=72% src="https://cdn.evan.lol/mitata.gif"></img>
+  <img width=72% src="./assets/images/mitata.gif"></img>
 </div>
 
 <br />
