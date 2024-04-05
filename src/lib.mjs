@@ -196,7 +196,7 @@ export async function measure(fn, opts = {}) {
 export function mergeDeepRight(target, source) {
   const targetClone = structuredClone(target);
 
-  for (const key of Object.keys(source)) {
+  for (const key in source) {
     if (Object.prototype.toString.call(target[key]).slice(8, -1) === 'Object') {
       if (
         Object.prototype.toString.call(target[key]).slice(8, -1) === 'Object'
