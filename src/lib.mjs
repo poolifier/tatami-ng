@@ -59,7 +59,7 @@ export const no_color = (() => {
   }[runtime]();
 })();
 
-export async function measure(fn, opts) {
+export async function measure(fn, opts = {}) {
   if (
     ![
       Function,
@@ -74,25 +74,33 @@ export async function measure(fn, opts) {
   if ([GeneratorFunction, AsyncGeneratorFunction].includes(fn.constructor))
     throw new Error('generator is not supported yet');
 
-  const async = [AsyncFunction, AsyncGeneratorFunction].includes(
-    fn.constructor,
+  // biome-ignore lint/style/noParameterAssign: <explanation>
+  opts = mergeDeepRight(
+    {
+      warmup: true,
+      samples: {
+        warmup: 128,
+        benchmark: 128,
+      },
+    },
+    opts,
   );
+  opts.async ??= AsyncFunction === fn.constructor;
+  opts.time ??= 600_000_000;
+
   const generator = [GeneratorFunction, AsyncGeneratorFunction].includes(
     fn.constructor,
   );
-  opts.warmup =
-    false === opts.warmup
-      ? false
-      : {
-          warmup: opts.warmup ?? true,
-          samples: opts.warmup?.samples ?? 128,
-        };
 
   const t0 = now();
-  !async ? fn() : await fn();
+  !opts.async ? fn() : await fn();
   const fnExecutionTime = now() - t0;
 
-  const b = new (!async ? Function : AsyncFunction)(
+  if (fnExecutionTime > 250_000_000) {
+    opts.warmup = false;
+  }
+
+  const benchmark = new (!opts.async ? Function : AsyncFunction)(
     '$fn',
     '$now',
     `
@@ -114,44 +122,39 @@ export async function measure(fn, opts) {
     ${
       !opts.warmup
         ? ''
-        : fnExecutionTime > 250_000_000
-          ? ''
-          : `
-            warmup: {
-              const samples = new Array(${opts.warmup.samples - 1});
+        : `warmup: {
+            const samples = new Array();
 
-              for (let i = 0; i < ${opts.warmup.samples - 1}; i++) {
-                const t0 = $now();
-                ${!async ? '' : 'await'} $fn();
-                const t1 = $now();
+            for (let i = 0; i < ${opts.samples.warmup - 1}; i++) {
+              const t0 = $now();
+              ${!opts.async ? '' : 'await'} $fn();
+              const t1 = $now();
 
-                samples.push(t1 - t0);
-              }
-
-              samples.sort((a, b) => a - b);
-              $w = quantile(samples, .5);
+              samples.push(t1 - t0);
             }
-          `
+
+            samples.sort((a, b) => a - b);
+            $w = quantile(samples, .5);
+          }`
     }
 
     let s = 0;
-    let t = 600_000_000;
     let samples = new Array();
 
     if ($w > 10_000) {
-      while (s < t || 10 > samples.length) {
+      while (s < ${opts.time} || ${opts.samples.benchmark} > samples.length) {
         const t0 = $now();
-        ${!async ? '' : 'await'} $fn();
+        ${!opts.async ? '' : 'await'} $fn();
         const t1 = $now();
 
         s += samples[samples.push(t1 - t0) - 1];
       }
     } else {
-      while (s < t || 128 > samples.length) {
+      while (s < ${opts.time} || ${opts.samples.benchmark} > samples.length) {
         const t0 = $now();
 
         for (let i = 0; i < 256; i++) {
-          ${`${!async ? '' : 'await'} $fn();\n`.repeat(8)}
+          ${`${!opts.async ? '' : 'await'} $fn();\n`.repeat(8)}
         }
 
         const t1 = $now();
@@ -186,6 +189,26 @@ export async function measure(fn, opts) {
   `,
   );
 
-  const stats = !async ? b(fn, now) : await b(fn, now);
-  return { stats, async, warmup: opts.warmup, generator };
+  const stats = !opts.async ? benchmark(fn, now) : await benchmark(fn, now);
+  return { stats, async: opts.async, warmup: opts.warmup, generator };
+}
+
+export function mergeDeepRight(target, source) {
+  const targetClone = structuredClone(target);
+
+  for (const key of Object.keys(source)) {
+    if (Object.prototype.toString.call(target[key]).slice(8, -1) === 'Object') {
+      if (
+        Object.prototype.toString.call(target[key]).slice(8, -1) === 'Object'
+      ) {
+        targetClone[key] = mergeDeepRight(target[key], source[key]);
+      } else {
+        targetClone[key] = source[key];
+      }
+    } else {
+      targetClone[key] = source[key];
+    }
+  }
+
+  return targetClone;
 }

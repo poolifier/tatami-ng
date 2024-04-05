@@ -12,6 +12,7 @@ and this project adheres to
 
 - Fix `measure()` asynchronous implementation.
 - Fix percentiles computation.
+- Fix warmup status in JSON report.
 
 ### Changed
 

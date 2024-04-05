@@ -5,10 +5,9 @@ import * as table from './reporter/table.mjs';
 import { runtime } from './runtime.mjs';
 
 let _gc = 0;
-let g = null;
-const summaries = {};
-const benchmarks = [];
+let groupName = null;
 const groups = new Set();
+const benchmarks = [];
 
 export function group(name, cb) {
   if ('function' === typeof name) {
@@ -17,17 +16,16 @@ export function group(name, cb) {
   }
   if (cb != null && ![Function, AsyncFunction].includes(cb.constructor))
     throw new TypeError(`expected function, got ${cb.constructor.name}`);
-  const o = {
-    summary: name.summary ?? true,
+  const group = {
     name:
       ('string' === typeof name ? name : name.name) || `$mitata_group${++_gc}`,
+    summary: name.summary ?? true,
   };
 
-  g = o.name;
-  groups.add(g);
-  summaries[g] = o.summary;
+  groupName = group.name;
+  groups.add(group);
   cb();
-  g = null;
+  groupName = null;
 }
 
 export function bench(name, fn) {
@@ -43,8 +41,7 @@ export function bench(name, fn) {
   benchmarks.push({
     fn,
     name,
-    group: g,
-    time: 500,
+    group: groupName,
     warmup: true,
     baseline: false,
     async: AsyncFunction === fn.constructor,
@@ -64,8 +61,7 @@ export function baseline(name, fn) {
   benchmarks.push({
     fn,
     name,
-    group: g,
-    time: 500,
+    group: groupName,
     warmup: true,
     baseline: true,
     async: AsyncFunction === fn.constructor,
@@ -74,11 +70,8 @@ export function baseline(name, fn) {
 
 export function clear() {
   _gc = 0;
-  for (const key in summaries) {
-    delete summaries[key];
-  }
-  benchmarks.length = 0;
   groups.clear();
+  benchmarks.length = 0;
 }
 
 export async function run(opts = {}) {
@@ -92,7 +85,7 @@ export async function run(opts = {}) {
     );
   opts.silent ??= false;
   opts.colors ??= !no_color;
-  opts.size = table.size(benchmarks.map(b => b.name));
+  opts.size = table.size(benchmarks.map(benchmark => benchmark.name));
 
   const log = opts.silent === true ? () => {} : logger;
 
@@ -102,7 +95,7 @@ export async function run(opts = {}) {
     runtime: `${runtime} ${version} (${os})`,
   };
 
-  if (!opts.json) {
+  if (!opts.json && benchmarks.length > 0) {
     log(clr.gray(opts.colors, `cpu: ${report.cpu}`));
     log(clr.gray(opts.colors, `runtime: ${report.runtime}`));
 
@@ -113,24 +106,30 @@ export async function run(opts = {}) {
 
   let _f = false;
   let _b = false;
-  for (const b of benchmarks) {
-    if (b.group) continue;
-    if (b.baseline) _b = true;
+  for (const benchmark of benchmarks) {
+    if (benchmark.group) continue;
+    if (benchmark.baseline) _b = true;
 
     _f = true;
     try {
-      b.stats = (await measure(b.fn, {})).stats;
-      if (!opts.json) log(table.benchmark(b.name, b.stats, opts));
+      benchmark.stats = (
+        await measure(benchmark.fn, {
+          async: benchmark.async,
+          time: benchmark.time,
+        })
+      ).stats;
+      if (!opts.json)
+        log(table.benchmark(benchmark.name, benchmark.stats, opts));
     } catch (err) {
-      b.error = { stack: err.stack, message: err.message };
-      if (!opts.json) log(table.benchmark_error(b.name, err, opts));
+      benchmark.error = { stack: err.stack, message: err.message };
+      if (!opts.json) log(table.benchmark_error(benchmark.name, err, opts));
     }
   }
 
   if (_b && !opts.json)
     log(
       `\n${table.summary(
-        benchmarks.filter(b => null == b.group),
+        benchmarks.filter(benchmark => null == benchmark.group),
         opts,
       )}`,
     );
@@ -138,28 +137,34 @@ export async function run(opts = {}) {
   for (const group of groups) {
     if (!opts.json) {
       if (_f) log('');
-      if (!group.startsWith('$mitata_group')) log(`• ${group}`);
-      if (_f || !group.startsWith('$mitata_group'))
+      if (!group.name.startsWith('$mitata_group')) log(`• ${group.name}`);
+      if (_f || !group.name.startsWith('$mitata_group'))
         log(clr.gray(opts.colors, table.br(opts)));
     }
 
     _f = true;
-    for (const b of benchmarks) {
-      if (group !== b.group) continue;
+    for (const benchmark of benchmarks) {
+      if (group.name !== benchmark.group) continue;
 
       try {
-        b.stats = (await measure(b.fn, {})).stats;
-        if (!opts.json) log(table.benchmark(b.name, b.stats, opts));
+        benchmark.stats = (
+          await measure(benchmark.fn, {
+            async: benchmark.async,
+            time: benchmark.time,
+          })
+        ).stats;
+        if (!opts.json)
+          log(table.benchmark(benchmark.name, benchmark.stats, opts));
       } catch (err) {
-        b.error = { stack: err.stack, message: err.message };
-        if (!opts.json) log(table.benchmark_error(b.name, err, opts));
+        benchmark.error = { stack: err.stack, message: err.message };
+        if (!opts.json) log(table.benchmark_error(benchmark.name, err, opts));
       }
     }
 
-    if (summaries[group] != null && !opts.json)
+    if (group.summary === true && !opts.json)
       log(
         `\n${table.summary(
-          benchmarks.filter(b => group === b.group),
+          benchmarks.filter(benchmark => group.name === benchmark.group),
           opts,
         )}`,
       );
