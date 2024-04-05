@@ -22,6 +22,7 @@
     "type": "git",
     "url": "git+https://github.com/evanwashere/mitata.git"
   },
+  "files": ["src"],
   "scripts": {
     "prepare": "bun run prepare.mjs",
     "format": "biome format . --write",
