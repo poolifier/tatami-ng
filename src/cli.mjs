@@ -16,6 +16,7 @@ export function group(name, cb) {
   }
   if (cb != null && ![Function, AsyncFunction].includes(cb.constructor))
     throw new TypeError(`expected function, got ${cb.constructor.name}`);
+
   const group = {
     name:
       ('string' === typeof name ? name : name.name) || `$mitata_group${++_gc}`,

@@ -5,11 +5,13 @@
   "license": "MIT",
   "version": "0.1.11",
   "packageManager": "bun@1.1.1",
-  "main": "./src/cli.mjs",
   "types": "./src/cli.d.ts",
+  "main": "./src/cli.mjs",
+  "browser": "./src/cli.mjs",
   "exports": {
     "types": "./src/cli.d.ts",
-    "import": "./src/cli.mjs"
+    "import": "./src/cli.mjs",
+    "browser": "./src/cli.cjs"
   },
   "description": "cross-runtime benchmarking lib",
   "homepage": "https://github.com/evanwashere/mitata#readme",
