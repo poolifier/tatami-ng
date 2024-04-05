@@ -41,13 +41,14 @@ export interface Report {
     error?: Error;
 
     stats?: {
-      avg: number;
       min: number;
       max: number;
       p50: number;
       p75: number;
       p99: number;
       p999: number;
+      avg: number;
+      std: number;
     };
   }[];
 }

@@ -24,6 +24,9 @@ deno add npm:mitata
 
 Deno versions >= 1.40.x are supported.
 
+The `--allow-hrtime` permission flag is recommended to allow high-resolution
+time measurement.
+
 ### Bun
 
 ```shell

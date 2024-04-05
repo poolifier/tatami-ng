@@ -5,6 +5,7 @@ try {
   _logger = print;
 }
 
-if ('function' !== typeof _logger) throw new Error('logger is not a function');
+if ('function' !== typeof _logger)
+  throw new TypeError('logger is not a function');
 
 export const logger = _logger;

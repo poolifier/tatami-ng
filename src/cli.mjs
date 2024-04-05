@@ -82,12 +82,19 @@ export function clear() {
 }
 
 export async function run(opts = {}) {
+  if (
+    opts.json != null &&
+    'number' !== typeof opts.json &&
+    'boolean' !== typeof opts.json
+  )
+    throw new TypeError(
+      `expected number or boolean as 'json' options, got ${opts.json.constructor.name}`,
+    );
   opts.silent ??= false;
   opts.colors ??= !no_color;
-  opts.json = !!opts.json ?? 0 === opts.json;
   opts.size = table.size(benchmarks.map(b => b.name));
 
-  const log = opts.silent ? () => {} : logger;
+  const log = opts.silent === true ? () => {} : logger;
 
   const report = {
     benchmarks,
@@ -123,7 +130,7 @@ export async function run(opts = {}) {
   if (_b && !opts.json)
     log(
       `\n${table.summary(
-        benchmarks.filter(b => null === b.group),
+        benchmarks.filter(b => null == b.group),
         opts,
       )}`,
     );
@@ -149,7 +156,7 @@ export async function run(opts = {}) {
       }
     }
 
-    if (summaries[group] && !opts.json)
+    if (summaries[group] != null && !opts.json)
       log(
         `\n${table.summary(
           benchmarks.filter(b => group === b.group),
@@ -163,7 +170,7 @@ export async function run(opts = {}) {
     log(
       JSON.stringify(
         report,
-        null,
+        undefined,
         'number' !== typeof opts.json ? 0 : opts.json,
       ),
     );

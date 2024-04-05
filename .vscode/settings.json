@@ -10,5 +10,5 @@
     "quickfix.biome": "explicit",
     "source.organizeImports.biome": "explicit"
   },
-  "cSpell.words": ["runtimes"]
+  "cSpell.words": ["quantile", "runtimes"]
 }

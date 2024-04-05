@@ -68,7 +68,7 @@ export async function measure(fn, opts) {
       AsyncGeneratorFunction,
     ].includes(fn.constructor)
   )
-    throw new Error(
+    throw new TypeError(
       `expected function or generator, got ${fn.constructor.name}`,
     );
   if ([GeneratorFunction, AsyncGeneratorFunction].includes(fn.constructor))
@@ -98,6 +98,19 @@ export async function measure(fn, opts) {
     `
     let $w = ${fnExecutionTime};
 
+    const quantile = (arr, q) => {
+      const base = (arr.length - 1) * q;
+      const baseIndex = Math.floor(base);
+      if (arr[baseIndex + 1] != null) {
+        return (
+          arr[baseIndex] +
+          (base - baseIndex) * (arr[baseIndex + 1] - arr[baseIndex])
+        );
+      } else {
+        return arr[baseIndex];
+      }
+    };
+
     ${
       !opts.warmup
         ? ''
@@ -116,7 +129,7 @@ export async function measure(fn, opts) {
               }
 
               samples.sort((a, b) => a - b);
-              $w = samples[1];
+              $w = quantile(samples, .5);
             }
           `
     }
@@ -149,17 +162,26 @@ export async function measure(fn, opts) {
     }
 
     samples.sort((a, b) => a - b);
-    samples = samples.slice(1, -1);
+
+    const q1 = quantile(samples, .25);
+    const q3 = quantile(samples, .75);
+    const iqr = q3 - q1;
+    const l = q1 - 1.5 * iqr;
+    const h = q3 + 1.5 * iqr;
+    samples = samples.filter(v => v >= l && v <= h);
+
+    const avg = samples.reduce((a, b) => a + b, 0) / samples.length;
 
     return {
       // samples,
       min: samples[0],
       max: samples[samples.length - 1],
-      p50: samples[(.50 * samples.length) | 0],
-      p75: samples[(.75 * samples.length) | 0],
-      p99: samples[(.99 * samples.length) | 0],
-      p999: samples[(.999 * samples.length) | 0],
-      avg: samples.reduce((a, b) => a + b, 0) / samples.length,
+      p50: quantile(samples, .5),
+      p75: quantile(samples, .75),
+      p99: quantile(samples, .99),
+      p999: quantile(samples, .999),
+      avg,
+      std: Math.sqrt(samples.reduce((a, b) => a + (b - avg) ** 2, 0) / (samples.length - 1)),
     };
   `,
   );

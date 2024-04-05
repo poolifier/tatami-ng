@@ -11,11 +11,14 @@ and this project adheres to
 ### Fixed
 
 - Fix `measure()` asynchronous implementation.
+- Fix percentiles computation.
 
 ### Changed
 
 - Add `clear()` benchmark clearing primitive.
 - Optimize JavaScript runtime environment detection code (constify environment
   variables).
+- Add measurement outliers detection and removal.
+- Add standard deviation to JSON report.
 
 ## [0.1.11] - 2024-02-20
