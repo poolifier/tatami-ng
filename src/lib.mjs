@@ -164,8 +164,9 @@ export async function measure(fn, opts = {}) {
       }
     }
 
-    const rawAvg = samples.reduce((a, b) => a + b, 0) / samples.length;
-    const rawStd = Math.sqrt(samples.reduce((a, b) => a + (b - rawAvg) ** 2, 0) / (samples.length - 1))
+    const rawSamples = samples.slice();
+    const rawAvg = rawSamples.reduce((a, b) => a + b, 0) / rawSamples.length;
+    const rawStd = Math.sqrt(rawSamples.reduce((a, b) => a + (b - rawAvg) ** 2, 0) / (rawSamples.length - 1));
 
     samples.sort((a, b) => a - b);
 
@@ -177,9 +178,11 @@ export async function measure(fn, opts = {}) {
     samples = samples.filter(v => v >= l && v <= h);
 
     const avg = samples.reduce((a, b) => a + b, 0) / samples.length;
+    const std = Math.sqrt(samples.reduce((a, b) => a + (b - avg) ** 2, 0) / (samples.length - 1));
 
     return {
       // samples,
+      // rawSamples,
       min: samples[0],
       max: samples[samples.length - 1],
       p50: quantile(samples, .5),
@@ -187,7 +190,7 @@ export async function measure(fn, opts = {}) {
       p99: quantile(samples, .99),
       p999: quantile(samples, .999),
       avg,
-      std: Math.sqrt(samples.reduce((a, b) => a + (b - avg) ** 2, 0) / (samples.length - 1)),
+      std,
       rawAvg,
       rawStd,
     };
