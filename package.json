@@ -4,7 +4,7 @@
   "type": "module",
   "license": "MIT",
   "version": "0.1.11",
-  "packageManager": "bun@1.1.0",
+  "packageManager": "bun@1.1.1",
   "main": "./src/cli.mjs",
   "types": "./src/cli.d.ts",
   "exports": {

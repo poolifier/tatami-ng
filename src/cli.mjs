@@ -111,7 +111,6 @@ export async function run(opts = {}) {
     if (b.baseline) _b = true;
 
     _f = true;
-
     try {
       b.stats = (await measure(b.fn, {})).stats;
       if (!opts.json) log(table.benchmark(b.name, b.stats, opts));

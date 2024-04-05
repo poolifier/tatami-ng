@@ -46,5 +46,4 @@ const time = (() => {
   }[runtime]();
 })();
 
-export const now = time.now;
-export const diff = time.diff;
+export const { diff, now } = time;
