@@ -78,8 +78,6 @@ await run({
 clear();
 ```
 
-samples?: { warmup?: number; benchmark?: number; };
-
 ## Development
 
 The JavaScript runtime environment used for development is Bun.
