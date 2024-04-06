@@ -21,7 +21,7 @@ import { runtime } from './runtime.mjs';
 
 let _gc = 0;
 let groupName = null;
-const groups = new Set();
+const groups = new Map();
 const benchmarks = [];
 
 export function group(name, cb) {
@@ -41,14 +41,11 @@ export function group(name, cb) {
   if (cb != null && ![Function, AsyncFunction].includes(cb.constructor))
     throw new TypeError(`expected function, got ${cb.constructor.name}`);
 
-  const group = {
-    name:
-      ('string' === typeof name ? name : name.name) || `${mitataGroup}${++_gc}`,
-    summary: name.summary ?? true,
-  };
-
-  groupName = group.name;
-  groups.add(group);
+  groupName =
+    ('string' === typeof name ? name.trim() : name.name.trim()) ||
+    `${mitataGroup}${++_gc}`;
+  if (!groups.has(groupName))
+    groups.set(groupName, { summary: name.summary ?? true });
   cb();
   groupName = null;
 }
@@ -61,6 +58,8 @@ export function bench(name, fn, opts = {}) {
     name = fn.name;
   }
   checkBenchmarkArgs(fn, opts);
+  // biome-ignore lint/style/noParameterAssign: <explanation>
+  name = name.trim();
 
   benchmarks.push({
     before: opts.before ?? emptyFunction,
@@ -84,6 +83,8 @@ export function baseline(name, fn, opts = {}) {
     name = fn.name;
   }
   checkBenchmarkArgs(fn, opts);
+  // biome-ignore lint/style/noParameterAssign: <explanation>
+  name = name.trim();
 
   benchmarks.push({
     before: opts.before ?? emptyFunction,
@@ -169,17 +170,17 @@ export async function run(opts = {}) {
       )}`,
     );
 
-  for (const group of groups) {
+  for (const [group, groupOpts] of groups) {
     if (!opts.json) {
       if (_first) log('');
-      if (!group.name.startsWith(mitataGroup)) log(`• ${group.name}`);
-      if (_first || !group.name.startsWith(mitataGroup))
+      if (!group.startsWith(mitataGroup)) log(`• ${group}`);
+      if (_first || !group.startsWith(mitataGroup))
         log(clr.gray(opts.colors, table.br(opts)));
     }
 
     _first = true;
     for (const benchmark of benchmarks) {
-      if (group.name !== benchmark.group) continue;
+      if (group !== benchmark.group) continue;
 
       try {
         benchmark.stats = (
@@ -200,10 +201,10 @@ export async function run(opts = {}) {
       }
     }
 
-    if (group.summary === true && !opts.json)
+    if (groupOpts.summary === true && !opts.json)
       log(
         `\n${table.summary(
-          benchmarks.filter(benchmark => group.name === benchmark.group),
+          benchmarks.filter(benchmark => group === benchmark.group),
           opts,
         )}`,
       );
