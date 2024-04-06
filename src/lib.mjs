@@ -71,7 +71,7 @@ export const checkBenchmarkArgs = (fn, opts = {}) => {
       `expected function, got ${opts.before.constructor.name}`,
     );
   if (
-    opts.before != null &&
+    opts.after != null &&
     ![Function, AsyncFunction].includes(opts.after.constructor)
   )
     throw new TypeError(
