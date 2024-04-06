@@ -4,9 +4,23 @@ export function group(
   options: { name?: string; summary?: boolean },
   cb: () => void,
 ): void;
-export function bench(name: string, fn: () => void | Promise<void>): void;
+export function bench(
+  name: string,
+  fn: () => void | Promise<void>,
+  options?: {
+    before?: () => void | Promise<void>;
+    after?: () => void | Promise<void>;
+  },
+): void;
 
-export function baseline(name: string, fn: () => void | Promise<void>): void;
+export function baseline(
+  name: string,
+  fn: () => void | Promise<void>,
+  options?: {
+    before?: () => void | Promise<void>;
+    after?: () => void | Promise<void>;
+  },
+): void;
 
 export function clear(): void;
 
@@ -39,7 +53,9 @@ export interface Report {
       benchmark: number;
     };
     time: number;
+    before: () => void | Promise<void>;
     fn: () => void | Promise<void>;
+    after: () => void | Promise<void>;
     async: boolean;
     warmup: boolean;
     baseline: boolean;

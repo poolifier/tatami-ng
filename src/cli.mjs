@@ -1,11 +1,17 @@
-import { defaultSamples, defaultTime, mitataGroup } from './constants.mjs';
+import {
+  defaultSamples,
+  defaultTime,
+  emptyFunction,
+  mitataGroup,
+} from './constants.mjs';
 import {
   os,
   AsyncFunction,
+  checkBenchmarkArgs,
   cpu,
   measure,
   mergeDeepRight,
-  no_color,
+  noColor,
   version,
 } from './lib.mjs';
 import { logger } from './logger.mjs';
@@ -47,18 +53,19 @@ export function group(name, cb) {
   groupName = null;
 }
 
-export function bench(name, fn) {
+export function bench(name, fn, opts = {}) {
   if ([Function, AsyncFunction].includes(name.constructor)) {
     // biome-ignore lint/style/noParameterAssign: <explanation>
     fn = name;
     // biome-ignore lint/style/noParameterAssign: <explanation>
     name = fn.name;
   }
-  if (![Function, AsyncFunction].includes(fn.constructor))
-    throw new TypeError(`expected function, got ${fn.constructor.name}`);
+  checkBenchmarkArgs(fn, opts);
 
   benchmarks.push({
+    before: opts.before ?? emptyFunction,
     fn,
+    after: opts.after ?? emptyFunction,
     name,
     group: groupName,
     time: defaultTime,
@@ -69,18 +76,19 @@ export function bench(name, fn) {
   });
 }
 
-export function baseline(name, fn) {
+export function baseline(name, fn, opts = {}) {
   if ([Function, AsyncFunction].includes(name.constructor)) {
     // biome-ignore lint/style/noParameterAssign: <explanation>
     fn = name;
     // biome-ignore lint/style/noParameterAssign: <explanation>
     name = fn.name;
   }
-  if (![Function, AsyncFunction].includes(fn.constructor))
-    throw new TypeError(`expected function, got ${fn.constructor.name}`);
+  checkBenchmarkArgs(fn, opts);
 
   benchmarks.push({
+    before: opts.before ?? emptyFunction,
     fn,
+    after: opts.after ?? emptyFunction,
     name,
     group: groupName,
     time: defaultTime,
@@ -107,10 +115,10 @@ export async function run(opts = {}) {
       `expected number or boolean as 'json' options, got ${opts.json.constructor.name}`,
     );
   opts.silent ??= false;
-  opts.colors ??= !no_color;
+  opts.colors ??= !noColor;
   opts.size = table.size(benchmarks.map(benchmark => benchmark.name));
 
-  const log = opts.silent === true ? () => {} : logger;
+  const log = opts.silent === true ? emptyFunction : logger;
 
   const report = {
     benchmarks,
@@ -136,7 +144,7 @@ export async function run(opts = {}) {
     _first = true;
     try {
       benchmark.stats = (
-        await measure(benchmark.fn, {
+        await measure(benchmark.fn, benchmark.before, benchmark.after, {
           async: benchmark.async,
           time: benchmark.time,
           samples:
@@ -149,7 +157,7 @@ export async function run(opts = {}) {
         log(table.benchmark(benchmark.name, benchmark.stats, opts));
     } catch (err) {
       benchmark.error = { stack: err.stack, message: err.message };
-      if (!opts.json) log(table.benchmark_error(benchmark.name, err, opts));
+      if (!opts.json) log(table.benchmarkError(benchmark.name, err, opts));
     }
   }
 
@@ -175,7 +183,7 @@ export async function run(opts = {}) {
 
       try {
         benchmark.stats = (
-          await measure(benchmark.fn, {
+          await measure(benchmark.fn, benchmark.before, benchmark.after, {
             async: benchmark.async,
             time: benchmark.time,
             samples:
@@ -188,7 +196,7 @@ export async function run(opts = {}) {
           log(table.benchmark(benchmark.name, benchmark.stats, opts));
       } catch (err) {
         benchmark.error = { stack: err.stack, message: err.message };
-        if (!opts.json) log(table.benchmark_error(benchmark.name, err, opts));
+        if (!opts.json) log(table.benchmarkError(benchmark.name, err, opts));
       }
     }
 

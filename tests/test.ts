@@ -1,6 +1,9 @@
 import { baseline, bench, clear, group, run } from '../src/cli.mjs';
 
-bench('noop', () => {});
+bench('noop', () => {}, {
+  before: () => {},
+  after: () => {},
+});
 bench('async noop()', async () => {});
 baseline('aaa', () => {});
 bench('noop2', async () => Promise.resolve());

@@ -17,4 +17,6 @@ export const defaultSamples = {
   benchmark: 128,
 };
 
+export const emptyFunction = () => {};
+
 export const mitataGroup = '$mitata_group';

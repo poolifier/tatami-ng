@@ -16,7 +16,7 @@ export function br({ size, avg = true, min_max = true, percentiles = true }) {
   );
 }
 
-export function benchmark_error(
+export function benchmarkError(
   name,
   error,
   { size, avg = true, colors = true, min_max = true, percentiles = true },

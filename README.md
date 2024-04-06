@@ -65,17 +65,20 @@ group({ name: 'group2', summary: false }, () => {
 });
 
 await run({
-  units: false, // print small units cheatsheet
-  silent: false, // enable/disable stdout output
-  avg: true, // enable/disable avg column (default: true)
+  units: false, // print units cheatsheet (default: false)
+  silent: false, // enable/disable stdout output (default: undefined)
   json: false, // enable/disable json output (default: false)
   colors: true, // enable/disable colors (default: true)
-  min_max: true, // enable/disable min/max column (default: true)
-  percentiles: false, // enable/disable percentiles column (default: true)
+  samples: { warmup: 128, benchmark: 128 }, // number of benchmark samples (default: { warmup: 128, benchmark: 128, })
+  avg: true, // enable/disable time (avg) column (default: true)
+  min_max: true, // enable/disable (min...max) column (default: true)
+  percentiles: false, // enable/disable percentile columns (default: true)
 });
 
 clear();
 ```
+
+samples?: { warmup?: number; benchmark?: number; };
 
 ## Development
 

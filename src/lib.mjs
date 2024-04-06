@@ -50,7 +50,7 @@ export const cpu = await (async () => {
   }[runtime]();
 })();
 
-export const no_color = (() => {
+export const noColor = (() => {
   return {
     unknown: () => false,
     browser: () => true,
@@ -60,7 +60,46 @@ export const no_color = (() => {
   }[runtime]();
 })();
 
-export async function measure(fn, opts = {}) {
+export const checkBenchmarkArgs = (fn, opts = {}) => {
+  if (![Function, AsyncFunction].includes(fn.constructor))
+    throw new TypeError(`expected function, got ${fn.constructor.name}`);
+  if (
+    opts.before != null &&
+    ![Function, AsyncFunction].includes(opts.before.constructor)
+  )
+    throw new TypeError(
+      `expected function, got ${opts.before.constructor.name}`,
+    );
+  if (
+    opts.before != null &&
+    ![Function, AsyncFunction].includes(opts.after.constructor)
+  )
+    throw new TypeError(
+      `expected function, got ${opts.after.constructor.name}`,
+    );
+};
+
+export function mergeDeepRight(target, source) {
+  const targetClone = structuredClone(target);
+
+  for (const key in source) {
+    if (Object.prototype.toString.call(target[key]).slice(8, -1) === 'Object') {
+      if (
+        Object.prototype.toString.call(target[key]).slice(8, -1) === 'Object'
+      ) {
+        targetClone[key] = mergeDeepRight(target[key], source[key]);
+      } else {
+        targetClone[key] = source[key];
+      }
+    } else {
+      targetClone[key] = source[key];
+    }
+  }
+
+  return targetClone;
+}
+
+export async function measure(fn, before, after, opts = {}) {
   if (
     ![
       Function,
@@ -74,6 +113,10 @@ export async function measure(fn, opts = {}) {
     );
   if ([GeneratorFunction, AsyncGeneratorFunction].includes(fn.constructor))
     throw new Error('generator is not supported yet');
+  if (![Function, AsyncFunction].includes(before.constructor))
+    throw new TypeError(`expected function, got ${before.constructor.name}`);
+  if (![Function, AsyncFunction].includes(after.constructor))
+    throw new TypeError(`expected function, got ${after.constructor.name}`);
 
   // biome-ignore lint/style/noParameterAssign: <explanation>
   opts = mergeDeepRight(
@@ -98,8 +141,13 @@ export async function measure(fn, opts = {}) {
     opts.warmup = false;
   }
 
+  const asyncBefore = AsyncFunction === before.constructor;
+  const asyncAfter = AsyncFunction === after.constructor;
+
   const benchmark = new (!opts.async ? Function : AsyncFunction)(
     '$fn',
+    '$before',
+    '$after',
     '$now',
     `
     let $w = ${benchmarkTime};
@@ -124,9 +172,11 @@ export async function measure(fn, opts = {}) {
             const samples = new Array();
 
             for (let i = 0; i < ${opts.samples.warmup - 1}; i++) {
+              ${asyncBefore ? 'await' : ''} $before();
               const t0 = $now();
               ${!opts.async ? '' : 'await'} $fn();
               const t1 = $now();
+              ${asyncAfter ? 'await' : ''} $after();
 
               samples.push(t1 - t0);
             }
@@ -142,22 +192,24 @@ export async function measure(fn, opts = {}) {
 
     if ($w > ${limits.warmup}) {
       while (s < ${opts.time} || ${opts.samples.benchmark} > samples.length) {
+        ${asyncBefore ? 'await' : ''} $before();
         const t0 = $now();
         ${!opts.async ? '' : 'await'} $fn();
         const t1 = $now();
+        ${asyncAfter ? 'await' : ''} $after();
 
         s += samples[samples.push(t1 - t0) - 1];
       }
     } else {
       micro = true;
       while (s < ${opts.time} || ${opts.samples.benchmark} > samples.length) {
+        ${asyncBefore ? 'await' : ''} $before();
         const t0 = $now();
-
         for (let i = 0; i < 256; i++) {
           ${`${!opts.async ? '' : 'await'} $fn();\n`.repeat(8)}
         }
-
         const t1 = $now();
+        ${asyncAfter ? 'await' : ''} $after();
 
         s += t1 - t0;
         samples.push((t1 - t0) / 2048);
@@ -198,26 +250,8 @@ export async function measure(fn, opts = {}) {
   `,
   );
 
-  const stats = !opts.async ? benchmark(fn, now) : await benchmark(fn, now);
+  const stats = !opts.async
+    ? benchmark(fn, before, after, now)
+    : await benchmark(fn, before, after, now);
   return { stats, async: opts.async, warmup: opts.warmup, generator };
-}
-
-export function mergeDeepRight(target, source) {
-  const targetClone = structuredClone(target);
-
-  for (const key in source) {
-    if (Object.prototype.toString.call(target[key]).slice(8, -1) === 'Object') {
-      if (
-        Object.prototype.toString.call(target[key]).slice(8, -1) === 'Object'
-      ) {
-        targetClone[key] = mergeDeepRight(target[key], source[key]);
-      } else {
-        targetClone[key] = source[key];
-      }
-    } else {
-      targetClone[key] = source[key];
-    }
-  }
-
-  return targetClone;
 }
