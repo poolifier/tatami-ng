@@ -1,4 +1,13 @@
-import { os, AsyncFunction, cpu, measure, no_color, version } from './lib.mjs';
+import { defaultSamples, defaultTime, mitataGroup } from './constants.mjs';
+import {
+  os,
+  AsyncFunction,
+  cpu,
+  measure,
+  mergeDeepRight,
+  no_color,
+  version,
+} from './lib.mjs';
 import { logger } from './logger.mjs';
 import * as clr from './reporter/clr.mjs';
 import * as table from './reporter/table.mjs';
@@ -10,7 +19,16 @@ const groups = new Set();
 const benchmarks = [];
 
 export function group(name, cb) {
-  if ('function' === typeof name) {
+  if (
+    name != null &&
+    'string' !== typeof name &&
+    Object.prototype.toString.call(name).slice(8, -1) !== 'Object' &&
+    ![Function, AsyncFunction].includes(name.constructor)
+  )
+    throw new TypeError(
+      `expected string, object or function, got ${name.constructor.name}`,
+    );
+  if ([Function, AsyncFunction].includes(name.constructor)) {
     // biome-ignore lint/style/noParameterAssign: <explanation>
     cb = name;
   }
@@ -19,7 +37,7 @@ export function group(name, cb) {
 
   const group = {
     name:
-      ('string' === typeof name ? name : name.name) || `$mitata_group${++_gc}`,
+      ('string' === typeof name ? name : name.name) || `${mitataGroup}${++_gc}`,
     summary: name.summary ?? true,
   };
 
@@ -43,7 +61,9 @@ export function bench(name, fn) {
     fn,
     name,
     group: groupName,
+    time: defaultTime,
     warmup: true,
+    samples: defaultSamples,
     baseline: false,
     async: AsyncFunction === fn.constructor,
   });
@@ -63,7 +83,9 @@ export function baseline(name, fn) {
     fn,
     name,
     group: groupName,
+    time: defaultTime,
     warmup: true,
+    samples: defaultSamples,
     baseline: true,
     async: AsyncFunction === fn.constructor,
   });
@@ -105,18 +127,22 @@ export async function run(opts = {}) {
     log(table.br(opts));
   }
 
-  let _f = false;
-  let _b = false;
+  let _baseline = false;
+  let _first = false;
   for (const benchmark of benchmarks) {
     if (benchmark.group) continue;
-    if (benchmark.baseline) _b = true;
+    if (benchmark.baseline) _baseline = true;
 
-    _f = true;
+    _first = true;
     try {
       benchmark.stats = (
         await measure(benchmark.fn, {
           async: benchmark.async,
           time: benchmark.time,
+          samples:
+            opts.samples != null
+              ? mergeDeepRight(benchmark.samples, opts.samples)
+              : benchmark.samples,
         })
       ).stats;
       if (!opts.json)
@@ -127,23 +153,23 @@ export async function run(opts = {}) {
     }
   }
 
-  if (_b && !opts.json)
+  if (_baseline && !opts.json)
     log(
       `\n${table.summary(
-        benchmarks.filter(benchmark => null == benchmark.group),
+        benchmarks.filter(benchmark => benchmark.group == null),
         opts,
       )}`,
     );
 
   for (const group of groups) {
     if (!opts.json) {
-      if (_f) log('');
-      if (!group.name.startsWith('$mitata_group')) log(`• ${group.name}`);
-      if (_f || !group.name.startsWith('$mitata_group'))
+      if (_first) log('');
+      if (!group.name.startsWith(mitataGroup)) log(`• ${group.name}`);
+      if (_first || !group.name.startsWith(mitataGroup))
         log(clr.gray(opts.colors, table.br(opts)));
     }
 
-    _f = true;
+    _first = true;
     for (const benchmark of benchmarks) {
       if (group.name !== benchmark.group) continue;
 
@@ -152,6 +178,10 @@ export async function run(opts = {}) {
           await measure(benchmark.fn, {
             async: benchmark.async,
             time: benchmark.time,
+            samples:
+              opts.samples != null
+                ? mergeDeepRight(benchmark.samples, opts.samples)
+                : benchmark.samples,
           })
         ).stats;
         if (!opts.json)

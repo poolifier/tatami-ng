@@ -1,9 +1,4 @@
-const runtimes = {
-  bun: 'bun',
-  deno: 'deno',
-  node: 'node',
-  browser: 'browser',
-};
+import { runtimes } from './constants.mjs';
 
 const isBun = !!globalThis.Bun || !!globalThis.process?.versions?.bun;
 const isDeno = !!globalThis.Deno;

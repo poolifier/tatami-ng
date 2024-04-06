@@ -11,9 +11,13 @@ export function baseline(name: string, fn: () => void | Promise<void>): void;
 export function clear(): void;
 
 export function run(options?: {
-  avg?: boolean;
   silent?: boolean;
   colors?: boolean;
+  samples?: {
+    warmup?: number;
+    benchmark?: number;
+  };
+  avg?: boolean;
   min_max?: boolean;
   percentiles?: boolean;
   json?: number | boolean;
@@ -30,6 +34,10 @@ export interface Report {
 
   benchmarks: {
     name: string;
+    samples: {
+      warmup: number;
+      benchmark: number;
+    };
     time: number;
     fn: () => void | Promise<void>;
     async: boolean;
@@ -40,6 +48,7 @@ export interface Report {
     error?: Error;
 
     stats?: {
+      micro: boolean;
       min: number;
       max: number;
       p50: number;

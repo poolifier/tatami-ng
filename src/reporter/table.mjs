@@ -1,3 +1,4 @@
+import { mitataGroup } from '../constants.mjs';
 import * as clr from './clr.mjs';
 import { duration } from './fmt.mjs';
 
@@ -16,13 +17,13 @@ export function br({ size, avg = true, min_max = true, percentiles = true }) {
 }
 
 export function benchmark_error(
-  n,
-  e,
+  name,
+  error,
   { size, avg = true, colors = true, min_max = true, percentiles = true },
 ) {
-  return `${n.padEnd(size, ' ')}${clr.red(colors, 'error')}: ${e.message}${
-    e.stack ? `\n${clr.gray(colors, e.stack)}` : ''
-  }`;
+  return `${name.padEnd(size, ' ')}${clr.red(colors, 'error')}: ${
+    error.message
+  }${error.stack ? `\n${clr.gray(colors, error.stack)}` : ''}`;
 }
 
 export function units({ colors = true } = {}) {
@@ -57,61 +58,68 @@ export function header({
 }
 
 export function benchmark(
-  n,
-  b,
+  name,
+  benchmark,
   { size, avg = true, colors = true, min_max = true, percentiles = true },
 ) {
   return (
-    n.padEnd(size, ' ') +
+    name.padEnd(size, ' ') +
     (!avg
       ? ''
-      : `${clr.yellow(colors, duration(b.avg))}/iter`.padStart(
+      : `${clr.yellow(colors, duration(benchmark.avg))}/iter`.padStart(
           14 + 10 * colors,
           ' ',
         )) +
     (!min_max
       ? ''
-      : `(${clr.cyan(colors, duration(b.min))} … ${clr.magenta(
+      : `(${clr.cyan(colors, duration(benchmark.min))} … ${clr.magenta(
           colors,
-          duration(b.max),
+          duration(benchmark.max),
         )})`.padStart(24 + 2 * 10 * colors, ' ')) +
     (!percentiles
       ? ''
       : ` ${clr
-          .gray(colors, duration(b.p75))
+          .gray(colors, duration(benchmark.p75))
           .padStart(9 + 10 * colors, ' ')} ${clr
-          .gray(colors, duration(b.p99))
+          .gray(colors, duration(benchmark.p99))
           .padStart(9 + 10 * colors, ' ')} ${clr
-          .gray(colors, duration(b.p999))
+          .gray(colors, duration(benchmark.p999))
           .padStart(9 + 10 * colors, ' ')}`) +
-    (0 !== b.min && b.avg > 0.25 ? '' : ` ${clr.red(colors, '!')}`)
+    (0 !== benchmark.min && benchmark.avg > 0.25
+      ? ''
+      : ` ${clr.red(colors, '!')}`)
   );
 }
 
 export function summary(benchmarks, { colors = true } = {}) {
   // biome-ignore lint/style/noParameterAssign: <explanation>
-  benchmarks = benchmarks.filter(b => b.error == null);
-  benchmarks.sort((a, b) => a.stats.avg - b.stats.avg);
-  const baseline = benchmarks.find(b => b.baseline) ?? benchmarks[0];
+  benchmarks = benchmarks.filter(benchmark => benchmark.error == null);
+  benchmarks.sort(
+    (benchmarkA, benchmarkB) => benchmarkA.stats.avg - benchmarkB.stats.avg,
+  );
+  const baseline =
+    benchmarks.find(benchmark => benchmark.baseline) ?? benchmarks[0];
 
   return `${
     clr.bold(colors, 'summary') +
-    (null == baseline.group || baseline.group.startsWith?.('$mitata_group')
+    (baseline.group == null || baseline.group.startsWith(mitataGroup)
       ? ''
       : clr.gray(colors, ` for ${baseline.group}`))
   }\n  ${clr.bold(colors, clr.cyan(colors, baseline.name))}${benchmarks
-    .filter(b => b !== baseline)
-    .map(b => {
-      const diff = Number(((1 / baseline.stats.avg) * b.stats.avg).toFixed(2));
-      const inv_diff = Number(
-        ((1 / b.stats.avg) * baseline.stats.avg).toFixed(2),
+    .filter(benchmark => benchmark !== baseline)
+    .map(benchmark => {
+      const diff = Number(
+        ((1 / baseline.stats.avg) * benchmark.stats.avg).toFixed(2),
+      );
+      const invDiff = Number(
+        ((1 / benchmark.stats.avg) * baseline.stats.avg).toFixed(2),
       );
       return `\n   ${clr[1 > diff ? 'red' : 'green'](
         colors,
-        1 <= diff ? diff : inv_diff,
+        1 <= diff ? diff : invDiff,
       )}x ${1 > diff ? 'slower' : 'faster'} than ${clr.bold(
         colors,
-        clr.cyan(colors, b.name),
+        clr.cyan(colors, benchmark.name),
       )}`;
     })
     .join('')}`;

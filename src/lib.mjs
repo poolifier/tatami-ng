@@ -1,3 +1,4 @@
+import { defaultSamples, defaultTime, limits } from './constants.mjs';
 import { runtime } from './runtime.mjs';
 import { now } from './time.mjs';
 
@@ -77,16 +78,13 @@ export async function measure(fn, opts = {}) {
   // biome-ignore lint/style/noParameterAssign: <explanation>
   opts = mergeDeepRight(
     {
+      async: AsyncFunction === fn.constructor,
+      time: defaultTime,
       warmup: true,
-      samples: {
-        warmup: 128,
-        benchmark: 128,
-      },
+      samples: defaultSamples,
     },
     opts,
   );
-  opts.async ??= AsyncFunction === fn.constructor;
-  opts.time ??= 600_000_000;
 
   const generator = [GeneratorFunction, AsyncGeneratorFunction].includes(
     fn.constructor,
@@ -94,9 +92,9 @@ export async function measure(fn, opts = {}) {
 
   const t0 = now();
   !opts.async ? fn() : await fn();
-  const fnExecutionTime = now() - t0;
+  const benchmarkTime = now() - t0;
 
-  if (fnExecutionTime > 250_000_000) {
+  if (opts.samples.warmup === 0 || benchmarkTime > limits.benchmark) {
     opts.warmup = false;
   }
 
@@ -104,7 +102,7 @@ export async function measure(fn, opts = {}) {
     '$fn',
     '$now',
     `
-    let $w = ${fnExecutionTime};
+    let $w = ${benchmarkTime};
 
     const quantile = (arr, q) => {
       const base = (arr.length - 1) * q;
@@ -138,10 +136,11 @@ export async function measure(fn, opts = {}) {
           }`
     }
 
+    let micro = false;
     let s = 0;
     let samples = new Array();
 
-    if ($w > 10_000) {
+    if ($w > ${limits.warmup}) {
       while (s < ${opts.time} || ${opts.samples.benchmark} > samples.length) {
         const t0 = $now();
         ${!opts.async ? '' : 'await'} $fn();
@@ -150,6 +149,7 @@ export async function measure(fn, opts = {}) {
         s += samples[samples.push(t1 - t0) - 1];
       }
     } else {
+      micro = true;
       while (s < ${opts.time} || ${opts.samples.benchmark} > samples.length) {
         const t0 = $now();
 
@@ -183,6 +183,7 @@ export async function measure(fn, opts = {}) {
     return {
       // samples,
       // rawSamples,
+      micro,
       min: samples[0],
       max: samples[samples.length - 1],
       p50: quantile(samples, .5),
