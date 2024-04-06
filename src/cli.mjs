@@ -42,7 +42,7 @@ export function group(name, cb) {
     throw new TypeError(`expected function, got ${cb.constructor.name}`);
 
   groupName =
-    ('string' === typeof name ? name.trim() : name.name.trim()) ||
+    ('string' === typeof name ? name.trim() : name.name?.trim()) ||
     `${mitataGroup}${++_gc}`;
   if (!groups.has(groupName))
     groups.set(groupName, { summary: name.summary ?? true });
