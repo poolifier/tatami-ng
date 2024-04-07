@@ -41,20 +41,20 @@ import {
 ## Example
 
 ```js
-import { baseline, bench, clear, group, run } from "tatami-ng";
+import { baseline, bench, clear, group, run } from 'tatami-ng';
 
-bench("noop", () => {});
-bench("noop2", () => {});
+bench('noop', () => {});
+bench('noop2', () => {});
 
-group("group", () => {
-  baseline("baseline", () => {});
-  bench("Date.now()", () => Date.now());
-  bench("performance.now()", () => performance.now());
+group('group', () => {
+  baseline('baseline', () => {});
+  bench('Date.now()', () => Date.now());
+  bench('performance.now()', () => performance.now());
 });
 
-group({ name: "group2", summary: false }, () => {
-  bench("new Array(0)", () => new Array(0));
-  bench("new Array(1024)", () => new Array(1024));
+group({ name: 'group2', summary: false }, () => {
+  bench('new Array(0)', () => new Array(0));
+  bench('new Array(1024)', () => new Array(1024));
 });
 
 await run({
