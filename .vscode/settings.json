@@ -11,10 +11,12 @@
     "source.organizeImports.biome": "explicit"
   },
   "cSpell.words": [
-    "Benoit",
+    "benoit",
     "cheatsheet",
     "commitlint",
-    "POOLIFIER",
+    "deno",
+    "hrtime",
+    "poolifier",
     "quantile",
     "runtimes",
     "tatami-ng"

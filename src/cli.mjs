@@ -183,14 +183,15 @@ export async function run(opts = {}) {
     if (benchmark.baseline) _baseline = true;
 
     benchmark.samples = opts.samples ?? benchmark.samples;
+    benchmark.time = opts.time ?? benchmark.time;
     _first = true;
     try {
       benchmark.stats = (
         await measure(benchmark.fn, benchmark.before, benchmark.after, {
           async: benchmark.async,
           warmup: benchmark.warmup,
-          time: benchmark.time,
           samples: benchmark.samples,
+          time: benchmark.time,
         })
       ).stats;
       if (!opts.json)
@@ -225,14 +226,15 @@ export async function run(opts = {}) {
       if (group !== benchmark.group) continue;
 
       benchmark.samples = opts.samples ?? benchmark.samples;
+      benchmark.time = opts.time ?? benchmark.time;
       _first = true;
       try {
         benchmark.stats = (
           await measure(benchmark.fn, benchmark.before, benchmark.after, {
             async: benchmark.async,
             warmup: benchmark.warmup,
-            time: benchmark.time,
             samples: benchmark.samples,
+            time: benchmark.time,
           })
         ).stats;
         if (!opts.json)

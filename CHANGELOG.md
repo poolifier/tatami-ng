@@ -8,6 +8,11 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Changed
+
+- Add `time: number` to `run()` options specifying the minimum benchmark time in
+  nanoseconds.
+
 ## [0.2.0] - 2024-04-07
 
 ### Fixed

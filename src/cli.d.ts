@@ -35,6 +35,7 @@ export function run(options?: {
   silent?: boolean;
   colors?: boolean;
   samples?: number;
+  time?: number;
   avg?: boolean;
   iter?: boolean;
   min_max?: boolean;
