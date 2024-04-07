@@ -1,6 +1,5 @@
 <h1 align=center>tatami</h1>
-  <div align=center>Cross JavaScript runtime benchmarking library</div>
-<br />
+<h2 align=center>Cross JavaScript runtime benchmarking library</h2>
 
 ## Install
 
