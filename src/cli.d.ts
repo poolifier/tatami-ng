@@ -63,7 +63,7 @@ export interface Report {
     error?: Error;
 
     stats?: {
-      micro: boolean;
+      samples: number;
       min: number;
       max: number;
       p50: number;
@@ -72,6 +72,7 @@ export interface Report {
       p999: number;
       avg: number;
       std: number;
+      rawSamples: number;
       rawAvg: number;
       rawStd: number;
     };

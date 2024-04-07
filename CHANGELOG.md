@@ -12,23 +12,24 @@ and this project adheres to
 
 - Fix `measure()` asynchronous implementation.
 - Fix percentiles computation.
-- Fix warmup status in JSON report.
+- Fix inconsistent benchmark behavior: the samples statistical significance
+  shall be done on the same measurement base.
 
 ### Changed
 
 - Add `clear()` benchmark clearing primitive.
 - Optimize JavaScript runtime environment detection code (constify environment
   variables).
-- Add measurement outliers detection and removal.
+- Add IQR samples outlier detection and removal.
 - Add standard deviation to JSON report.
-- Add `samples: number` to `run()` options specifying the number of samples to
-  run.
+- Add `samples: number` to `run()` options specifying the minimum number of
+  benchmark samples.
 - Add
   `options: { before: () => void | Promise<void>; after: () => void | Promise<void> }`
-  to `bench()` and `baseline()` specifying actions to run before and after the
+  to `bench()` and `baseline()` specifying callbacks to run before and after the
   benchmark.
 - Add
   `{ before: () => void | Promise<void>; after: () => void | Promise<void> }` to
-  `group()` specifying actions to run before and after the group.
+  `group()` specifying callbacks to run before and after the group.
 
 ## [0.1.11] - 2024-02-20

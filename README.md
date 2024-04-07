@@ -69,7 +69,7 @@ await run({
   silent: false, // enable/disable stdout output (default: undefined)
   json: false, // enable/disable json output (default: false)
   colors: true, // enable/disable colors (default: true)
-  samples: 128, // number of benchmark samples (default: 128)
+  samples: 128, // minimum number of benchmark samples (default: 128)
   avg: true, // enable/disable time (avg) column (default: true)
   min_max: true, // enable/disable (min...max) column (default: true)
   percentiles: false, // enable/disable percentile columns (default: true)

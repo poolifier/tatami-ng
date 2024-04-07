@@ -59,35 +59,34 @@ export function header({
 
 export function benchmark(
   name,
-  benchmark,
+  stats,
   { size, avg = true, colors = true, min_max = true, percentiles = true },
 ) {
   return (
     name.padEnd(size, ' ') +
     (!avg
       ? ''
-      : `${clr.yellow(colors, duration(benchmark.avg))}/iter`.padStart(
+      : `${clr.yellow(colors, duration(stats.avg))}/iter`.padStart(
           14 + 10 * colors,
           ' ',
         )) +
     (!min_max
       ? ''
-      : `(${clr.cyan(colors, duration(benchmark.min))} … ${clr.magenta(
+      : `(${clr.cyan(colors, duration(stats.min))} … ${clr.magenta(
           colors,
-          duration(benchmark.max),
+          duration(stats.max),
         )})`.padStart(24 + 2 * 10 * colors, ' ')) +
     (!percentiles
       ? ''
       : ` ${clr
-          .gray(colors, duration(benchmark.p75))
+          .gray(colors, duration(stats.p75))
           .padStart(9 + 10 * colors, ' ')} ${clr
-          .gray(colors, duration(benchmark.p99))
+          .gray(colors, duration(stats.p99))
           .padStart(9 + 10 * colors, ' ')} ${clr
-          .gray(colors, duration(benchmark.p999))
+          .gray(colors, duration(stats.p999))
           .padStart(9 + 10 * colors, ' ')}`) +
-    (0 !== benchmark.min && benchmark.avg > 0.25
-      ? ''
-      : ` ${clr.red(colors, '!')}`)
+    // Statistical significance
+    (stats.samples > 100 ? '' : ` ${clr.red(colors, '!')}`)
   );
 }
 

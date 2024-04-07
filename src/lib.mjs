@@ -1,4 +1,4 @@
-import { defaultSamples, defaultTime, limits } from './constants.mjs';
+import { defaultSamples, defaultTime } from './constants.mjs';
 import { runtime } from './runtime.mjs';
 import { now } from './time.mjs';
 
@@ -154,14 +154,6 @@ export async function measure(fn, before, after, opts = {}) {
     fn.constructor,
   );
 
-  const t0 = now();
-  !opts.async ? fn() : await fn();
-  const benchmarkTime = now() - t0;
-
-  if (benchmarkTime > limits.benchmark) {
-    opts.warmup = false;
-  }
-
   const asyncBefore = AsyncFunction === before.constructor;
   const asyncAfter = AsyncFunction === after.constructor;
 
@@ -170,71 +162,42 @@ export async function measure(fn, before, after, opts = {}) {
     '$before',
     '$after',
     '$now',
-    '$quantile',
     `
-    let warmup = ${benchmarkTime};
-
     ${
       !opts.warmup
         ? ''
         : `warmup: {
-            const samples = new Array();
-
             ${asyncBefore ? 'await' : ''} $before();
             for (let i = 0; i < ${opts.samples - 1}; i++) {
               const t0 = $now();
               ${!opts.async ? '' : 'await'} $fn();
               const t1 = $now();
-
-              samples.push(t1 - t0);
             }
             ${asyncAfter ? 'await' : ''} $after();
-
-            samples.sort((a, b) => a - b);
-            warmup = $quantile(samples, .5);
           }`
     }
 
     const samples = new Array();
-    let micro = false;
     let time = 0;
 
-    if (warmup > ${limits.warmup}) {
-      ${asyncBefore ? 'await' : ''} $before();
-      while (time < ${opts.time} || ${opts.samples} > samples.length) {
-        const t0 = $now();
-        ${!opts.async ? '' : 'await'} $fn();
-        const t1 = $now();
+    ${asyncBefore ? 'await' : ''} $before();
+    while (time < ${opts.time} || ${opts.samples} > samples.length) {
+      const t0 = $now();
+      ${!opts.async ? '' : 'await'} $fn();
+      const t1 = $now();
 
-        time += samples[samples.push(t1 - t0) - 1];
-      }
-      ${asyncAfter ? 'await' : ''} $after();
-    } else {
-      micro = true;
-      ${asyncBefore ? 'await' : ''} $before();
-      while (time < ${opts.time} || ${opts.samples} > samples.length) {
-        const t0 = $now();
-        for (let i = 0; i < 256; i++) {
-          ${`${!opts.async ? '' : 'await'} $fn();\n`.repeat(8)}
-        }
-        const t1 = $now();
-
-        time += t1 - t0;
-        samples.push((t1 - t0) / 2048);
-      }
-      ${asyncAfter ? 'await' : ''} $after();
+      time += t1 - t0;
+      samples.push(t1 - t0);
     }
+    ${asyncAfter ? 'await' : ''} $after();
 
-    return {
-      samples,
-      micro,
-    };
+    return samples;
   `,
   );
 
-  let { samples, micro } = !opts.async
-    ? benchmark(fn, before, after, now, quantile)
-    : await benchmark(fn, before, after, now, quantile);
+  let samples = !opts.async
+    ? benchmark(fn, before, after, now)
+    : await benchmark(fn, before, after, now);
 
   const rawSamples = samples.slice();
   const rawAvg = rawSamples.reduce((a, b) => a + b, 0) / rawSamples.length;
@@ -254,7 +217,7 @@ export async function measure(fn, before, after, opts = {}) {
 
   return {
     stats: {
-      micro,
+      samples: samples.length,
       min: samples[0],
       max: samples[samples.length - 1],
       p50: quantile(samples, 0.5),
@@ -263,6 +226,7 @@ export async function measure(fn, before, after, opts = {}) {
       p999: quantile(samples, 0.999),
       avg,
       std,
+      rawSamples: rawSamples.length,
       rawAvg,
       rawStd,
     },
