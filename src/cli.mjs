@@ -101,7 +101,7 @@ export function bench(name, fn, opts = {}) {
     name,
     group: groupName,
     time: defaultTime,
-    warmup: true,
+    warmup: opts.warmup ?? true,
     samples: defaultSamples,
     baseline: false,
     async: AsyncFunction === fn.constructor,
@@ -126,7 +126,7 @@ export function baseline(name, fn, opts = {}) {
     name,
     group: groupName,
     time: defaultTime,
-    warmup: true,
+    warmup: opts.warmup ?? true,
     samples: defaultSamples,
     baseline: true,
     async: AsyncFunction === fn.constructor,
@@ -146,7 +146,7 @@ export async function run(opts = {}) {
     'boolean' !== typeof opts.json
   )
     throw new TypeError(
-      `expected number or boolean as 'json' options, got ${opts.json.constructor.name}`,
+      `expected number or boolean as 'json' option, got ${opts.json.constructor.name}`,
     );
   opts.silent ??= false;
   opts.colors ??= !noColor;
@@ -175,13 +175,15 @@ export async function run(opts = {}) {
     if (benchmark.group) continue;
     if (benchmark.baseline) _baseline = true;
 
+    benchmark.samples = opts.samples ?? benchmark.samples;
     _first = true;
     try {
       benchmark.stats = (
         await measure(benchmark.fn, benchmark.before, benchmark.after, {
           async: benchmark.async,
+          warmup: benchmark.warmup,
           time: benchmark.time,
-          samples: opts.samples ?? benchmark.samples,
+          samples: benchmark.samples,
         })
       ).stats;
       if (!opts.json)
@@ -212,16 +214,18 @@ export async function run(opts = {}) {
       ? await groupOpts.before()
       : groupOpts.before();
 
-    _first = true;
     for (const benchmark of benchmarks) {
       if (group !== benchmark.group) continue;
 
+      benchmark.samples = opts.samples ?? benchmark.samples;
+      _first = true;
       try {
         benchmark.stats = (
           await measure(benchmark.fn, benchmark.before, benchmark.after, {
             async: benchmark.async,
+            warmup: benchmark.warmup,
             time: benchmark.time,
-            samples: opts.samples ?? benchmark.samples,
+            samples: benchmark.samples,
           })
         ).stats;
         if (!opts.json)

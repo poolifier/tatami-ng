@@ -13,6 +13,7 @@ export function bench(
   name: string,
   fn: () => void | Promise<void>,
   options?: {
+    warmup?: boolean;
     before?: () => void | Promise<void>;
     after?: () => void | Promise<void>;
   },
@@ -22,6 +23,7 @@ export function baseline(
   name: string,
   fn: () => void | Promise<void>,
   options?: {
+    warmup?: boolean;
     before?: () => void | Promise<void>;
     after?: () => void | Promise<void>;
   },

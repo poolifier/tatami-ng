@@ -63,6 +63,10 @@ export const noColor = (() => {
 export const checkBenchmarkArgs = (fn, opts = {}) => {
   if (![Function, AsyncFunction].includes(fn.constructor))
     throw new TypeError(`expected function, got ${fn.constructor.name}`);
+  if (opts.warmup != null && 'boolean' !== typeof opts.warmup)
+    throw new TypeError(
+      `expected boolean, got ${opts.warmup.constructor.name}`,
+    );
   if (
     opts.before != null &&
     ![Function, AsyncFunction].includes(opts.before.constructor)
@@ -143,8 +147,8 @@ export async function measure(fn, before, after, opts = {}) {
   opts = mergeDeepRight(
     {
       async: AsyncFunction === fn.constructor,
-      time: defaultTime,
       warmup: true,
+      time: defaultTime,
       samples: defaultSamples,
     },
     opts,
