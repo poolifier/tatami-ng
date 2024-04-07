@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [0.2.0-1] - 2024-04-07
+
 ### Fixed
 
 - Fix `measure()` asynchronous implementation.
