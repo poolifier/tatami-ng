@@ -4,7 +4,7 @@
   "type": "module",
   "license": "MIT",
   "version": "0.1.11",
-  "packageManager": "bun@1.1.1",
+  "packageManager": "bun@1.1.2",
   "types": "./src/cli.d.ts",
   "main": "./src/cli.mjs",
   "browser": "./src/cli.mjs",
@@ -13,14 +13,14 @@
     "import": "./src/cli.mjs",
     "browser": "./src/cli.cjs"
   },
-  "description": "cross-runtime benchmarking lib",
-  "homepage": "https://github.com/evanwashere/tatami#readme",
+  "description": "cross javascript runtime benchmarking library",
+  "homepage": "https://github.com/poolifier/tatami#readme",
   "bugs": {
-    "url": "https://github.com/evanwashere/tatami/issues"
+    "url": "https://github.com/poolifier/tatami/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/evanwashere/tatami.git"
+    "url": "git+https://github.com/poolifier/tatami.git"
   },
   "files": ["src"],
   "scripts": {
@@ -33,16 +33,20 @@
     "check:ci": "biome ci .",
     "test:node": "node tests/test.js",
     "test:deno": "deno run -A tests/test.js && deno run -A tests/test.ts",
-    "test:bun": "bun run tests/test.js && bun run tests/test.ts"
+    "test:bun": "bun run tests/test.js && bun run tests/test.ts",
+    "release": "release-it"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.6.4",
     "@commitlint/cli": "^19.2.1",
     "@commitlint/config-conventional": "^19.1.0",
+    "@release-it/bumper": "^6.0.1",
+    "@release-it/keep-a-changelog": "^5.0.0",
     "@types/bun": "^1.0.12",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
-    "prettier": "^3.2.5"
+    "prettier": "^3.2.5",
+    "release-it": "^17.1.1"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
