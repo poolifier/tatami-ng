@@ -3,10 +3,10 @@ import * as clr from './clr.mjs';
 import { duration } from './fmt.mjs';
 
 export function size(names) {
-  let max = 9;
-  for (const name of names) if (max < name.length) max = name.length;
+  let size = 9;
+  for (const name of names) if (size < name.length) size = name.length;
 
-  return 2 + max;
+  return 2 + size;
 }
 
 export function br({

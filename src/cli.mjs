@@ -195,8 +195,9 @@ export async function run(opts = {}) {
       if (!opts.json)
         log(table.benchmark(benchmark.name, benchmark.stats, opts));
     } catch (err) {
-      benchmark.error = { stack: err.stack, message: err.message };
-      if (!opts.json) log(table.benchmarkError(benchmark.name, err, opts));
+      benchmark.error = err;
+      if (!opts.json)
+        log(table.benchmarkError(benchmark.name, benchmark.error, opts));
     }
   }
 
@@ -238,8 +239,9 @@ export async function run(opts = {}) {
         if (!opts.json)
           log(table.benchmark(benchmark.name, benchmark.stats, opts));
       } catch (err) {
-        benchmark.error = { stack: err.stack, message: err.message };
-        if (!opts.json) log(table.benchmarkError(benchmark.name, err, opts));
+        benchmark.error = err;
+        if (!opts.json)
+          log(table.benchmarkError(benchmark.name, benchmark.error, opts));
       }
     }
 
