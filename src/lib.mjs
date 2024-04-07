@@ -83,7 +83,7 @@ export const checkBenchmarkArgs = (fn, opts = {}) => {
     );
 };
 
-function mergeDeepRight(target, source) {
+export function mergeDeepRight(target, source) {
   const targetClone = structuredClone(target);
 
   for (const key in source) {

@@ -10,6 +10,7 @@ import {
   checkBenchmarkArgs,
   cpu,
   measure,
+  mergeDeepRight,
   noColor,
   version,
 } from './lib.mjs';
@@ -148,9 +149,15 @@ export async function run(opts = {}) {
     throw new TypeError(
       `expected number or boolean as 'json' option, got ${opts.json.constructor.name}`,
     );
-  opts.silent ??= false;
-  opts.colors ??= !noColor;
-  opts.size = table.size(benchmarks.map(benchmark => benchmark.name));
+  // biome-ignore lint/style/noParameterAssign: <explanation>
+  opts = mergeDeepRight(
+    {
+      silent: false,
+      colors: !noColor,
+      size: table.size(benchmarks.map(benchmark => benchmark.name)),
+    },
+    opts,
+  );
 
   const log = opts.silent === true ? emptyFunction : logger;
 
