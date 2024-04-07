@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [0.2.1] - 2024-04-07
+
 ### Changed
 
 - Add `time: number` to `run()` options specifying the minimum benchmark time in
