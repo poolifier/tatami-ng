@@ -1,4 +1,4 @@
-<h1 align=center>tatami</h1>
+<h1 align=center>tatami-ng</h1>
 <h2 align=center>Cross JavaScript runtime benchmarking library</h2>
 
 ## Install
@@ -6,13 +6,13 @@
 ### Node
 
 ```shell
-npm install tatami
+npm install tatami-ng
 ```
 
 ### Deno
 
 ```shell
-deno add npm:tatami
+deno add npm:tatami-ng
 ```
 
 Deno versions >= 1.40.x are supported.
@@ -23,7 +23,7 @@ time measurement.
 ### Bun
 
 ```shell
-bun add tatami
+bun add tatami-ng
 ```
 
 Bun versions >= 1.x are supported.
@@ -34,14 +34,14 @@ Bun versions >= 1.x are supported.
 <script type="module">
 import {
  ...
-} from 'https://cdn.jsdelivr.net/npm/tatami@0.2.0-1/src/cli.mjs'
+} from 'https://cdn.jsdelivr.net/npm/tatami-ng@0.2.0-1/src/cli.mjs'
 </script>
 ```
 
 ## Example
 
 ```js
-import { baseline, bench, clear, group, run } from 'tatami';
+import { baseline, bench, clear, group, run } from 'tatami-ng';
 
 bench('noop', () => {});
 bench('noop2', () => {});

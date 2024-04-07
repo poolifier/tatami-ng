@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/package",
-  "name": "tatami",
+  "name": "tatami-ng",
   "type": "module",
   "license": "MIT",
   "version": "0.2.0-1",
@@ -14,13 +14,13 @@
     "browser": "./src/cli.cjs"
   },
   "description": "cross javascript runtime benchmarking library",
-  "homepage": "https://github.com/poolifier/tatami#readme",
+  "homepage": "https://github.com/poolifier/tatami-ng#readme",
   "bugs": {
-    "url": "https://github.com/poolifier/tatami/issues"
+    "url": "https://github.com/poolifier/tatami-ng/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/poolifier/tatami.git"
+    "url": "git+https://github.com/poolifier/tatami-ng.git"
   },
   "files": ["src"],
   "scripts": {

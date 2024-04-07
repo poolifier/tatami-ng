@@ -11,4 +11,4 @@ export const defaultSamples = 128;
 
 export const emptyFunction = () => {};
 
-export const tatamiGroup = '$tatami_group';
+export const tatamiNgGroup = '$tatami-ng_group';
