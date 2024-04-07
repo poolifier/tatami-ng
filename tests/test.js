@@ -22,7 +22,7 @@ group('group', () => {
   bench('performance.now()', () => performance.now());
 });
 
-group({ summary: false }, () => {
+group({ summary: false, after: () => {} }, () => {
   bench('aa', () => {});
   bench('bb', () => {});
 });

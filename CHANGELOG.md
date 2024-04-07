@@ -21,11 +21,14 @@ and this project adheres to
   variables).
 - Add measurement outliers detection and removal.
 - Add standard deviation to JSON report.
-- Add `samples: { warmup: number; benchmark: number }` to `run()` options
-  specifying the number of samples to run during warmup and benchmark.
+- Add `samples: number` to `run()` options specifying the number of samples to
+  run.
 - Add
   `options: { before: () => void | Promise<void>; after: () => void | Promise<void> }`
   to `bench()` and `baseline()` specifying actions to run before and after the
   benchmark.
+- Add
+  `{ before: () => void | Promise<void>; after: () => void | Promise<void> }` to
+  `group()` specifying actions to run before and after the group.
 
 ## [0.1.11] - 2024-02-20

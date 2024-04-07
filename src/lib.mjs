@@ -79,7 +79,7 @@ export const checkBenchmarkArgs = (fn, opts = {}) => {
     );
 };
 
-export function mergeDeepRight(target, source) {
+function mergeDeepRight(target, source) {
   const targetClone = structuredClone(target);
 
   for (const key in source) {
@@ -98,6 +98,27 @@ export function mergeDeepRight(target, source) {
 
   return targetClone;
 }
+
+const quantile = (arr, q) => {
+  const base = (arr.length - 1) * q;
+  const baseIndex = Math.floor(base);
+  if (arr[baseIndex + 1] != null) {
+    return (
+      arr[baseIndex] +
+      (base - baseIndex) * (arr[baseIndex + 1] - arr[baseIndex])
+    );
+  }
+  return arr[baseIndex];
+};
+
+const iqrFilter = arr => {
+  const q1 = quantile(arr, 0.25);
+  const q3 = quantile(arr, 0.75);
+  const iqr = q3 - q1;
+  const l = q1 - 1.5 * iqr;
+  const h = q3 + 1.5 * iqr;
+  return arr.filter(v => v >= l && v <= h);
+};
 
 export async function measure(fn, before, after, opts = {}) {
   if (
@@ -137,7 +158,7 @@ export async function measure(fn, before, after, opts = {}) {
   !opts.async ? fn() : await fn();
   const benchmarkTime = now() - t0;
 
-  if (opts.samples.warmup === 0 || benchmarkTime > limits.benchmark) {
+  if (benchmarkTime > limits.benchmark) {
     opts.warmup = false;
   }
 
@@ -149,21 +170,9 @@ export async function measure(fn, before, after, opts = {}) {
     '$before',
     '$after',
     '$now',
+    '$quantile',
     `
-    let $w = ${benchmarkTime};
-
-    const quantile = (arr, q) => {
-      const base = (arr.length - 1) * q;
-      const baseIndex = Math.floor(base);
-      if (arr[baseIndex + 1] != null) {
-        return (
-          arr[baseIndex] +
-          (base - baseIndex) * (arr[baseIndex + 1] - arr[baseIndex])
-        );
-      } else {
-        return arr[baseIndex];
-      }
-    };
+    let warmup = ${benchmarkTime};
 
     ${
       !opts.warmup
@@ -172,7 +181,7 @@ export async function measure(fn, before, after, opts = {}) {
             const samples = new Array();
 
             ${asyncBefore ? 'await' : ''} $before();
-            for (let i = 0; i < ${opts.samples.warmup - 1}; i++) {
+            for (let i = 0; i < ${opts.samples - 1}; i++) {
               const t0 = $now();
               ${!opts.async ? '' : 'await'} $fn();
               const t1 = $now();
@@ -182,76 +191,83 @@ export async function measure(fn, before, after, opts = {}) {
             ${asyncAfter ? 'await' : ''} $after();
 
             samples.sort((a, b) => a - b);
-            $w = quantile(samples, .5);
+            warmup = $quantile(samples, .5);
           }`
     }
 
+    const samples = new Array();
     let micro = false;
-    let s = 0;
-    let samples = new Array();
+    let time = 0;
 
-    if ($w > ${limits.warmup}) {
+    if (warmup > ${limits.warmup}) {
       ${asyncBefore ? 'await' : ''} $before();
-      while (s < ${opts.time} || ${opts.samples.benchmark} > samples.length) {
+      while (time < ${opts.time} || ${opts.samples} > samples.length) {
         const t0 = $now();
         ${!opts.async ? '' : 'await'} $fn();
         const t1 = $now();
 
-        s += samples[samples.push(t1 - t0) - 1];
+        time += samples[samples.push(t1 - t0) - 1];
       }
       ${asyncAfter ? 'await' : ''} $after();
     } else {
       micro = true;
       ${asyncBefore ? 'await' : ''} $before();
-      while (s < ${opts.time} || ${opts.samples.benchmark} > samples.length) {
+      while (time < ${opts.time} || ${opts.samples} > samples.length) {
         const t0 = $now();
         for (let i = 0; i < 256; i++) {
           ${`${!opts.async ? '' : 'await'} $fn();\n`.repeat(8)}
         }
         const t1 = $now();
 
-        s += t1 - t0;
+        time += t1 - t0;
         samples.push((t1 - t0) / 2048);
       }
       ${asyncAfter ? 'await' : ''} $after();
     }
 
-    const rawSamples = samples.slice();
-    const rawAvg = rawSamples.reduce((a, b) => a + b, 0) / rawSamples.length;
-    const rawStd = Math.sqrt(rawSamples.reduce((a, b) => a + (b - rawAvg) ** 2, 0) / (rawSamples.length - 1));
-
-    samples.sort((a, b) => a - b);
-
-    const q1 = quantile(samples, .25);
-    const q3 = quantile(samples, .75);
-    const iqr = q3 - q1;
-    const l = q1 - 1.5 * iqr;
-    const h = q3 + 1.5 * iqr;
-    samples = samples.filter(v => v >= l && v <= h);
-
-    const avg = samples.reduce((a, b) => a + b, 0) / samples.length;
-    const std = Math.sqrt(samples.reduce((a, b) => a + (b - avg) ** 2, 0) / (samples.length - 1));
-
     return {
-      // samples,
-      // rawSamples,
+      samples,
       micro,
-      min: samples[0],
-      max: samples[samples.length - 1],
-      p50: quantile(samples, .5),
-      p75: quantile(samples, .75),
-      p99: quantile(samples, .99),
-      p999: quantile(samples, .999),
-      avg,
-      std,
-      rawAvg,
-      rawStd,
     };
   `,
   );
 
-  const stats = !opts.async
-    ? benchmark(fn, before, after, now)
-    : await benchmark(fn, before, after, now);
-  return { stats, async: opts.async, warmup: opts.warmup, generator };
+  let { samples, micro } = !opts.async
+    ? benchmark(fn, before, after, now, quantile)
+    : await benchmark(fn, before, after, now, quantile);
+
+  const rawSamples = samples.slice();
+  const rawAvg = rawSamples.reduce((a, b) => a + b, 0) / rawSamples.length;
+  const rawStd = Math.sqrt(
+    rawSamples.reduce((a, b) => a + (b - rawAvg) ** 2, 0) /
+      (rawSamples.length - 1),
+  );
+
+  samples.sort((a, b) => a - b);
+
+  samples = iqrFilter(samples);
+
+  const avg = samples.reduce((a, b) => a + b, 0) / samples.length;
+  const std = Math.sqrt(
+    samples.reduce((a, b) => a + (b - avg) ** 2, 0) / (samples.length - 1),
+  );
+
+  return {
+    stats: {
+      micro,
+      min: samples[0],
+      max: samples[samples.length - 1],
+      p50: quantile(samples, 0.5),
+      p75: quantile(samples, 0.75),
+      p99: quantile(samples, 0.99),
+      p999: quantile(samples, 0.999),
+      avg,
+      std,
+      rawAvg,
+      rawStd,
+    },
+    async: opts.async,
+    warmup: opts.warmup,
+    generator,
+  };
 }

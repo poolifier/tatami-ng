@@ -12,10 +12,7 @@ export const limits = {
 
 export const defaultTime = 600_000_000;
 
-export const defaultSamples = {
-  warmup: 128,
-  benchmark: 128,
-};
+export const defaultSamples = 128;
 
 export const emptyFunction = () => {};
 

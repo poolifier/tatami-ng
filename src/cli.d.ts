@@ -1,7 +1,12 @@
 export function group(cb: () => void): void;
 export function group(name: string, cb: () => void): void;
 export function group(
-  options: { name?: string; summary?: boolean },
+  options: {
+    name?: string;
+    summary?: boolean;
+    before?: () => void | Promise<void>;
+    after?: () => void | Promise<void>;
+  },
   cb: () => void,
 ): void;
 export function bench(
@@ -27,10 +32,7 @@ export function clear(): void;
 export function run(options?: {
   silent?: boolean;
   colors?: boolean;
-  samples?: {
-    warmup?: number;
-    benchmark?: number;
-  };
+  samples?: number;
   avg?: boolean;
   min_max?: boolean;
   percentiles?: boolean;
@@ -48,10 +50,7 @@ export interface Report {
 
   benchmarks: {
     name: string;
-    samples: {
-      warmup: number;
-      benchmark: number;
-    };
+    samples: number;
     time: number;
     before: () => void | Promise<void>;
     fn: () => void | Promise<void>;

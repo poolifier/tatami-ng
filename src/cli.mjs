@@ -10,7 +10,6 @@ import {
   checkBenchmarkArgs,
   cpu,
   measure,
-  mergeDeepRight,
   noColor,
   version,
 } from './lib.mjs';
@@ -40,12 +39,46 @@ export function group(name, cb) {
   }
   if (cb != null && ![Function, AsyncFunction].includes(cb.constructor))
     throw new TypeError(`expected function, got ${cb.constructor.name}`);
+  if (
+    Object.prototype.toString.call(name).slice(8, -1) === 'Object' &&
+    name.name != null &&
+    'string' !== typeof name.name
+  )
+    throw new TypeError(`expected string, got ${name.name.constructor.name}`);
+  if (
+    Object.prototype.toString.call(name).slice(8, -1) === 'Object' &&
+    name.summary != null &&
+    'boolean' !== typeof name.summary
+  )
+    throw new TypeError(
+      `expected boolean, got ${name.summary.constructor.name}`,
+    );
+  if (
+    Object.prototype.toString.call(name).slice(8, -1) === 'Object' &&
+    name.before != null &&
+    ![Function, AsyncFunction].includes(name.before.constructor)
+  )
+    throw new TypeError(
+      `expected function, got ${name.before.constructor.name}`,
+    );
+  if (
+    Object.prototype.toString.call(name).slice(8, -1) === 'Object' &&
+    name.after != null &&
+    ![Function, AsyncFunction].includes(name.after.constructor)
+  )
+    throw new TypeError(
+      `expected function, got ${name.after.constructor.name}`,
+    );
 
   groupName =
     ('string' === typeof name ? name.trim() : name.name?.trim()) ||
     `${mitataGroup}${++_gc}`;
   if (!groups.has(groupName))
-    groups.set(groupName, { summary: name.summary ?? true });
+    groups.set(groupName, {
+      summary: name.summary ?? true,
+      before: name.before ?? emptyFunction,
+      after: name.after ?? emptyFunction,
+    });
   cb();
   groupName = null;
 }
@@ -148,10 +181,7 @@ export async function run(opts = {}) {
         await measure(benchmark.fn, benchmark.before, benchmark.after, {
           async: benchmark.async,
           time: benchmark.time,
-          samples:
-            opts.samples != null
-              ? mergeDeepRight(benchmark.samples, opts.samples)
-              : benchmark.samples,
+          samples: opts.samples ?? benchmark.samples,
         })
       ).stats;
       if (!opts.json)
@@ -178,6 +208,10 @@ export async function run(opts = {}) {
         log(clr.gray(opts.colors, table.br(opts)));
     }
 
+    AsyncFunction === groupOpts.before.constructor
+      ? await groupOpts.before()
+      : groupOpts.before();
+
     _first = true;
     for (const benchmark of benchmarks) {
       if (group !== benchmark.group) continue;
@@ -187,10 +221,7 @@ export async function run(opts = {}) {
           await measure(benchmark.fn, benchmark.before, benchmark.after, {
             async: benchmark.async,
             time: benchmark.time,
-            samples:
-              opts.samples != null
-                ? mergeDeepRight(benchmark.samples, opts.samples)
-                : benchmark.samples,
+            samples: opts.samples ?? benchmark.samples,
           })
         ).stats;
         if (!opts.json)
@@ -200,6 +231,10 @@ export async function run(opts = {}) {
         if (!opts.json) log(table.benchmarkError(benchmark.name, err, opts));
       }
     }
+
+    AsyncFunction === groupOpts.after.constructor
+      ? await groupOpts.after()
+      : groupOpts.after();
 
     if (groupOpts.summary === true && !opts.json)
       log(
