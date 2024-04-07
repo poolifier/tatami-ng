@@ -19,7 +19,6 @@ import * as clr from './reporter/clr.mjs';
 import * as table from './reporter/table.mjs';
 import { runtime } from './runtime.mjs';
 
-let _gc = 0;
 let groupName = null;
 const groups = new Map();
 const benchmarks = [];
@@ -73,7 +72,7 @@ export function group(name, cb) {
 
   groupName =
     ('string' === typeof name ? name.trim() : name.name?.trim()) ||
-    `${tatamiNgGroup}${++_gc}`;
+    `${tatamiNgGroup}${groups.size + 1}`;
   if (!groups.has(groupName))
     groups.set(groupName, {
       summary: name.summary ?? true,
@@ -135,7 +134,6 @@ export function baseline(name, fn, opts = {}) {
 }
 
 export function clear() {
-  _gc = 0;
   groups.clear();
   benchmarks.length = 0;
 }
