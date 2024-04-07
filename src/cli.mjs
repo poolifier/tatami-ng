@@ -2,7 +2,7 @@ import {
   defaultSamples,
   defaultTime,
   emptyFunction,
-  mitataGroup,
+  tatamiGroup,
 } from './constants.mjs';
 import {
   os,
@@ -73,7 +73,7 @@ export function group(name, cb) {
 
   groupName =
     ('string' === typeof name ? name.trim() : name.name?.trim()) ||
-    `${mitataGroup}${++_gc}`;
+    `${tatamiGroup}${++_gc}`;
   if (!groups.has(groupName))
     groups.set(groupName, {
       summary: name.summary ?? true,
@@ -212,8 +212,8 @@ export async function run(opts = {}) {
   for (const [group, groupOpts] of groups) {
     if (!opts.json) {
       if (_first) log('');
-      if (!group.startsWith(mitataGroup)) log(`• ${group}`);
-      if (_first || !group.startsWith(mitataGroup))
+      if (!group.startsWith(tatamiGroup)) log(`• ${group}`);
+      if (_first || !group.startsWith(tatamiGroup))
         log(clr.gray(opts.colors, table.br(opts)));
     }
 

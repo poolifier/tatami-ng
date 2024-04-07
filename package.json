@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/package",
-  "name": "mitata",
+  "name": "tatami",
   "type": "module",
   "license": "MIT",
   "version": "0.1.11",
@@ -14,13 +14,13 @@
     "browser": "./src/cli.cjs"
   },
   "description": "cross-runtime benchmarking lib",
-  "homepage": "https://github.com/evanwashere/mitata#readme",
+  "homepage": "https://github.com/evanwashere/tatami#readme",
   "bugs": {
-    "url": "https://github.com/evanwashere/mitata/issues"
+    "url": "https://github.com/evanwashere/tatami/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/evanwashere/mitata.git"
+    "url": "git+https://github.com/evanwashere/tatami.git"
   },
   "files": ["src"],
   "scripts": {

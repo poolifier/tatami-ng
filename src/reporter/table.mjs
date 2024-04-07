@@ -1,4 +1,4 @@
-import { mitataGroup } from '../constants.mjs';
+import { tatamiGroup } from '../constants.mjs';
 import * as clr from './clr.mjs';
 import { duration } from './fmt.mjs';
 
@@ -118,7 +118,7 @@ export function summary(benchmarks, { colors = true }) {
 
   return `${
     clr.bold(colors, 'summary') +
-    (baseline.group == null || baseline.group.startsWith(mitataGroup)
+    (baseline.group == null || baseline.group.startsWith(tatamiGroup)
       ? ''
       : clr.gray(colors, ` for ${baseline.group}`))
   }\n  ${clr.bold(colors, clr.cyan(colors, baseline.name))}${benchmarks

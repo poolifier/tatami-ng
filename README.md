@@ -1,11 +1,5 @@
-<h1 align=center>mitata</h1>
-<div align=center>cross-runtime benchmarking lib</div>
-<br />
-
-<div align="center">
-  <img width=72% src="./assets/images/mitata.gif"></img>
-</div>
-
+<h1 align=center>tatami</h1>
+  <div align=center>Cross JavaScript runtime benchmarking library</div>
 <br />
 
 ## Install
@@ -13,13 +7,13 @@
 ### Node
 
 ```shell
-npm install mitata
+npm install tatami
 ```
 
 ### Deno
 
 ```shell
-deno add npm:mitata
+deno add npm:tatami
 ```
 
 Deno versions >= 1.40.x are supported.
@@ -30,7 +24,7 @@ time measurement.
 ### Bun
 
 ```shell
-bun add mitata
+bun add tatami
 ```
 
 Bun versions >= 1.x are supported.
@@ -41,14 +35,14 @@ Bun versions >= 1.x are supported.
 <script type="module">
 import {
  ...
-} from 'https://cdn.jsdelivr.net/npm/mitata@0.1.11/src/cli.mjs'
+} from 'https://cdn.jsdelivr.net/npm/tatami@0.1.11/src/cli.mjs'
 </script>
 ```
 
 ## Example
 
 ```js
-import { baseline, bench, clear, group, run } from 'mitata';
+import { baseline, bench, clear, group, run } from 'tatami';
 
 bench('noop', () => {});
 bench('noop2', () => {});
@@ -85,4 +79,5 @@ The JavaScript runtime environment used for development is Bun.
 
 ## License
 
-MIT © [Evan](https://github.com/evanwashere)
+MIT © [Evan](https://github.com/evanwashere),
+[Jerome Benoit](https://github.com/jerome-benoit)

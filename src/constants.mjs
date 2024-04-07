@@ -11,4 +11,4 @@ export const defaultSamples = 128;
 
 export const emptyFunction = () => {};
 
-export const mitataGroup = '$mitata_group';
+export const tatamiGroup = '$tatami_group';
