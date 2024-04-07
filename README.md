@@ -9,8 +9,8 @@
 [![Npm Weekly Downloads](https://badgen.net/npm/dw/tatami-ng?icon=npm)](https://www.npmjs.com/package/tatami-ng)
 [![CI Workflow](https://github.com/poolifier/tatami-ng/actions/workflows/ci.yml/badge.svg)](https://github.com/poolifier/tatami-ng/actions/workflows/ci.yml)
 [![PRs Welcome](https://badgen.net/static/PRs/welcome/green)](https://makeapullrequest.com)
-[![No Dependencies](<https://badgen.net/static/dependencies/no dependencies/green>)](https://badgen.net/static/dependencies/no
-dependencies/green)
+
+<!-- [![No Dependencies](<https://badgen.net/static/dependencies/no dependencies/green>)](<https://badgen.net/static/dependencies/no dependencies/green>) -->
 
 </div>
 
