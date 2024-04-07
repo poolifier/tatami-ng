@@ -36,6 +36,7 @@ export function run(options?: {
   colors?: boolean;
   samples?: number;
   avg?: boolean;
+  iter?: boolean;
   min_max?: boolean;
   percentiles?: boolean;
   json?: number | boolean;
@@ -74,6 +75,7 @@ export interface Report {
       p999: number;
       avg: number;
       std: number;
+      iter: number;
       rawSamples: number;
       rawAvg: number;
       rawStd: number;

@@ -31,5 +31,6 @@ and this project adheres to
 - Add
   `{ before: () => void | Promise<void>; after: () => void | Promise<void> }` to
   `group()` specifying callbacks to run before and after the group.
+- Add `iter/s` to report.
 
 ## [0.1.11] - 2024-02-20

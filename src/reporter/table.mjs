@@ -9,18 +9,20 @@ export function size(names) {
   return 2 + max;
 }
 
-export function br({ size, avg = true, min_max = true, percentiles = true }) {
+export function br({
+  size,
+  avg = true,
+  iter = true,
+  min_max = true,
+  percentiles = true,
+}) {
   return (
-    '-'.repeat(size + 14 * avg + 24 * min_max) +
+    '-'.repeat(size + 14 * avg + 14 * iter + 24 * min_max) +
     (!percentiles ? '' : ` ${'-'.repeat(9 + 10 + 10)}`)
   );
 }
 
-export function benchmarkError(
-  name,
-  error,
-  { size, avg = true, colors = true, min_max = true, percentiles = true },
-) {
+export function benchmarkError(name, error, { size, colors = true }) {
   return `${name.padEnd(size, ' ')}${clr.red(colors, 'error')}: ${
     error.message
   }${error.stack ? `\n${clr.gray(colors, error.stack)}` : ''}`;
@@ -41,12 +43,14 @@ export function units({ colors = true } = {}) {
 export function header({
   size,
   avg = true,
+  iter = true,
   min_max = true,
   percentiles = true,
 }) {
   return (
     'benchmark'.padEnd(size, ' ') +
     (!avg ? '' : 'time (avg)'.padStart(14, ' ')) +
+    (!iter ? '' : 'iter/s'.padStart(14, ' ')) +
     (!min_max ? '' : '(min … max)'.padStart(24, ' ')) +
     (!percentiles
       ? ''
@@ -60,13 +64,26 @@ export function header({
 export function benchmark(
   name,
   stats,
-  { size, avg = true, colors = true, min_max = true, percentiles = true },
+  {
+    size,
+    avg = true,
+    iter = true,
+    colors = true,
+    min_max = true,
+    percentiles = true,
+  },
 ) {
   return (
     name.padEnd(size, ' ') +
     (!avg
       ? ''
       : `${clr.yellow(colors, duration(stats.avg))}/iter`.padStart(
+          14 + 10 * colors,
+          ' ',
+        )) +
+    (!iter
+      ? ''
+      : `${clr.yellow(colors, stats.iter.toFixed(2))}`.padStart(
           14 + 10 * colors,
           ' ',
         )) +
@@ -90,7 +107,7 @@ export function benchmark(
   );
 }
 
-export function summary(benchmarks, { colors = true } = {}) {
+export function summary(benchmarks, { colors = true }) {
   // biome-ignore lint/style/noParameterAssign: <explanation>
   benchmarks = benchmarks.filter(benchmark => benchmark.error == null);
   benchmarks.sort(

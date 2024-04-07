@@ -211,7 +211,6 @@ export async function measure(fn, before, after, opts = {}) {
   );
 
   samples.sort((a, b) => a - b);
-
   samples = iqrFilter(samples);
 
   const avg = samples.reduce((a, b) => a + b, 0) / samples.length;
@@ -230,6 +229,7 @@ export async function measure(fn, before, after, opts = {}) {
       p999: quantile(samples, 0.999),
       avg,
       std,
+      iter: samples.length / (samples.reduce((a, b) => a + b, 0) / 1e9),
       rawSamples: rawSamples.length,
       rawAvg,
       rawStd,
