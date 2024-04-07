@@ -34,4 +34,6 @@ and this project adheres to
 - Add `iter/s` to report.
 - Add package publication GitHub workflow.
 
+## [0.2.0-2] - 2024-04-07
+
 ## [0.1.11] - 2024-02-20
