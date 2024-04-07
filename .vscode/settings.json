@@ -10,5 +10,12 @@
     "quickfix.biome": "explicit",
     "source.organizeImports.biome": "explicit"
   },
-  "cSpell.words": ["commitlint", "tatami-ng", "quantile", "runtimes"]
+  "cSpell.words": [
+    "Benoit",
+    "cheatsheet",
+    "commitlint",
+    "quantile",
+    "runtimes",
+    "tatami-ng"
+  ]
 }

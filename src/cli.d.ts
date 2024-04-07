@@ -41,10 +41,6 @@ export function run(options?: {
   percentiles?: boolean;
   json?: number | boolean;
   units?: boolean;
-  /**
-   * @deprecated does not do anything since 0.1.7
-   */
-  collect?: boolean;
 }): Promise<Report>;
 
 export interface Report {
