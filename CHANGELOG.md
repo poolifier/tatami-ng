@@ -31,8 +31,8 @@ and this project adheres to
   to `bench()` and `baseline()` specifying callbacks to run before and after the
   benchmark.
 - Add
-  `{ before: () => void | Promise<void>; after: () => void | Promise<void> }` to
-  `group()` specifying callbacks to run before and after the group.
+  `options: { before: () => void | Promise<void>; after: () => void | Promise<void> }`
+  to `group()` specifying callbacks to run before and after the group.
 - Add `iter/s` to report.
 - Add package publication GitHub workflow.
 
