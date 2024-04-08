@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Fixed
+
+- Align `iter/s` with `time (avg)` formatting.
+
 ## [0.2.2] - 2024-04-08
 
 ### Changed

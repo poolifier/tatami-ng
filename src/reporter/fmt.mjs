@@ -30,5 +30,7 @@ export function duration(time) {
 }
 
 export function iterPerSecond(iter) {
-  return `${Number(iter.toFixed(2)).toString()}`;
+  return `${Number(iter.toFixed(2))
+    .toLocaleString(locale)
+    .replaceAll(',', "'")}`;
 }
