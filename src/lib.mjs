@@ -180,8 +180,9 @@ export async function measure(fn, before, after, opts = {}) {
       ${!opts.async ? '' : 'await'} $fn();
       const t1 = $now();
 
-      time += t1 - t0;
-      samples.push(t1 - t0);
+      const diff = t1 - t0;
+      time += diff;
+      samples.push(diff);
     }
     ${asyncAfter ? 'await' : ''} $after();
 
