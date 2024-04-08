@@ -12,6 +12,10 @@ and this project adheres to
 
 - Align `iter/s` with `time (avg)` formatting.
 
+### Changed
+
+- Add median (p50) to console output.
+
 ## [0.2.2] - 2024-04-08
 
 ### Changed

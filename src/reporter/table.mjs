@@ -18,7 +18,7 @@ export function br({
 }) {
   return (
     '-'.repeat(size + 14 * avg + 14 * iter + 24 * min_max) +
-    (!percentiles ? '' : ` ${'-'.repeat(9 + 10 + 10)}`)
+    (!percentiles ? '' : ` ${'-'.repeat(9 + 10 + 10 + 10)}`)
   );
 }
 
@@ -54,10 +54,10 @@ export function header({
     (!min_max ? '' : '(min … max)'.padStart(24, ' ')) +
     (!percentiles
       ? ''
-      : ` ${'p75'.padStart(9, ' ')} ${'p99'.padStart(9, ' ')} ${'p999'.padStart(
+      : ` ${'p50'.padStart(9, ' ')} ${'p75'.padStart(9, ' ')} ${'p99'.padStart(
           9,
           ' ',
-        )}`)
+        )} ${'p999'.padStart(9, ' ')}`)
   );
 }
 
@@ -96,6 +96,8 @@ export function benchmark(
     (!percentiles
       ? ''
       : ` ${clr
+          .gray(colors, duration(stats.p50))
+          .padStart(9 + 10 * colors, ' ')} ${clr
           .gray(colors, duration(stats.p75))
           .padStart(9 + 10 * colors, ' ')} ${clr
           .gray(colors, duration(stats.p99))
