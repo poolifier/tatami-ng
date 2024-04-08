@@ -1,6 +1,6 @@
 import { tatamiNgGroup } from '../constants.mjs';
 import * as clr from './clr.mjs';
-import { duration } from './fmt.mjs';
+import { duration, iterPerSecond } from './fmt.mjs';
 
 export function size(names) {
   let size = 9;
@@ -83,7 +83,7 @@ export function benchmark(
         )) +
     (!iter
       ? ''
-      : `${clr.yellow(colors, stats.iter.toFixed(2))}`.padStart(
+      : `${clr.yellow(colors, iterPerSecond(stats.iter))}`.padStart(
           14 + 10 * colors,
           ' ',
         )) +

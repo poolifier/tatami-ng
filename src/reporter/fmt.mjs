@@ -28,3 +28,7 @@ export function duration(time) {
     notation: 'compact',
   })} h`;
 }
+
+export function iterPerSecond(iter) {
+  return `${Number(iter.toFixed(2)).toString()}`;
+}
