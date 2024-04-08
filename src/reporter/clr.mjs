@@ -31,12 +31,9 @@ function init(x, y) {
     if (!e || txt == null) return txt;
     // biome-ignore lint/style/noParameterAssign: <explanation>
     txt = txt.toString();
-    return (
-      open +
-      // biome-ignore lint/complexity/noExtraBooleanCast: <explanation>
-      (!!~txt.indexOf(close) ? txt.replace(rgx, close + open) : txt) +
-      close
-    );
+    return `${open}${
+      txt.includes(close) ? txt.replace(rgx, close + open) : txt
+    }${close}`;
   };
 }
 

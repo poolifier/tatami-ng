@@ -30,23 +30,9 @@ export const cpu = await (async () => {
   return await {
     unknown: () => 'unknown',
     browser: () => 'unknown',
-    node: async () => (await import('node:os')).cpus()[0].model,
-    deno: async () => {
-      try {
-        const os = await import('node:os');
-        if (os?.cpus?.()?.[0]?.model) return os.cpus()[0].model;
-      } catch {}
-
-      return 'unknown';
-    },
-    bun: async () => {
-      try {
-        const os = await import('node:os');
-        if (os?.cpus?.()?.[0]?.model) return os.cpus()[0].model;
-      } catch {}
-
-      return 'unknown';
-    },
+    node: async () => (await import('node:os'))?.cpus?.()?.[0]?.model,
+    deno: async () => (await import('node:os'))?.cpus?.()?.[0]?.model,
+    bun: async () => (await import('node:os'))?.cpus?.()?.[0]?.model,
   }[runtime]();
 })();
 
@@ -63,6 +49,8 @@ export const noColor = (() => {
 export const checkBenchmarkArgs = (fn, opts = {}) => {
   if (![Function, AsyncFunction].includes(fn.constructor))
     throw new TypeError(`expected function, got ${fn.constructor.name}`);
+  if (Object.prototype.toString.call(opts).slice(8, -1) !== 'Object')
+    throw new TypeError(`expected object, got ${opts.constructor.name}`);
   if (opts.warmup != null && 'boolean' !== typeof opts.warmup)
     throw new TypeError(
       `expected boolean, got ${opts.warmup.constructor.name}`,
@@ -142,6 +130,8 @@ export async function measure(fn, before, after, opts = {}) {
     throw new TypeError(`expected function, got ${before.constructor.name}`);
   if (![Function, AsyncFunction].includes(after.constructor))
     throw new TypeError(`expected function, got ${after.constructor.name}`);
+  if (Object.prototype.toString.call(opts).slice(8, -1) !== 'Object')
+    throw new TypeError(`expected object, got ${opts.constructor.name}`);
 
   // biome-ignore lint/style/noParameterAssign: <explanation>
   opts = mergeDeepRight(
@@ -213,7 +203,8 @@ export async function measure(fn, before, after, opts = {}) {
   samples.sort((a, b) => a - b);
   samples = iqrFilter(samples);
 
-  const avg = samples.reduce((a, b) => a + b, 0) / samples.length;
+  const time = samples.reduce((a, b) => a + b, 0);
+  const avg = time / samples.length;
   const std = Math.sqrt(
     samples.reduce((a, b) => a + (b - avg) ** 2, 0) / (samples.length - 1),
   );
@@ -229,7 +220,7 @@ export async function measure(fn, before, after, opts = {}) {
       p999: quantile(samples, 0.999),
       avg,
       std,
-      iter: samples.length / (samples.reduce((a, b) => a + b, 0) / 1e9),
+      iter: samples.length / (time / 1e9),
       rawSamples: rawSamples.length,
       rawAvg,
       rawStd,

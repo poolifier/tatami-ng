@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Changed
+
+- Optimize benchmark statistics computation.
+
 ## [0.2.1] - 2024-04-07
 
 ### Changed

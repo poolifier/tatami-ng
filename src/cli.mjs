@@ -39,36 +39,28 @@ export function group(name, cb) {
   }
   if (cb != null && ![Function, AsyncFunction].includes(cb.constructor))
     throw new TypeError(`expected function, got ${cb.constructor.name}`);
-  if (
-    Object.prototype.toString.call(name).slice(8, -1) === 'Object' &&
-    name.name != null &&
-    'string' !== typeof name.name
-  )
-    throw new TypeError(`expected string, got ${name.name.constructor.name}`);
-  if (
-    Object.prototype.toString.call(name).slice(8, -1) === 'Object' &&
-    name.summary != null &&
-    'boolean' !== typeof name.summary
-  )
-    throw new TypeError(
-      `expected boolean, got ${name.summary.constructor.name}`,
-    );
-  if (
-    Object.prototype.toString.call(name).slice(8, -1) === 'Object' &&
-    name.before != null &&
-    ![Function, AsyncFunction].includes(name.before.constructor)
-  )
-    throw new TypeError(
-      `expected function, got ${name.before.constructor.name}`,
-    );
-  if (
-    Object.prototype.toString.call(name).slice(8, -1) === 'Object' &&
-    name.after != null &&
-    ![Function, AsyncFunction].includes(name.after.constructor)
-  )
-    throw new TypeError(
-      `expected function, got ${name.after.constructor.name}`,
-    );
+  if (Object.prototype.toString.call(name).slice(8, -1) === 'Object') {
+    if (name.name != null && 'string' !== typeof name.name)
+      throw new TypeError(`expected string, got ${name.name.constructor.name}`);
+    if (name.summary != null && 'boolean' !== typeof name.summary)
+      throw new TypeError(
+        `expected boolean, got ${name.summary.constructor.name}`,
+      );
+    if (
+      name.before != null &&
+      ![Function, AsyncFunction].includes(name.before.constructor)
+    )
+      throw new TypeError(
+        `expected function, got ${name.before.constructor.name}`,
+      );
+    if (
+      name.after != null &&
+      ![Function, AsyncFunction].includes(name.after.constructor)
+    )
+      throw new TypeError(
+        `expected function, got ${name.after.constructor.name}`,
+      );
+  }
 
   groupName =
     ('string' === typeof name ? name.trim() : name.name?.trim()) ||
@@ -139,6 +131,16 @@ export function clear() {
 }
 
 export async function run(opts = {}) {
+  if (Object.prototype.toString.call(opts).slice(8, -1) !== 'Object')
+    throw new TypeError(`expected object, got ${opts.constructor.name}`);
+  if (opts.samples != null && 'number' !== typeof opts.samples)
+    throw new TypeError(
+      `expected number as 'samples' option, got ${opts.samples.constructor.name}`,
+    );
+  if (opts.time != null && 'number' !== typeof opts.time)
+    throw new TypeError(
+      `expected number as 'time' option, got ${opts.time.constructor.name}`,
+    );
   if (
     opts.json != null &&
     'number' !== typeof opts.json &&
