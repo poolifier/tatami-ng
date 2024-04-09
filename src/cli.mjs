@@ -41,7 +41,9 @@ export function group(name, cb) {
     throw new TypeError(`expected function, got ${cb.constructor.name}`);
   if (Object.prototype.toString.call(name).slice(8, -1) === 'Object') {
     if (name.name != null && 'string' !== typeof name.name)
-      throw new TypeError(`expected string, got ${name.name.constructor.name}`);
+      throw new TypeError(
+        `expected string as 'name' option, got ${name.name.constructor.name}`,
+      );
     if (name.summary != null && 'boolean' !== typeof name.summary)
       throw new TypeError(
         `expected boolean as 'summary' option, got ${name.summary.constructor.name}`,
