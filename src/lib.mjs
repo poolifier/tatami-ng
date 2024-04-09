@@ -53,21 +53,21 @@ export const checkBenchmarkArgs = (fn, opts = {}) => {
     throw new TypeError(`expected object, got ${opts.constructor.name}`);
   if (opts.warmup != null && 'boolean' !== typeof opts.warmup)
     throw new TypeError(
-      `expected boolean, got ${opts.warmup.constructor.name}`,
+      `expected boolean as 'warmup' option, got ${opts.warmup.constructor.name}`,
     );
   if (
     opts.before != null &&
     ![Function, AsyncFunction].includes(opts.before.constructor)
   )
     throw new TypeError(
-      `expected function, got ${opts.before.constructor.name}`,
+      `expected function as 'before' option, got ${opts.before.constructor.name}`,
     );
   if (
     opts.after != null &&
     ![Function, AsyncFunction].includes(opts.after.constructor)
   )
     throw new TypeError(
-      `expected function, got ${opts.after.constructor.name}`,
+      `expected function as 'after' option, got ${opts.after.constructor.name}`,
     );
 };
 

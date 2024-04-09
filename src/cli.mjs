@@ -44,21 +44,21 @@ export function group(name, cb) {
       throw new TypeError(`expected string, got ${name.name.constructor.name}`);
     if (name.summary != null && 'boolean' !== typeof name.summary)
       throw new TypeError(
-        `expected boolean, got ${name.summary.constructor.name}`,
+        `expected boolean as 'summary' option, got ${name.summary.constructor.name}`,
       );
     if (
       name.before != null &&
       ![Function, AsyncFunction].includes(name.before.constructor)
     )
       throw new TypeError(
-        `expected function, got ${name.before.constructor.name}`,
+        `expected function as 'before' option, got ${name.before.constructor.name}`,
       );
     if (
       name.after != null &&
       ![Function, AsyncFunction].includes(name.after.constructor)
     )
       throw new TypeError(
-        `expected function, got ${name.after.constructor.name}`,
+        `expected function as 'after' option, got ${name.after.constructor.name}`,
       );
   }
 
