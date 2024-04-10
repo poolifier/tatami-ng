@@ -140,15 +140,15 @@ export async function measure(fn, before, after, opts = {}) {
     ${
       !opts.warmup
         ? ''
-        : `warmup: {
-            ${asyncBefore ? 'await' : ''} $before();
-            for (let i = 0; i < ${opts.samples - 1}; i++) {
-              const t0 = $now();
-              ${!opts.async ? '' : 'await'} $fn();
-              const t1 = $now();
-            }
-            ${asyncAfter ? 'await' : ''} $after();
-          }`
+        : `
+          ${asyncBefore ? 'await' : ''} $before();
+          for (let i = 0; i < ${opts.samples - 1}; i++) {
+            const t0 = $now();
+            ${!opts.async ? '' : 'await'} $fn();
+            const t1 = $now();
+          }
+          ${asyncAfter ? 'await' : ''} $after();
+          `
     }
 
     const samples = new Array();
