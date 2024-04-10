@@ -36,7 +36,7 @@ export function iterPerSecond(iter) {
 }
 
 export function errorMargin(rmoe) {
-  return `± ${Number(rmoe.toFixed(2))
+  return `${Number(rmoe.toFixed(2))
     .toLocaleString(locale)
     .replaceAll(',', "'")} %`;
 }

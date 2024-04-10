@@ -99,7 +99,7 @@ export function benchmark(
         )})`.padStart(24 + 2 * 10 * colors, ' ')) +
     (!rmoe
       ? ''
-      : `${clr.yellow(colors, errorMargin(stats.rmoe))}`.padStart(
+      : `± ${clr.yellow(colors, errorMargin(stats.rmoe))}`.padStart(
           14 + 10 * colors,
           ' ',
         )) +
