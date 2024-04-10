@@ -114,8 +114,7 @@ export function benchmark(
           .padStart(9 + 10 * colors, ' ')} ${clr
           .gray(colors, duration(stats.p995))
           .padStart(9 + 10 * colors, ' ')}`) +
-    // Statistical significance for 95% confidence level and 5% error margin
-    (stats.samples > 385 ? '' : ` ${clr.red(colors, '!')}`)
+    (!stats.ss ? ` ${clr.red(colors, '!')}` : '')
   );
 }
 

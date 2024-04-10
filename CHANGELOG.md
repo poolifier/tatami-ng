@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix statistical significance threshold value and reporting in JSON.
+
 ### Changed
 
 - Add error margin to report.

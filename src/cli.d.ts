@@ -76,6 +76,7 @@ export interface Report {
       sd: number;
       rmoe: number;
       iter: number;
+      ss: boolean;
     };
   }[];
 }

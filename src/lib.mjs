@@ -1,4 +1,9 @@
-import { defaultSamples, defaultTime, tTable } from './constants.mjs';
+import {
+  defaultSamples,
+  defaultTime,
+  minimumSamples,
+  tTable,
+} from './constants.mjs';
 import { runtime } from './runtime.mjs';
 import { now } from './time.mjs';
 
@@ -218,5 +223,6 @@ const buildStats = samples => {
     sd,
     rmoe,
     iter: samples.length / (time / 1e9),
+    ss: samples.length > minimumSamples,
   };
 };

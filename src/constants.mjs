@@ -136,6 +136,9 @@ export const tTable = {
   infinity: 1.96,
 };
 
+// Minimum size for 95% confidence level and 5% error margin statistical significance
+export const minimumSamples = 385;
+
 export const defaultTime = 600_000_000;
 
 export const defaultSamples = 128;
