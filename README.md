@@ -47,7 +47,7 @@ Bun versions >= 1.x are supported.
 <script type="module">
 import {
  ...
-} from 'https://cdn.jsdelivr.net/npm/tatami-ng@0.2.3/src/cli.mjs'
+} from 'https://cdn.jsdelivr.net/npm/tatami-ng@0.3.0/src/cli.mjs'
 </script>
 ```
 

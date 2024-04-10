@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [0.3.0] - 2024-04-10
+
 ### Fixed
 
 - Fix statistical significance threshold value and reporting in JSON.
