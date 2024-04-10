@@ -13,8 +13,8 @@ export function br({
   size,
   avg = true,
   iter = true,
-  min_max = true,
   rmoe = true,
+  min_max = true,
   percentiles = true,
 }) {
   return (
@@ -45,8 +45,8 @@ export function header({
   size,
   avg = true,
   iter = true,
-  min_max = true,
   rmoe = true,
+  min_max = true,
   percentiles = true,
 }) {
   return (
@@ -72,8 +72,8 @@ export function benchmark(
     avg = true,
     iter = true,
     colors = true,
-    min_max = true,
     rmoe = true,
+    min_max = true,
     percentiles = true,
   },
 ) {
