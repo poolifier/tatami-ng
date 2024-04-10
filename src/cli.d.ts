@@ -72,10 +72,10 @@ export interface Report {
       p99: number;
       p995: number;
       avg: number;
+      iter: number;
       vr: number;
       sd: number;
       rmoe: number;
-      iter: number;
       ss: boolean;
     };
   }[];

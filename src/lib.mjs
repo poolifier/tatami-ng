@@ -219,10 +219,10 @@ const buildStats = samples => {
     p99: quantile(samples, 0.99),
     p995: quantile(samples, 0.995),
     avg,
+    iter: samples.length / (time / 1e9),
     vr,
     sd,
     rmoe,
-    iter: samples.length / (time / 1e9),
     ss: samples.length > minimumSamples,
   };
 };
