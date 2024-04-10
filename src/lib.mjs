@@ -1,4 +1,4 @@
-import { defaultSamples, defaultTime } from './constants.mjs';
+import { defaultSamples, defaultTime, tTable } from './constants.mjs';
 import { runtime } from './runtime.mjs';
 import { now } from './time.mjs';
 
@@ -91,27 +91,6 @@ export function mergeDeepRight(target, source) {
   return targetClone;
 }
 
-const quantile = (arr, q) => {
-  const base = (arr.length - 1) * q;
-  const baseIndex = Math.floor(base);
-  if (arr[baseIndex + 1] != null) {
-    return (
-      arr[baseIndex] +
-      (base - baseIndex) * (arr[baseIndex + 1] - arr[baseIndex])
-    );
-  }
-  return arr[baseIndex];
-};
-
-const iqrFilter = arr => {
-  const q1 = quantile(arr, 0.25);
-  const q3 = quantile(arr, 0.75);
-  const iqr = q3 - q1;
-  const l = q1 - 1.5 * iqr;
-  const h = q3 + 1.5 * iqr;
-  return arr.filter(v => v >= l && v <= h);
-};
-
 export async function measure(fn, before, after, opts = {}) {
   if (
     ![
@@ -142,10 +121,6 @@ export async function measure(fn, before, after, opts = {}) {
       samples: defaultSamples,
     },
     opts,
-  );
-
-  const generator = [GeneratorFunction, AsyncGeneratorFunction].includes(
-    fn.constructor,
   );
 
   const asyncBefore = AsyncFunction === before.constructor;
@@ -190,44 +165,58 @@ export async function measure(fn, before, after, opts = {}) {
   `,
   );
 
-  let samples = !opts.async
+  const samples = !opts.async
     ? benchmark(fn, before, after, now)
     : await benchmark(fn, before, after, now);
 
-  const rawSamples = samples.slice();
-  const rawAvg = rawSamples.reduce((a, b) => a + b, 0) / rawSamples.length;
-  const rawStd = Math.sqrt(
-    rawSamples.reduce((a, b) => a + (b - rawAvg) ** 2, 0) /
-      (rawSamples.length - 1),
-  );
+  return {
+    stats: buildStats(samples),
+    async: opts.async,
+    warmup: opts.warmup,
+    generator: [GeneratorFunction, AsyncGeneratorFunction].includes(
+      fn.constructor,
+    ),
+  };
+}
 
+const quantile = (arr, q) => {
+  const base = (arr.length - 1) * q;
+  const baseIndex = Math.floor(base);
+  if (arr[baseIndex + 1] != null) {
+    return (
+      arr[baseIndex] +
+      (base - baseIndex) * (arr[baseIndex + 1] - arr[baseIndex])
+    );
+  }
+  return arr[baseIndex];
+};
+
+const buildStats = samples => {
   samples.sort((a, b) => a - b);
-  samples = iqrFilter(samples);
 
   const time = samples.reduce((a, b) => a + b, 0);
   const avg = time / samples.length;
-  const std = Math.sqrt(
-    samples.reduce((a, b) => a + (b - avg) ** 2, 0) / (samples.length - 1),
-  );
+  const vr =
+    samples.reduce((a, b) => a + (b - avg) ** 2, 0) / (samples.length - 1);
+  const sd = Math.sqrt(vr);
+  const sem = sd / Math.sqrt(samples.length);
+  const critical =
+    tTable[String(Math.round(samples.length - 1) || 1)] || tTable.infinity;
+  const moe = sem * critical;
+  const rmoe = (moe / avg) * 100;
 
   return {
-    stats: {
-      samples: samples.length,
-      min: samples[0],
-      max: samples[samples.length - 1],
-      p50: quantile(samples, 0.5),
-      p75: quantile(samples, 0.75),
-      p99: quantile(samples, 0.99),
-      p999: quantile(samples, 0.999),
-      avg,
-      std,
-      iter: samples.length / (time / 1e9),
-      rawSamples: rawSamples.length,
-      rawAvg,
-      rawStd,
-    },
-    async: opts.async,
-    warmup: opts.warmup,
-    generator,
+    samples: samples.length,
+    min: samples[0],
+    max: samples[samples.length - 1],
+    p50: quantile(samples, 0.5),
+    p75: quantile(samples, 0.75),
+    p99: quantile(samples, 0.99),
+    p995: quantile(samples, 0.995),
+    avg,
+    vr,
+    sd,
+    rmoe,
+    iter: samples.length / (time / 1e9),
   };
-}
+};

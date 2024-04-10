@@ -34,3 +34,9 @@ export function iterPerSecond(iter) {
     .toLocaleString(locale)
     .replaceAll(',', "'")}`;
 }
+
+export function errorMargin(rmoe) {
+  return `± ${Number(rmoe.toFixed(2))
+    .toLocaleString(locale)
+    .replaceAll(',', "'")} %`;
+}

@@ -8,6 +8,15 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Changed
+
+- Add error margin to report.
+- Remove IQR filtering since error margin permits to evaluate the results
+  statistical significance.
+- BREAKING CHANGE: rename in JSON report `std` to `sd` for the standard
+  deviation.
+- BREAKING CHANGE: switch percentile p999 to p995 in report.
+
 ## [0.2.3] - 2024-04-08
 
 ### Fixed

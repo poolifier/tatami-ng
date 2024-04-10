@@ -80,6 +80,7 @@ await run({
   iter: true, // enable/disable iter/s column (default: true)
   avg: true, // enable/disable time (avg) column (default: true)
   min_max: true, // enable/disable (min...max) column (default: true)
+  rmoe: true, // enable/disable error margin column (default: true)
   percentiles: false, // enable/disable percentile columns (default: true)
 });
 

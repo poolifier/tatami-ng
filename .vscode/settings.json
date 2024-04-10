@@ -19,6 +19,7 @@
     "hrtime",
     "poolifier",
     "quantile",
+    "rmoe",
     "runtimes",
     "tatami-ng"
   ]

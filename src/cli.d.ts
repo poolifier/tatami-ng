@@ -39,6 +39,7 @@ export function run(options?: {
   avg?: boolean;
   iter?: boolean;
   min_max?: boolean;
+  rmoe?: boolean;
   percentiles?: boolean;
   json?: number | boolean;
   units?: boolean;
@@ -69,13 +70,12 @@ export interface Report {
       p50: number;
       p75: number;
       p99: number;
-      p999: number;
+      p995: number;
       avg: number;
-      std: number;
+      vr: number;
+      sd: number;
+      rmoe: number;
       iter: number;
-      rawSamples: number;
-      rawAvg: number;
-      rawStd: number;
     };
   }[];
 }

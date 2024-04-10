@@ -1,6 +1,6 @@
 import { tatamiNgGroup } from '../constants.mjs';
 import * as clr from './clr.mjs';
-import { duration, iterPerSecond } from './fmt.mjs';
+import { duration, errorMargin, iterPerSecond } from './fmt.mjs';
 
 export function size(names) {
   let size = 9;
@@ -14,10 +14,11 @@ export function br({
   avg = true,
   iter = true,
   min_max = true,
+  rmoe = true,
   percentiles = true,
 }) {
   return (
-    '-'.repeat(size + 14 * avg + 14 * iter + 24 * min_max) +
+    '-'.repeat(size + 14 * avg + 14 * iter + 24 * min_max + 14 * rmoe) +
     (!percentiles ? '' : ` ${'-'.repeat(9 + 10 + 10 + 10)}`)
   );
 }
@@ -45,6 +46,7 @@ export function header({
   avg = true,
   iter = true,
   min_max = true,
+  rmoe = true,
   percentiles = true,
 }) {
   return (
@@ -52,12 +54,13 @@ export function header({
     (!avg ? '' : 'time (avg)'.padStart(14, ' ')) +
     (!iter ? '' : 'iter/s'.padStart(14, ' ')) +
     (!min_max ? '' : '(min … max)'.padStart(24, ' ')) +
+    (!rmoe ? '' : 'error margin'.padStart(14, ' ')) +
     (!percentiles
       ? ''
       : ` ${'p50'.padStart(9, ' ')} ${'p75'.padStart(9, ' ')} ${'p99'.padStart(
           9,
           ' ',
-        )} ${'p999'.padStart(9, ' ')}`)
+        )} ${'p995'.padStart(9, ' ')}`)
   );
 }
 
@@ -70,6 +73,7 @@ export function benchmark(
     iter = true,
     colors = true,
     min_max = true,
+    rmoe = true,
     percentiles = true,
   },
 ) {
@@ -93,6 +97,12 @@ export function benchmark(
           colors,
           duration(stats.max),
         )})`.padStart(24 + 2 * 10 * colors, ' ')) +
+    (!rmoe
+      ? ''
+      : `${clr.yellow(colors, errorMargin(stats.rmoe))}`.padStart(
+          14 + 10 * colors,
+          ' ',
+        )) +
     (!percentiles
       ? ''
       : ` ${clr
@@ -102,10 +112,10 @@ export function benchmark(
           .padStart(9 + 10 * colors, ' ')} ${clr
           .gray(colors, duration(stats.p99))
           .padStart(9 + 10 * colors, ' ')} ${clr
-          .gray(colors, duration(stats.p999))
+          .gray(colors, duration(stats.p995))
           .padStart(9 + 10 * colors, ' ')}`) +
-    // Statistical significance
-    (stats.samples > 100 ? '' : ` ${clr.red(colors, '!')}`)
+    // Statistical significance for 95% confidence level and 5% error margin
+    (stats.samples > 385 ? '' : ` ${clr.red(colors, '!')}`)
   );
 }
 
