@@ -1,6 +1,7 @@
 import {
   defaultSamples,
   defaultTime,
+  emptyFunction,
   minimumSamples,
   tTable,
 } from './constants.mjs';
@@ -96,7 +97,12 @@ export function mergeDeepRight(target, source) {
   return targetClone;
 }
 
-export async function measure(fn, before, after, opts = {}) {
+export async function measure(
+  fn,
+  before = emptyFunction,
+  after = emptyFunction,
+  opts = {},
+) {
   if (
     ![
       Function,
