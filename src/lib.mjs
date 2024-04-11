@@ -229,6 +229,6 @@ const buildStats = samples => {
     vr,
     sd,
     rmoe,
-    ss: samples.length > minimumSamples,
+    ss: samples.length >= minimumSamples,
   };
 };
