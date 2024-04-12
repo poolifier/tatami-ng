@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [0.3.1] - 2024-04-12
+
 ### Fixed
 
 - Ensure default minimum samples guarantee statistical significance.
