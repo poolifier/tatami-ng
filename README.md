@@ -14,6 +14,14 @@
 
 </div>
 
+- API backward compatible with [mitata](https://github.com/evanwashere/mitata) ✔
+- Benchmark latency and throughput ✔
+- Support for sync and async benchmark ✔
+- Advanced benchmark statistics report: significance, error margin, variance,
+  standard deviation, p-quantiles, ... ✔
+- Support node, bun, Deno and browser JS runtime ✔
+- Support for ESM and TypeScript ✔
+
 ## Install
 
 ### Node
@@ -89,7 +97,8 @@ clear();
 
 ## Development
 
-The JavaScript runtime environment used for development is Bun.
+The JavaScript runtime environment used for development is
+[Bun](https://bun.sh/).
 
 ## License
 

@@ -212,7 +212,7 @@ const buildStats = samples => {
   const sd = Math.sqrt(vr);
   const sem = sd / Math.sqrt(samples.length);
   const critical =
-    tTable[String(Math.round(samples.length - 1) || 1)] || tTable.infinity;
+    tTable[(Math.round(samples.length - 1) || 1).toString()] || tTable.infinity;
   const moe = sem * critical;
   const rmoe = (moe / avg) * 100;
 

@@ -17,8 +17,10 @@
     "commitlint",
     "deno",
     "hrtime",
+    "mitata",
     "poolifier",
     "quantile",
+    "quantiles",
     "rmoe",
     "runtimes",
     "tatami-ng"
