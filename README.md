@@ -98,7 +98,7 @@ clear();
 ## Development
 
 The JavaScript runtime environment used for development is
-[Bun](https://bun.sh/).
+[bun](https://bun.sh/).
 
 ## License
 
