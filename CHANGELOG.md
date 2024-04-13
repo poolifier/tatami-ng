@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [0.3.2] - 2024-04-13
+
 ### Changed
 
 - Add accurate two-tailed Student t-distribution table for 95% confidence level.
