@@ -83,7 +83,7 @@ await run({
   silent: false, // enable/disable stdout output (default: undefined)
   json: false, // enable/disable json output (default: false)
   colors: true, // enable/disable colors (default: true)
-  samples: 385, // minimum number of benchmark samples (default: 385)
+  samples: 128, // minimum number of benchmark samples (default: 128)
   time: 1_000_000_000, // minimum benchmark time in nanoseconds (default: 1_000_000_000)
   avg: true, // enable/disable time (avg) column (default: true)
   iter: true, // enable/disable iter/s column (default: true)

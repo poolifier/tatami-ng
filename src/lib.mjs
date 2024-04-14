@@ -203,6 +203,12 @@ const quantile = (arr, q) => {
 };
 
 const buildStats = samples => {
+  if (!Array.isArray(samples)) {
+    throw new TypeError(`expected array, got ${samples.constructor.name}`);
+  }
+  if (Array.isArray(samples) && samples.length === 0) {
+    throw new Error('expected non-empty array, got empty array');
+  }
   samples.sort((a, b) => a - b);
 
   const time = samples.reduce((a, b) => a + b, 0);
@@ -212,7 +218,7 @@ const buildStats = samples => {
   const sd = Math.sqrt(vr);
   const sem = sd / Math.sqrt(samples.length);
   const critical =
-    tTable[(Math.round(samples.length - 1) || 1).toString()] || tTable.infinity;
+    tTable[(samples.length - 1 || 1).toString()] || tTable.infinity;
   const moe = sem * critical;
   const rmoe = (moe / avg) * 100;
 

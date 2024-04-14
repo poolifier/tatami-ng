@@ -2,12 +2,12 @@ import { runtime } from './runtime.mjs';
 
 const time = (() => {
   const diff = (a, b) => a - b;
-  const ceil = Math.ceil;
+  const round = Math.round;
   return {
     unknown: () => {
       return {
         diff,
-        now: () => ceil(1e6 * performance.now()),
+        now: () => round(1e6 * performance.now()),
       };
     },
     browser: () => {
@@ -16,13 +16,13 @@ const time = (() => {
 
         return {
           diff,
-          now: () => ceil(1e6 * $.agent.monotonicNow()),
+          now: () => round(1e6 * $.agent.monotonicNow()),
         };
       } catch {}
 
       return {
         diff,
-        now: () => ceil(1e6 * performance.now()),
+        now: () => round(1e6 * performance.now()),
       };
     },
     node: () => {
@@ -34,7 +34,7 @@ const time = (() => {
     deno: () => {
       return {
         diff,
-        now: () => ceil(1e6 * performance.now()),
+        now: () => round(1e6 * performance.now()),
       };
     },
     bun: () => {

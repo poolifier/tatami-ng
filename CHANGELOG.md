@@ -11,6 +11,8 @@ and this project adheres to
 ### Fixed
 
 - Fix rate computation and formatting in summary.
+- Less biased timestamp rounding.
+- Refine minimum number of samples for Student t-distribution.
 
 ## [0.3.2] - 2024-04-13
 
