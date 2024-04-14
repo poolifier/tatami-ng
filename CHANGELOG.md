@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [0.3.3] - 2024-04-14
+
 ### Fixed
 
 - Fix rate computation and formatting in summary.
