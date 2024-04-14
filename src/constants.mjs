@@ -1044,6 +1044,6 @@ export const tTable = {
 // But for 95% confidence level and 80% power on samples with unknown previous standard deviation, 128 samples are recommended.
 export const minimumSamples = 128;
 
-export const defaultTime = 1_000_000_000;
+export const defaultTime = 1_000_000_000; // ns
 
 export const defaultSamples = minimumSamples;
