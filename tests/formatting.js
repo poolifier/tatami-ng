@@ -1,6 +1,6 @@
 import { bench, group, run } from '../src/cli.mjs';
 
-group({ summary: false }, () => {
+group({ summary: true }, () => {
   bench('noop', () => {});
   bench('new Array(2 ** 0)', () => new Array(2 ** 0));
   bench('new Array(2 ** 1)', () => new Array(2 ** 1));

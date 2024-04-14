@@ -1,6 +1,6 @@
 import { tatamiNgGroup } from '../constants.mjs';
 import * as clr from './clr.mjs';
-import { duration, errorMargin, iterPerSecond } from './fmt.mjs';
+import { duration, errorMargin, iterPerSecond, speedRate } from './fmt.mjs';
 
 export function size(names) {
   let size = 9;
@@ -134,16 +134,11 @@ export function summary(benchmarks, { colors = true }) {
   }`}\n  ${clr.bold(colors, clr.cyan(colors, baseline.name))}${benchmarks
     .filter(benchmark => benchmark !== baseline)
     .map(benchmark => {
-      const diff = Number(
-        ((1 / baseline.stats.avg) * benchmark.stats.avg).toFixed(2),
-      );
-      const invDiff = Number(
-        ((1 / benchmark.stats.avg) * baseline.stats.avg).toFixed(2),
-      );
-      return `\n   ${clr[1 > diff ? 'red' : 'green'](
+      const rate = (1 / baseline.stats.avg) * benchmark.stats.avg;
+      return `\n   ${clr[1 > rate ? 'red' : 'green'](
         colors,
-        1 <= diff ? diff : invDiff,
-      )}x ${1 > diff ? 'slower' : 'faster'} than ${clr.bold(
+        1 > rate ? speedRate(1 / rate) : speedRate(rate),
+      )}x ${1 > rate ? 'slower' : 'faster'} than ${clr.bold(
         colors,
         clr.cyan(colors, benchmark.name),
       )}`;
