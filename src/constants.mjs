@@ -1040,7 +1040,7 @@ export const tTable = {
   infinity: 1.96,
 };
 
-// Student two-tailed t-distribution as no minimum samples size.
+// Student two-tailed t-distribution has no minimum samples size.
 // But for 95% confidence level and 80% power on samples with unknown previous standard deviation, 128 samples are recommended.
 export const minimumSamples = 128;
 
