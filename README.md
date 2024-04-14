@@ -61,7 +61,7 @@ bun add tatami-ng
 #### JSR
 
 ```shell
-bunx jsr add @poolifier/poolifier-web-worker
+bunx jsr add @poolifier/tatami-ng
 ```
 
 Bun versions >= 1.x are supported.
