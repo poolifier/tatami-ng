@@ -19,7 +19,7 @@
 - Support for sync and async benchmark ✔
 - Advanced benchmark statistics report: significance, error margin, variance,
   standard deviation, p-quantiles, ... ✔
-- Support node, bun, Deno and browser JS runtime ✔
+- Zero cost abstraction support for multiple JS runtime ✔
 - Support for ESM and TypeScript ✔
 
 ## Install
