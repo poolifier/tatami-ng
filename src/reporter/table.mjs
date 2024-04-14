@@ -17,10 +17,9 @@ export function br({
   min_max = true,
   percentiles = true,
 }) {
-  return (
-    '-'.repeat(size + 14 * avg + 14 * iter + 14 * rmoe + 24 * min_max) +
-    (!percentiles ? '' : ` ${'-'.repeat(9 + 10 + 10 + 10)}`)
-  );
+  return `${'-'.repeat(
+    size + 14 * avg + 14 * iter + 14 * rmoe + 24 * min_max,
+  )}${!percentiles ? '' : ` ${'-'.repeat(9 + 10 + 10 + 10)}`}`;
 }
 
 export function benchmarkError(name, error, { size, colors = true }) {
@@ -49,19 +48,18 @@ export function header({
   min_max = true,
   percentiles = true,
 }) {
-  return (
-    'benchmark'.padEnd(size, ' ') +
-    (!avg ? '' : 'time (avg)'.padStart(14, ' ')) +
-    (!iter ? '' : 'iter/s'.padStart(14, ' ')) +
-    (!rmoe ? '' : 'error margin'.padStart(14, ' ')) +
-    (!min_max ? '' : '(min … max)'.padStart(24, ' ')) +
-    (!percentiles
+  return `${'benchmark'.padEnd(size, ' ')}${
+    !avg ? '' : 'time (avg)'.padStart(14, ' ')
+  }${!iter ? '' : 'iter/s'.padStart(14, ' ')}${
+    !rmoe ? '' : 'error margin'.padStart(14, ' ')
+  }${!min_max ? '' : '(min … max)'.padStart(24, ' ')}${
+    !percentiles
       ? ''
       : ` ${'p50'.padStart(9, ' ')} ${'p75'.padStart(9, ' ')} ${'p99'.padStart(
           9,
           ' ',
-        )} ${'p995'.padStart(9, ' ')}`)
-  );
+        )} ${'p995'.padStart(9, ' ')}`
+  }`;
 }
 
 export function benchmark(
@@ -77,33 +75,36 @@ export function benchmark(
     percentiles = true,
   },
 ) {
-  return (
-    name.padEnd(size, ' ') +
-    (!avg
+  return `${name.padEnd(size, ' ')}${
+    !avg
       ? ''
       : `${clr.yellow(colors, duration(stats.avg))}/iter`.padStart(
           14 + 10 * colors,
           ' ',
-        )) +
-    (!iter
+        )
+  }${
+    !iter
       ? ''
       : `${clr.yellow(colors, iterPerSecond(stats.iter))}`.padStart(
           14 + 10 * colors,
           ' ',
-        )) +
-    (!rmoe
+        )
+  }${
+    !rmoe
       ? ''
       : `± ${clr.yellow(colors, errorMargin(stats.rmoe))}`.padStart(
           14 + 10 * colors,
           ' ',
-        )) +
-    (!min_max
+        )
+  }${
+    !min_max
       ? ''
       : `(${clr.cyan(colors, duration(stats.min))} … ${clr.magenta(
           colors,
           duration(stats.max),
-        )})`.padStart(24 + 2 * 10 * colors, ' ')) +
-    (!percentiles
+        )})`.padStart(24 + 2 * 10 * colors, ' ')
+  }${
+    !percentiles
       ? ''
       : ` ${clr
           .gray(colors, duration(stats.p50))
@@ -113,9 +114,8 @@ export function benchmark(
           .gray(colors, duration(stats.p99))
           .padStart(9 + 10 * colors, ' ')} ${clr
           .gray(colors, duration(stats.p995))
-          .padStart(9 + 10 * colors, ' ')}`) +
-    (!stats.ss ? ` ${clr.red(colors, '!')}` : '')
-  );
+          .padStart(9 + 10 * colors, ' ')}`
+  }${!stats.ss ? ` ${clr.red(colors, '!')}` : ''}`;
 }
 
 export function summary(benchmarks, { colors = true }) {
@@ -127,12 +127,11 @@ export function summary(benchmarks, { colors = true }) {
   const baseline =
     benchmarks.find(benchmark => benchmark.baseline) ?? benchmarks[0];
 
-  return `${
-    clr.bold(colors, 'summary') +
-    (baseline.group == null || baseline.group.startsWith(tatamiNgGroup)
+  return `${`${clr.bold(colors, 'summary')}${
+    baseline.group == null || baseline.group.startsWith(tatamiNgGroup)
       ? ''
-      : clr.gray(colors, ` for ${baseline.group}`))
-  }\n  ${clr.bold(colors, clr.cyan(colors, baseline.name))}${benchmarks
+      : clr.gray(colors, ` for ${baseline.group}`)
+  }`}\n  ${clr.bold(colors, clr.cyan(colors, baseline.name))}${benchmarks
     .filter(benchmark => benchmark !== baseline)
     .map(benchmark => {
       const diff = Number(
