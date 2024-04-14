@@ -209,6 +209,7 @@ const buildStats = samples => {
   if (Array.isArray(samples) && samples.length === 0) {
     throw new Error('expected non-empty array, got empty array');
   }
+
   samples.sort((a, b) => a - b);
 
   const time = samples.reduce((a, b) => a + b, 0);
