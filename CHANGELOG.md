@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Added
+
+- Add releasing on JSR.
+
 ## [0.3.3] - 2024-04-14
 
 ### Fixed

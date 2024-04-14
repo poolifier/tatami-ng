@@ -7,6 +7,7 @@
 [![GitHub commit activity (master)](https://img.shields.io/github/commit-activity/m/poolifier/tatami-ng/master?color=brightgreen&logo=github)](https://github.com/poolifier/tatami-ng/graphs/commit-activity)
 [![Npm Version](https://badgen.net/npm/v/tatami-ng?icon=npm)](https://www.npmjs.com/package/tatami-ng)
 [![Npm Weekly Downloads](https://badgen.net/npm/dw/tatami-ng?icon=npm)](https://www.npmjs.com/package/tatami-ng)
+[![JSR Version](https://jsr.io/badges/@poolifier/tatami-ng)](https://jsr.io/@poolifier/tatami-ng)
 [![CI Workflow](https://github.com/poolifier/tatami-ng/actions/workflows/ci.yml/badge.svg)](https://github.com/poolifier/tatami-ng/actions/workflows/ci.yml)
 [![PRs Welcome](https://badgen.net/static/PRs/welcome/green)](https://makeapullrequest.com)
 
@@ -26,14 +27,22 @@
 
 ### Node
 
+#### npmjs
+
 ```shell
 npm install tatami-ng
+```
+
+#### JSR
+
+```shell
+npx jsr add @poolifier/tatami-ng
 ```
 
 ### Deno
 
 ```shell
-deno add npm:tatami-ng
+deno add @poolifier/tatami-ng
 ```
 
 Deno versions >= 1.40.x are supported.
@@ -43,8 +52,16 @@ time measurement.
 
 ### Bun
 
+#### npmjs
+
 ```shell
 bun add tatami-ng
+```
+
+#### JSR
+
+```shell
+bunx jsr add @poolifier/poolifier-web-worker
 ```
 
 Bun versions >= 1.x are supported.

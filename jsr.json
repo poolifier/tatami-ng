@@ -1,0 +1,15 @@
+{
+  "$schema": "https://jsr.io/schema/config-file.v1.json",
+  "name": "@poolifier/tatami-ng",
+  "version": "0.3.3",
+  "exports": "./src/cli.mjs",
+  "publish": {
+    "include": [
+      "LICENSE",
+      "README.md",
+      "jsr.json",
+      "src/**/*.mjs",
+      "src/**/*.ts"
+    ]
+  }
+}

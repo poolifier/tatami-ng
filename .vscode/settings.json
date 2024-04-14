@@ -18,6 +18,7 @@
     "deno",
     "hrtime",
     "mitata",
+    "npmjs",
     "poolifier",
     "quantile",
     "quantiles",
