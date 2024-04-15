@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix browser support.
+
 ## [0.4.0] - 2024-04-15
 
 ### Fixed

@@ -33,6 +33,9 @@ jobs:
       - name: Run Code Quality Checks
         run: bun check:ci
 
+      - name: Bundle
+        run: bun bundle
+
       - name: Run Tests
         run: |
           bun test:node
@@ -87,6 +90,9 @@ jobs:
         uses: oven-sh/setup-bun@v1
         with:
           bun-version: 1.x
+
+      - name: Bundle
+        run: bun bundle
 
       - name: Read package.json version
         id: package-version
