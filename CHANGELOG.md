@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [0.4.0] - 2024-04-15
+
 ### Fixed
 
 - Fix ESM browser export.
