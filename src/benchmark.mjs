@@ -188,14 +188,17 @@ export async function run(opts = {}) {
     benchmark.time = opts.time ?? benchmark.time;
     _first = true;
     try {
-      benchmark.stats = (
-        await measure(benchmark.fn, benchmark.before, benchmark.after, {
+      benchmark.stats = await measure(
+        benchmark.fn,
+        benchmark.before,
+        benchmark.after,
+        {
           async: benchmark.async,
           warmup: benchmark.warmup,
           samples: benchmark.samples,
           time: benchmark.time,
-        })
-      ).stats;
+        },
+      );
       if (!opts.json)
         log(table.benchmark(benchmark.name, benchmark.stats, opts));
     } catch (err) {
@@ -232,14 +235,17 @@ export async function run(opts = {}) {
       benchmark.time = opts.time ?? benchmark.time;
       _first = true;
       try {
-        benchmark.stats = (
-          await measure(benchmark.fn, benchmark.before, benchmark.after, {
+        benchmark.stats = await measure(
+          benchmark.fn,
+          benchmark.before,
+          benchmark.after,
+          {
             async: benchmark.async,
             warmup: benchmark.warmup,
             samples: benchmark.samples,
             time: benchmark.time,
-          })
-        ).stats;
+          },
+        );
         if (!opts.json)
           log(table.benchmark(benchmark.name, benchmark.stats, opts));
       } catch (err) {

@@ -9,8 +9,6 @@ import { runtime } from './runtime.mjs';
 import { now } from './time.mjs';
 
 export const AsyncFunction = (async () => {}).constructor;
-const GeneratorFunction = function* () {}.constructor;
-const AsyncGeneratorFunction = async function* () {}.constructor;
 
 export const version = (() => {
   return {
@@ -103,19 +101,8 @@ export async function measure(
   after = emptyFunction,
   opts = {},
 ) {
-  if (
-    ![
-      Function,
-      AsyncFunction,
-      GeneratorFunction,
-      AsyncGeneratorFunction,
-    ].includes(fn.constructor)
-  )
-    throw new TypeError(
-      `expected function or generator, got ${fn.constructor.name}`,
-    );
-  if ([GeneratorFunction, AsyncGeneratorFunction].includes(fn.constructor))
-    throw new Error('generator is not supported yet');
+  if (![Function, AsyncFunction].includes(fn.constructor))
+    throw new TypeError(`expected function, got ${fn.constructor.name}`);
   if (![Function, AsyncFunction].includes(before.constructor))
     throw new TypeError(`expected function, got ${before.constructor.name}`);
   if (![Function, AsyncFunction].includes(after.constructor))
@@ -180,14 +167,7 @@ export async function measure(
     ? benchmark(fn, before, after, now)
     : await benchmark(fn, before, after, now);
 
-  return {
-    stats: buildStats(samples),
-    async: opts.async,
-    warmup: opts.warmup,
-    generator: [GeneratorFunction, AsyncGeneratorFunction].includes(
-      fn.constructor,
-    ),
-  };
+  return buildStats(samples);
 }
 
 const quantile = (arr, q) => {
