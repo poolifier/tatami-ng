@@ -9,6 +9,7 @@ export function group(
   },
   cb: () => void,
 ): void;
+
 export function bench(
   name: string,
   fn: () => void | Promise<void>,

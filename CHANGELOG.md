@@ -8,6 +8,15 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix ESM browser export.
+
+### Changed
+
+- BREAKING CHANGE: rename the default exported file to a more de facto
+  standardized namespace. Usage in browser is impacted.
+
 ## [0.3.4] - 2024-04-14
 
 ### Added
