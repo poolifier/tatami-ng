@@ -37,7 +37,7 @@ export function group(name, cb) {
     // biome-ignore lint/style/noParameterAssign: <explanation>
     cb = name;
   }
-  if (cb != null && ![Function, AsyncFunction].includes(cb.constructor))
+  if (![Function, AsyncFunction].includes(cb.constructor))
     throw new TypeError(`expected function, got ${cb.constructor.name}`);
   if (Object.prototype.toString.call(name).slice(8, -1) === 'Object') {
     if (name.name != null && 'string' !== typeof name.name)
