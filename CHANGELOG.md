@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [0.4.2] - 2024-04-17
+
 ### Fixed
 
 - Fix `bench()` and `baseline()` type definitions.
