@@ -23,6 +23,16 @@ let groupName = null;
 const groups = new Map();
 const benchmarks = [];
 
+/**
+ * Define a group of benchmarks.
+ *
+ * @param {String|Object|Function} name - name of the group or options object or callback function
+ * @param {String} [name.name] - name of the group
+ * @param {Boolean} [name.summary=true] - display summary
+ * @param {Function} [name.before=()=>{}] - before hook
+ * @param {Function} [name.after=()=>{}] - after hook
+ * @param {Function} [cb] - callback function
+ */
 export function group(name, cb) {
   if (
     name != null &&
@@ -77,6 +87,16 @@ export function group(name, cb) {
   groupName = null;
 }
 
+/**
+ * Define a benchmark.
+ *
+ * @param {String|Function} name - name of the benchmark or benchmark function
+ * @param {Function} [fn] - benchmark function
+ * @param {Object} [opts={}] - options object
+ * @param {Boolean} [opts.warmup=true] - warmup
+ * @param {Function} [opts.before=()=>{}] - before hook
+ * @param {Function} [opts.after=()=>{}] - after hook
+ */
 export function bench(name, fn, opts = {}) {
   if ([Function, AsyncFunction].includes(name.constructor)) {
     // biome-ignore lint/style/noParameterAssign: <explanation>
@@ -102,6 +122,17 @@ export function bench(name, fn, opts = {}) {
   });
 }
 
+/**
+ * Define a baseline benchmark.
+ * Baseline benchmarks are used as a reference to compare other benchmarks.
+ *
+ * @param {String|Function} name - name of the baseline benchmark or baseline benchmark function
+ * @param {Function} [fn] - baseline benchmark function
+ * @param {Object} [opts={}] - options object
+ * @param {Boolean} [opts.warmup=true] - warmup
+ * @param {Function} [opts.before=()=>{}] - before hook
+ * @param {Function} [opts.after=()=>{}] - after hook
+ */
 export function baseline(name, fn, opts = {}) {
   if ([Function, AsyncFunction].includes(name.constructor)) {
     // biome-ignore lint/style/noParameterAssign: <explanation>
@@ -127,11 +158,45 @@ export function baseline(name, fn, opts = {}) {
   });
 }
 
+/**
+ * Clear all benchmarks.
+ * Permits to define and run benchmarks in multiple steps.
+ *
+ * @example
+ * group(() => {
+ *   bench('foo1()', () => {});
+ *   baseline('bar1()', () => {});
+ * });
+ * await run();
+ * clear();
+ * group(() => {
+ *   bench('foo2()', () => {});
+ *   baseline('bar2()', () => {});
+ * });
+ * await run();
+ */
 export function clear() {
   groups.clear();
   benchmarks.length = 0;
 }
 
+/**
+ * Run defined benchmarks.
+ *
+ * @param {Object} [opts={}] - options object
+ * @param {Boolean} [opts.units=false] - print units cheatsheet
+ * @param {Boolean} [opts.silent=false] - enable/disable stdout output
+ * @param {Boolean|Number} [opts.json=false] - enable/disable json output
+ * @param {Boolean} [opts.colors=true] - enable/disable colors
+ * @param {Number} [opts.samples=128] - minimum number of benchmark samples
+ * @param {Number} [opts.time=1_000_000_000] - minimum benchmark time in nanoseconds
+ * @param {Boolean} [opts.avg=true] - enable/disable time (avg) column
+ * @param {Boolean} [opts.iter=true] - enable/disable iter/s column
+ * @param {Boolean} [opts.rmoe=true] - enable/disable error margin column
+ * @param {Boolean} [opts.min_max=true] - enable/disable (min...max) column
+ * @param {Boolean} [opts.percentiles=true] - enable/disable percentile columns
+ * @returns {Object} - defined benchmarks report
+ */
 export async function run(opts = {}) {
   if (Object.prototype.toString.call(opts).slice(8, -1) !== 'Object')
     throw new TypeError(`expected object, got ${opts.constructor.name}`);

@@ -98,7 +98,7 @@ group({ name: 'group2', summary: false }, () => {
 
 await run({
   units: false, // print units cheatsheet (default: false)
-  silent: false, // enable/disable stdout output (default: undefined)
+  silent: false, // enable/disable stdout output (default: false)
   json: false, // enable/disable json output (default: false)
   colors: true, // enable/disable colors (default: true)
   samples: 128, // minimum number of benchmark samples (default: 128)

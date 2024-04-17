@@ -11,6 +11,14 @@ export function group(
 ): void;
 
 export function bench(
+  fn: () => void | Promise<void>,
+  options?: {
+    warmup?: boolean;
+    before?: () => void | Promise<void>;
+    after?: () => void | Promise<void>;
+  },
+): void;
+export function bench(
   name: string,
   fn: () => void | Promise<void>,
   options?: {
@@ -20,6 +28,14 @@ export function bench(
   },
 ): void;
 
+export function baseline(
+  fn: () => void | Promise<void>,
+  options?: {
+    warmup?: boolean;
+    before?: () => void | Promise<void>;
+    after?: () => void | Promise<void>;
+  },
+): void;
 export function baseline(
   name: string,
   fn: () => void | Promise<void>,
