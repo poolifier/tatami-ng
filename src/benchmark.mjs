@@ -26,14 +26,14 @@ const benchmarks = [];
 /**
  * Define a group of benchmarks.
  *
- * @param {String|Object|Function} name - name of the group or options object or callback function
- * @param {String} [name.name] - name of the group
- * @param {Boolean} [name.summary=true] - display summary
- * @param {Function} [name.before=()=>{}] - before hook
- * @param {Function} [name.after=()=>{}] - after hook
- * @param {Function} [cb] - callback function
+ * @param {String|Object|Function} name name of the group or options object or callback function
+ * @param {String} [name.name] name of the group
+ * @param {Boolean} [name.summary=true] display summary
+ * @param {Function} [name.before=()=>{}] before hook
+ * @param {Function} [name.after=()=>{}] after hook
+ * @param {Function} [cb] callback function
  */
-export function group(name, cb) {
+export function group(name, cb = undefined) {
   if (
     name != null &&
     'string' !== typeof name &&
@@ -90,14 +90,14 @@ export function group(name, cb) {
 /**
  * Define a benchmark.
  *
- * @param {String|Function} name - name of the benchmark or benchmark function
- * @param {Function} [fn] - benchmark function
- * @param {Object} [opts={}] - options object
- * @param {Boolean} [opts.warmup=true] - warmup
- * @param {Function} [opts.before=()=>{}] - before hook
- * @param {Function} [opts.after=()=>{}] - after hook
+ * @param {String|Function} name name of the benchmark or benchmark function
+ * @param {Function} [fn] benchmark function
+ * @param {Object} [opts={}] options object
+ * @param {Boolean} [opts.warmup=true] warmup
+ * @param {Function} [opts.before=()=>{}] before hook
+ * @param {Function} [opts.after=()=>{}] after hook
  */
-export function bench(name, fn, opts = {}) {
+export function bench(name, fn = undefined, opts = {}) {
   if ([Function, AsyncFunction].includes(name.constructor)) {
     // biome-ignore lint/style/noParameterAssign: <explanation>
     fn = name;
@@ -126,14 +126,14 @@ export function bench(name, fn, opts = {}) {
  * Define a baseline benchmark.
  * Baseline benchmarks are used as a reference to compare other benchmarks.
  *
- * @param {String|Function} name - name of the baseline benchmark or baseline benchmark function
- * @param {Function} [fn] - baseline benchmark function
- * @param {Object} [opts={}] - options object
- * @param {Boolean} [opts.warmup=true] - warmup
- * @param {Function} [opts.before=()=>{}] - before hook
- * @param {Function} [opts.after=()=>{}] - after hook
+ * @param {String|Function} name name of the baseline benchmark or baseline benchmark function
+ * @param {Function} [fn] baseline benchmark function
+ * @param {Object} [opts={}] options object
+ * @param {Boolean} [opts.warmup=true] warmup
+ * @param {Function} [opts.before=()=>{}] before hook
+ * @param {Function} [opts.after=()=>{}] after hook
  */
-export function baseline(name, fn, opts = {}) {
+export function baseline(name, fn = undefined, opts = {}) {
   if ([Function, AsyncFunction].includes(name.constructor)) {
     // biome-ignore lint/style/noParameterAssign: <explanation>
     fn = name;
@@ -183,19 +183,19 @@ export function clear() {
 /**
  * Run defined benchmarks.
  *
- * @param {Object} [opts={}] - options object
- * @param {Boolean} [opts.units=false] - print units cheatsheet
- * @param {Boolean} [opts.silent=false] - enable/disable stdout output
- * @param {Boolean|Number} [opts.json=false] - enable/disable json output
- * @param {Boolean} [opts.colors=true] - enable/disable colors
- * @param {Number} [opts.samples=128] - minimum number of benchmark samples
- * @param {Number} [opts.time=1_000_000_000] - minimum benchmark time in nanoseconds
- * @param {Boolean} [opts.avg=true] - enable/disable time (avg) column
- * @param {Boolean} [opts.iter=true] - enable/disable iter/s column
- * @param {Boolean} [opts.rmoe=true] - enable/disable error margin column
- * @param {Boolean} [opts.min_max=true] - enable/disable (min...max) column
- * @param {Boolean} [opts.percentiles=true] - enable/disable percentile columns
- * @returns {Object} - defined benchmarks report
+ * @param {Object} [opts={}] options object
+ * @param {Boolean} [opts.units=false] print units cheatsheet
+ * @param {Boolean} [opts.silent=false] enable/disable stdout output
+ * @param {Boolean|Number} [opts.json=false] enable/disable json output
+ * @param {Boolean} [opts.colors=true] enable/disable colors
+ * @param {Number} [opts.samples=128] minimum number of benchmark samples
+ * @param {Number} [opts.time=1_000_000_000] minimum benchmark time in nanoseconds
+ * @param {Boolean} [opts.avg=true] enable/disable time (avg) column
+ * @param {Boolean} [opts.iter=true] enable/disable iter/s column
+ * @param {Boolean} [opts.rmoe=true] enable/disable error margin column
+ * @param {Boolean} [opts.min_max=true] enable/disable (min...max) column
+ * @param {Boolean} [opts.percentiles=true] enable/disable percentile columns
+ * @returns {Promise<Object>} defined benchmarks report
  */
 export async function run(opts = {}) {
   if (Object.prototype.toString.call(opts).slice(8, -1) !== 'Object')
@@ -243,15 +243,15 @@ export async function run(opts = {}) {
     log(table.br(opts));
   }
 
-  let _baseline = false;
-  let _first = false;
+  let baseline = false;
+  let first = false;
   for (const benchmark of benchmarks) {
     if (benchmark.group) continue;
-    if (benchmark.baseline) _baseline = true;
+    if (benchmark.baseline) baseline = true;
 
     benchmark.samples = opts.samples ?? benchmark.samples;
     benchmark.time = opts.time ?? benchmark.time;
-    _first = true;
+    first = true;
     try {
       benchmark.stats = await measure(
         benchmark.fn,
@@ -273,7 +273,7 @@ export async function run(opts = {}) {
     }
   }
 
-  if (_baseline && !opts.json)
+  if (baseline && !opts.json)
     log(
       `\n${table.summary(
         benchmarks.filter(benchmark => benchmark.group == null),
@@ -283,9 +283,9 @@ export async function run(opts = {}) {
 
   for (const [group, groupOpts] of groups) {
     if (!opts.json) {
-      if (_first) log('');
+      if (first) log('');
       if (!group.startsWith(tatamiNgGroup)) log(`• ${group}`);
-      if (_first || !group.startsWith(tatamiNgGroup))
+      if (first || !group.startsWith(tatamiNgGroup))
         log(clr.gray(opts.colors, table.br(opts)));
     }
 
@@ -298,7 +298,7 @@ export async function run(opts = {}) {
 
       benchmark.samples = opts.samples ?? benchmark.samples;
       benchmark.time = opts.time ?? benchmark.time;
-      _first = true;
+      first = true;
       try {
         benchmark.stats = await measure(
           benchmark.fn,

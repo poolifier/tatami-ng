@@ -1,11 +1,16 @@
-let _logger;
-try {
-  _logger = console.log;
-} catch {
-  _logger = print;
-}
+/**
+ * @returns {Function} logger
+ */
+const buildLogger = () => {
+  let logger;
+  try {
+    logger = console.log;
+  } catch {
+    logger = print;
+  }
+  if ('function' !== typeof logger)
+    throw new TypeError(`logger is not a function: ${typeof logger}`);
+  return logger;
+};
 
-if ('function' !== typeof _logger)
-  throw new TypeError('logger is not a function');
-
-export const logger = _logger;
+export const logger = buildLogger();

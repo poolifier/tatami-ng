@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix JSDoc API description.
+
 ## [0.4.2] - 2024-04-17
 
 ### Fixed
