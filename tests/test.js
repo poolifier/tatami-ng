@@ -4,9 +4,9 @@ bench('noop', () => {}, {
   before: () => {},
   after: () => {},
 });
-bench('async noop()', async () => {});
+bench('async noop', async () => {});
 baseline('aaa', () => {});
-bench('noop2', async () => Promise.resolve());
+bench('async noop2', async () => Promise.resolve());
 
 group(() => {
   bench('a', () => {});

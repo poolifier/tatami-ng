@@ -1,8 +1,8 @@
 import { baseline, bench, group, run } from '../src/index.mjs';
 
 group(() => {
-  bench('noop()', () => {});
-  baseline('async noop()', async () => {});
+  bench('noop', () => {});
+  baseline('async noop', async () => {});
 });
 
 group('getting time', () => {
