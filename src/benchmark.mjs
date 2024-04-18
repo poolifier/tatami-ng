@@ -24,14 +24,19 @@ const groups = new Map();
 const benchmarks = [];
 
 /**
+ * @callback CallbackType
+ * @returns {void|Promise<void>}
+ */
+
+/**
  * Define a group of benchmarks.
  *
- * @param {String|Object|Function} name name of the group or options object or callback function
+ * @param {String|Object|CallbackType} name name of the group or options object or callback function
  * @param {String} [name.name] name of the group
  * @param {Boolean} [name.summary=true] display summary
- * @param {Function} [name.before=()=>{}] before hook
- * @param {Function} [name.after=()=>{}] after hook
- * @param {Function} [cb] callback function
+ * @param {CallbackType} [name.before=()=>{}] before hook
+ * @param {CallbackType} [name.after=()=>{}] after hook
+ * @param {CallbackType} [cb] callback function
  */
 export function group(name, cb = undefined) {
   if (
@@ -83,19 +88,25 @@ export function group(name, cb = undefined) {
       before: name.before ?? emptyFunction,
       after: name.after ?? emptyFunction,
     });
-  cb();
-  groupName = null;
+  if (AsyncFunction === cb.constructor) {
+    cb().then(() => {
+      groupName = null;
+    });
+  } else {
+    cb();
+    groupName = null;
+  }
 }
 
 /**
  * Define a benchmark.
  *
- * @param {String|Function} name name of the benchmark or benchmark function
- * @param {Function} [fn] benchmark function
+ * @param {String|CallbackType} name name of the benchmark or benchmark function
+ * @param {CallbackType} [fn] benchmark function
  * @param {Object} [opts={}] options object
  * @param {Boolean} [opts.warmup=true] warmup
- * @param {Function} [opts.before=()=>{}] before hook
- * @param {Function} [opts.after=()=>{}] after hook
+ * @param {CallbackType} [opts.before=()=>{}] before hook
+ * @param {CallbackType} [opts.after=()=>{}] after hook
  */
 export function bench(name, fn = undefined, opts = {}) {
   if ([Function, AsyncFunction].includes(name.constructor)) {
@@ -126,12 +137,12 @@ export function bench(name, fn = undefined, opts = {}) {
  * Define a baseline benchmark.
  * Baseline benchmarks are used as a reference to compare other benchmarks.
  *
- * @param {String|Function} name name of the baseline benchmark or baseline benchmark function
- * @param {Function} [fn] baseline benchmark function
+ * @param {String|CallbackType} name name of the baseline benchmark or baseline benchmark function
+ * @param {CallbackType} [fn] baseline benchmark function
  * @param {Object} [opts={}] options object
  * @param {Boolean} [opts.warmup=true] warmup
- * @param {Function} [opts.before=()=>{}] before hook
- * @param {Function} [opts.after=()=>{}] after hook
+ * @param {CallbackType} [opts.before=()=>{}] before hook
+ * @param {CallbackType} [opts.after=()=>{}] after hook
  */
 export function baseline(name, fn = undefined, opts = {}) {
   if ([Function, AsyncFunction].includes(name.constructor)) {
@@ -159,7 +170,7 @@ export function baseline(name, fn = undefined, opts = {}) {
 }
 
 /**
- * Clear all benchmarks.
+ * Clear previously defined benchmarks.
  * Permits to define and run benchmarks in multiple steps.
  *
  * @example

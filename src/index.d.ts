@@ -1,5 +1,5 @@
-export function group(cb: () => void): void;
-export function group(name: string, cb: () => void): void;
+export function group(cb: () => void | Promise<void>): void;
+export function group(name: string, cb: () => void | Promise<void>): void;
 export function group(
   options: {
     name?: string;
@@ -7,7 +7,7 @@ export function group(
     before?: () => void | Promise<void>;
     after?: () => void | Promise<void>;
   },
-  cb: () => void,
+  cb: () => void | Promise<void>,
 ): void;
 
 export function bench(

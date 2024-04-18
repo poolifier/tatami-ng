@@ -8,6 +8,14 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix benchmark function type definition.
+
+### Changed
+
+- Add `group()` asynchronous callback support.
+
 ## [0.4.3] - 2024-04-17
 
 ### Fixed
