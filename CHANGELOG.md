@@ -10,7 +10,7 @@ and this project adheres to
 
 ### Fixed
 
-- Fix benchmark function type definition.
+- Fix benchmark function JSDoc type definition.
 
 ### Changed
 
