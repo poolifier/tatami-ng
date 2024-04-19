@@ -1,4 +1,4 @@
-import { bench, group, run } from '../src/index.mjs';
+import { bench, group, run } from '../src/index.js';
 
 group({ summary: true }, () => {
   bench('noop', () => {});

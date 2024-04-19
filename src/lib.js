@@ -4,9 +4,9 @@ import {
   emptyFunction,
   minimumSamples,
   tTable,
-} from './constants.mjs';
-import { runtime } from './runtime.mjs';
-import { now } from './time.mjs';
+} from './constants.js';
+import { runtime } from './runtime.js';
+import { now } from './time.js';
 
 export const AsyncFunction = (async () => {}).constructor;
 

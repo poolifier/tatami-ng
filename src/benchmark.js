@@ -3,7 +3,7 @@ import {
   defaultTime,
   emptyFunction,
   tatamiNgGroup,
-} from './constants.mjs';
+} from './constants.js';
 import {
   os,
   AsyncFunction,
@@ -13,11 +13,11 @@ import {
   mergeDeepRight,
   noColor,
   version,
-} from './lib.mjs';
-import { logger } from './logger.mjs';
-import * as clr from './reporter/clr.mjs';
-import * as table from './reporter/table.mjs';
-import { runtime } from './runtime.mjs';
+} from './lib.js';
+import { logger } from './logger.js';
+import * as clr from './reporter/clr.js';
+import * as table from './reporter/table.js';
+import { runtime } from './runtime.js';
 
 let groupName = null;
 const groups = new Map();
@@ -175,14 +175,14 @@ export function baseline(name, fn = undefined, opts = {}) {
  *
  * @example
  * group(() => {
- *   bench('foo1()', () => {});
- *   baseline('bar1()', () => {});
+ *   bench('foo1', () => {});
+ *   baseline('bar1', () => {});
  * });
  * await run();
  * clear();
  * group(() => {
- *   bench('foo2()', () => {});
- *   baseline('bar2()', () => {});
+ *   bench('foo2', () => {});
+ *   baseline('bar2', () => {});
  * });
  * await run();
  */

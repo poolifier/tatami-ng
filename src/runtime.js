@@ -1,4 +1,4 @@
-import { runtimes } from './constants.mjs';
+import { runtimes } from './constants.js';
 
 const isBun = !!globalThis.Bun || !!globalThis.process?.versions?.bun;
 const isDeno = !!globalThis.Deno;

@@ -6,11 +6,11 @@
   "version": "0.4.3",
   "packageManager": "bun@1.1.4",
   "types": "./src/index.d.ts",
-  "main": "./src/index.mjs",
+  "main": "./src/index.js",
   "browser": "./dist/browser/index.js",
   "exports": {
     "types": "./src/index.d.ts",
-    "import": "./src/index.mjs",
+    "import": "./src/index.js",
     "browser": "./dist/browser/index.js"
   },
   "description": "cross javascript runtime benchmarking library",

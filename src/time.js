@@ -1,4 +1,4 @@
-import { runtime } from './runtime.mjs';
+import { runtime } from './runtime.js';
 
 export const now = (() => {
   return {

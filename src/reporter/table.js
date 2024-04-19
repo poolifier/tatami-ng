@@ -1,6 +1,6 @@
-import { tatamiNgGroup } from '../constants.mjs';
-import * as clr from './clr.mjs';
-import { duration, errorMargin, iterPerSecond, speedRatio } from './fmt.mjs';
+import { tatamiNgGroup } from '../constants.js';
+import * as clr from './clr.js';
+import { duration, errorMargin, iterPerSecond, speedRatio } from './fmt.js';
 
 export function size(names) {
   let size = 9;

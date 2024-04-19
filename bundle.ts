@@ -1,7 +1,7 @@
 import { existsSync, rmSync } from 'node:fs';
 import { build } from 'bun';
 
-export const entryPoints = ['./src/index.mjs'];
+export const entryPoints = ['./src/index.js'];
 
 export const baseBuildDir = './dist';
 export const browserBuildDir = `${baseBuildDir}/browser`;
