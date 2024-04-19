@@ -1,4 +1,4 @@
-// https://github.com/lukeed/kleur/blob/598f24cb7f5054b7c504e9ab89251305311131b1/colors.mjs
+// https://github.com/lukeed/kleur/blob/master/colors.mjs
 
 // The MIT License (MIT)
 
