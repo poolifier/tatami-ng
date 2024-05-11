@@ -28,6 +28,7 @@
     "quantiles",
     "rmoe",
     "runtimes",
-    "tatami-ng"
+    "tatami-ng",
+    "workerd"
   ]
 }
