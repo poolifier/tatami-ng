@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [0.4.5] - 2024-05-11
+
 ### Changed
 
 - Move benchmark options to `run()`.
