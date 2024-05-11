@@ -288,14 +288,15 @@ export async function run(opts = {}) {
     }
   }
 
-  if (baseline && !opts.json)
+  if (baseline && !opts.json) {
+    log('');
     log(
-      `\n${table.summary(
+      table.summary(
         benchmarks.filter(benchmark => benchmark.group == null),
         opts,
-      )}`,
+      ),
     );
-
+  }
   for (const [group, groupOpts] of groups) {
     if (!opts.json) {
       if (first) log('');
@@ -339,13 +340,15 @@ export async function run(opts = {}) {
       ? await groupOpts.after()
       : groupOpts.after();
 
-    if (groupOpts.summary === true && !opts.json)
+    if (groupOpts.summary === true && !opts.json) {
+      log('');
       log(
-        `\n${table.summary(
+        table.summary(
           benchmarks.filter(benchmark => group === benchmark.group),
           opts,
-        )}`,
+        ),
       );
+    }
   }
 
   if (!opts.json && opts.units) log(table.units(opts));
