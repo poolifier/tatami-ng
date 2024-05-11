@@ -13,7 +13,6 @@ export function group(
 export function bench(
   fn: () => void | Promise<void>,
   options?: {
-    warmup?: boolean;
     before?: () => void | Promise<void>;
     after?: () => void | Promise<void>;
   },
@@ -22,7 +21,6 @@ export function bench(
   name: string,
   fn: () => void | Promise<void>,
   options?: {
-    warmup?: boolean;
     before?: () => void | Promise<void>;
     after?: () => void | Promise<void>;
   },
@@ -31,7 +29,6 @@ export function bench(
 export function baseline(
   fn: () => void | Promise<void>,
   options?: {
-    warmup?: boolean;
     before?: () => void | Promise<void>;
     after?: () => void | Promise<void>;
   },
@@ -40,7 +37,6 @@ export function baseline(
   name: string,
   fn: () => void | Promise<void>,
   options?: {
-    warmup?: boolean;
     before?: () => void | Promise<void>;
     after?: () => void | Promise<void>;
   },
@@ -53,6 +49,7 @@ export function run(options?: {
   colors?: boolean;
   samples?: number;
   time?: number;
+  warmup?: boolean;
   avg?: boolean;
   iter?: boolean;
   min_max?: boolean;
@@ -70,11 +67,11 @@ export interface Report {
     name: string;
     samples: number;
     time: number;
+    warmup: boolean;
     before: () => void | Promise<void>;
     fn: () => void | Promise<void>;
     after: () => void | Promise<void>;
     async: boolean;
-    warmup: boolean;
     baseline: boolean;
     group: string | null;
 

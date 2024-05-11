@@ -111,6 +111,7 @@ await run({
   colors: true, // enable/disable colors (default: true)
   samples: 128, // minimum number of benchmark samples (default: 128)
   time: 1_000_000_000, // minimum benchmark time in nanoseconds (default: 1_000_000_000)
+  warmup: true, // enable/disable benchmark warmup (default: true)
   avg: true, // enable/disable time (avg) column (default: true)
   iter: true, // enable/disable iter/s column (default: true)
   rmoe: true, // enable/disable error margin column (default: true)

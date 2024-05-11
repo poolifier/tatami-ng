@@ -104,7 +104,6 @@ export function group(name, cb = undefined) {
  * @param {String|CallbackType} name name of the benchmark or benchmark function
  * @param {CallbackType} [fn] benchmark function
  * @param {Object} [opts={}] options object
- * @param {Boolean} [opts.warmup=true] warmup
  * @param {CallbackType} [opts.before=()=>{}] before hook
  * @param {CallbackType} [opts.after=()=>{}] after hook
  */
@@ -126,8 +125,8 @@ export function bench(name, fn = undefined, opts = {}) {
     name,
     group: groupName,
     time: defaultTime,
-    warmup: opts.warmup ?? true,
     samples: defaultSamples,
+    warmup: true,
     baseline: false,
     async: AsyncFunction === fn.constructor,
   });
@@ -140,7 +139,6 @@ export function bench(name, fn = undefined, opts = {}) {
  * @param {String|CallbackType} name name of the baseline benchmark or baseline benchmark function
  * @param {CallbackType} [fn] baseline benchmark function
  * @param {Object} [opts={}] options object
- * @param {Boolean} [opts.warmup=true] warmup
  * @param {CallbackType} [opts.before=()=>{}] before hook
  * @param {CallbackType} [opts.after=()=>{}] after hook
  */
@@ -162,8 +160,8 @@ export function baseline(name, fn = undefined, opts = {}) {
     name,
     group: groupName,
     time: defaultTime,
-    warmup: opts.warmup ?? true,
     samples: defaultSamples,
+    warmup: true,
     baseline: true,
     async: AsyncFunction === fn.constructor,
   });
@@ -201,6 +199,7 @@ export function clear() {
  * @param {Boolean} [opts.colors=true] enable/disable colors
  * @param {Number} [opts.samples=128] minimum number of benchmark samples
  * @param {Number} [opts.time=1_000_000_000] minimum benchmark time in nanoseconds
+ * @param {Boolean} [opts.warmup=true] enable/disable benchmark warmup
  * @param {Boolean} [opts.avg=true] enable/disable time (avg) column
  * @param {Boolean} [opts.iter=true] enable/disable iter/s column
  * @param {Boolean} [opts.rmoe=true] enable/disable error margin column
@@ -218,6 +217,10 @@ export async function run(opts = {}) {
   if (opts.time != null && 'number' !== typeof opts.time)
     throw new TypeError(
       `expected number as 'time' option, got ${opts.time.constructor.name}`,
+    );
+  if (opts.warmup != null && 'boolean' !== typeof opts.warmup)
+    throw new TypeError(
+      `expected boolean as 'warmup' option, got ${opts.warmup.constructor.name}`,
     );
   if (
     opts.json != null &&
@@ -262,6 +265,7 @@ export async function run(opts = {}) {
 
     benchmark.samples = opts.samples ?? benchmark.samples;
     benchmark.time = opts.time ?? benchmark.time;
+    benchmark.warmup = opts.warmup ?? benchmark.warmup;
     first = true;
     try {
       benchmark.stats = await measure(
@@ -270,9 +274,9 @@ export async function run(opts = {}) {
         benchmark.after,
         {
           async: benchmark.async,
-          warmup: benchmark.warmup,
           samples: benchmark.samples,
           time: benchmark.time,
+          warmup: benchmark.warmup,
         },
       );
       if (!opts.json)
@@ -317,9 +321,9 @@ export async function run(opts = {}) {
           benchmark.after,
           {
             async: benchmark.async,
-            warmup: benchmark.warmup,
             samples: benchmark.samples,
             time: benchmark.time,
+            warmup: benchmark.warmup,
           },
         );
         if (!opts.json)

@@ -55,10 +55,6 @@ export const checkBenchmarkArgs = (fn, opts = {}) => {
     throw new TypeError(`expected function, got ${fn.constructor.name}`);
   if (Object.prototype.toString.call(opts).slice(8, -1) !== 'Object')
     throw new TypeError(`expected object, got ${opts.constructor.name}`);
-  if (opts.warmup != null && 'boolean' !== typeof opts.warmup)
-    throw new TypeError(
-      `expected boolean as 'warmup' option, got ${opts.warmup.constructor.name}`,
-    );
   if (
     opts.before != null &&
     ![Function, AsyncFunction].includes(opts.before.constructor)
@@ -114,9 +110,9 @@ export async function measure(
   opts = mergeDeepRight(
     {
       async: AsyncFunction === fn.constructor,
-      warmup: true,
       time: defaultTime,
       samples: defaultSamples,
+      warmup: true,
     },
     opts,
   );
