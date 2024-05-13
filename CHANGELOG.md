@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Changed
+
+- Add JSON BMF benchmark report format support to allow integration with [Bencher](https://bencher.dev/).
+
 ## [0.4.5] - 2024-05-11
 
 ### Changed

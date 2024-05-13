@@ -195,7 +195,7 @@ export function clear() {
  * @param {Object} [opts={}] options object
  * @param {Boolean} [opts.units=false] print units cheatsheet
  * @param {Boolean} [opts.silent=false] enable/disable stdout output
- * @param {Boolean|Number} [opts.json=false] enable/disable json output
+ * @param {Boolean|Number|'bmf'} [opts.json=false] enable/disable json output
  * @param {Boolean} [opts.colors=true] enable/disable colors
  * @param {Number} [opts.samples=128] minimum number of benchmark samples
  * @param {Number} [opts.time=1_000_000_000] minimum benchmark time in nanoseconds
@@ -225,10 +225,11 @@ export async function run(opts = {}) {
   if (
     opts.json != null &&
     'number' !== typeof opts.json &&
-    'boolean' !== typeof opts.json
+    'boolean' !== typeof opts.json &&
+    'string' !== typeof opts.json
   )
     throw new TypeError(
-      `expected number or boolean as 'json' option, got ${opts.json.constructor.name}`,
+      `expected number or boolean or string as 'json' option, got ${opts.json.constructor.name}`,
     );
   // biome-ignore lint/style/noParameterAssign: <explanation>
   opts = mergeDeepRight(
@@ -352,7 +353,7 @@ export async function run(opts = {}) {
   }
 
   if (!opts.json && opts.units) log(table.units(opts));
-  if (opts.json)
+  if ('boolean' === typeof opts.json || 'number' === typeof opts.json) {
     log(
       JSON.stringify(
         report,
@@ -360,6 +361,32 @@ export async function run(opts = {}) {
         'number' !== typeof opts.json ? 0 : opts.json,
       ),
     );
+  } else if ('string' === typeof opts.json) {
+    let bmfReport;
+    switch (opts.json) {
+      case 'bmf':
+        bmfReport = report.benchmarks
+          .map(({ name, stats }) => {
+            return {
+              [name]: {
+                latency: {
+                  value: stats?.avg,
+                  lower_value: stats?.min,
+                  upper_value: stats?.max,
+                },
+                throughput: {
+                  value: stats?.iter,
+                },
+              },
+            };
+          })
+          .reduce((obj, item) => Object.assign(obj, item), {});
+        log(JSON.stringify(bmfReport));
+        break;
+      default:
+        throw new Error(`unexpected 'json' option: ${opts.json}`);
+    }
+  }
 
   return report;
 }

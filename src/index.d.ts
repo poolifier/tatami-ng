@@ -55,7 +55,7 @@ export function run(options?: {
   min_max?: boolean;
   rmoe?: boolean;
   percentiles?: boolean;
-  json?: number | boolean;
+  json?: number | boolean | 'bmf';
   units?: boolean;
 }): Promise<Report>;
 
