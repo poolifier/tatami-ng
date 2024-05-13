@@ -2,17 +2,20 @@ import {
   defaultSamples,
   defaultTime,
   emptyFunction,
+  jsonOutputFormat,
   tatamiNgGroup,
 } from './constants.js';
 import {
   os,
   AsyncFunction,
   checkBenchmarkArgs,
+  convertReportToBmf,
   cpu,
   measure,
   mergeDeepRight,
   noColor,
   version,
+  writeFileSync,
 } from './lib.js';
 import { logger } from './logger.js';
 import * as clr from './reporter/clr.js';
@@ -196,6 +199,7 @@ export function clear() {
  * @param {Boolean} [opts.units=false] print units cheatsheet
  * @param {Boolean} [opts.silent=false] enable/disable stdout output
  * @param {Boolean|Number|'bmf'} [opts.json=false] enable/disable json output
+ * @param {String} [opts.file=undefined] write json output to file
  * @param {Boolean} [opts.colors=true] enable/disable colors
  * @param {Number} [opts.samples=128] minimum number of benchmark samples
  * @param {Number} [opts.time=1_000_000_000] minimum benchmark time in nanoseconds
@@ -231,6 +235,22 @@ export async function run(opts = {}) {
     throw new TypeError(
       `expected number or boolean or string as 'json' option, got ${opts.json.constructor.name}`,
     );
+  if (
+    'string' === typeof opts.json &&
+    !Object.values(jsonOutputFormat).includes(opts.json)
+  )
+    throw new TypeError(
+      `expected one of ${Object.values(jsonOutputFormat).join(
+        ', ',
+      )} as 'json' option, got ${opts.json}`,
+    );
+  if (opts.file != null && 'string' !== typeof opts.file) {
+    throw new TypeError(
+      `expected string as 'file' option, got ${opts.file.constructor.name}`,
+    );
+  }
+  if ('string' === typeof opts.file && opts.file.trim().length === 0)
+    throw new TypeError(`expected non-empty string as 'file' option`);
   // biome-ignore lint/style/noParameterAssign: <explanation>
   opts = mergeDeepRight(
     {
@@ -353,41 +373,22 @@ export async function run(opts = {}) {
   }
 
   if (!opts.json && opts.units) log(table.units(opts));
-  if (
-    ('boolean' === typeof opts.json || 'number' === typeof opts.json) &&
-    opts.json
-  ) {
-    log(
-      JSON.stringify(
-        report,
-        undefined,
-        'number' !== typeof opts.json ? 0 : opts.json,
-      ),
-    );
-  } else if ('string' === typeof opts.json) {
-    let bmfReport;
+  if (opts.json) {
+    let jsonReport;
     switch (opts.json) {
-      case 'bmf':
-        bmfReport = report.benchmarks
-          .map(({ name, stats }) => {
-            return {
-              [name]: {
-                latency: {
-                  value: stats?.avg,
-                  lower_value: stats?.min,
-                  upper_value: stats?.max,
-                },
-                throughput: {
-                  value: stats?.iter,
-                },
-              },
-            };
-          })
-          .reduce((obj, item) => Object.assign(obj, item), {});
-        log(JSON.stringify(bmfReport));
+      case jsonOutputFormat.bmf:
+        jsonReport = JSON.stringify(convertReportToBmf(report));
+        log(jsonReport);
+        if (opts.file) writeFileSync(opts.file, jsonReport);
         break;
       default:
-        throw new Error(`unexpected 'json' option: ${opts.json}`);
+        jsonReport = JSON.stringify(
+          report,
+          undefined,
+          'number' !== typeof opts.json ? 0 : opts.json,
+        );
+        log(jsonReport);
+        if (opts.file) writeFileSync(opts.file, jsonReport);
     }
   }
 

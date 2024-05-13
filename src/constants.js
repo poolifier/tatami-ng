@@ -1048,3 +1048,7 @@ export const minimumSamples = 128;
 export const defaultTime = 1e9; // ns
 
 export const defaultSamples = minimumSamples;
+
+export const jsonOutputFormat = {
+  bmf: 'bmf',
+};

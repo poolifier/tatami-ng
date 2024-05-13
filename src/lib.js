@@ -50,6 +50,35 @@ export const noColor = (() => {
   }[runtime]();
 })();
 
+export const writeFileSync = await (async () => {
+  return await {
+    unknown: () => () => {},
+    browser: () => () => {},
+    node: async () => (await import('node:fs')).writeFileSync,
+    deno: () => Deno.writeTextFileSync,
+    bun: async () => (await import('node:fs')).writeFileSync,
+  }[runtime]();
+})();
+
+export const convertReportToBmf = report => {
+  return report.benchmarks
+    .map(({ name, stats }) => {
+      return {
+        [name]: {
+          latency: {
+            value: stats?.avg,
+            lower_value: stats?.min,
+            upper_value: stats?.max,
+          },
+          throughput: {
+            value: stats?.iter,
+          },
+        },
+      };
+    })
+    .reduce((obj, item) => Object.assign(obj, item), {});
+};
+
 export const checkBenchmarkArgs = (fn, opts = {}) => {
   if (![Function, AsyncFunction].includes(fn.constructor))
     throw new TypeError(`expected function, got ${fn.constructor.name}`);

@@ -56,6 +56,7 @@ export function run(options?: {
   rmoe?: boolean;
   percentiles?: boolean;
   json?: number | boolean | 'bmf';
+  file?: string;
   units?: boolean;
 }): Promise<Report>;
 

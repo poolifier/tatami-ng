@@ -108,6 +108,7 @@ await run({
   units: false, // print units cheatsheet (default: false)
   silent: false, // enable/disable stdout output (default: false)
   json: false, // enable/disable json output (default: false)
+  file: 'results.json', // write json output to file (default: undefined)
   colors: true, // enable/disable colors (default: true)
   samples: 128, // minimum number of benchmark samples (default: 128)
   time: 1_000_000_000, // minimum benchmark time in nanoseconds (default: 1_000_000_000)
