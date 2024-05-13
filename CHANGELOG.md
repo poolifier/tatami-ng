@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [0.4.9] - 2024-05-13
+
 ### Changed
 
 - Add `file` to `run()` option allowing to save the JSON output to a file.
