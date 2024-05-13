@@ -388,5 +388,5 @@ export async function run(opts = {}) {
     }
   }
 
-  return report;
+  return structuredClone(report);
 }

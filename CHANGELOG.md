@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Fixed
+
+- Ensure report returned by `run()` are not cleared.
+
 ## [0.4.6] - 2024-05-13
 
 ### Changed
