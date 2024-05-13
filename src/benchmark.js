@@ -353,7 +353,10 @@ export async function run(opts = {}) {
   }
 
   if (!opts.json && opts.units) log(table.units(opts));
-  if ('boolean' === typeof opts.json || 'number' === typeof opts.json) {
+  if (
+    ('boolean' === typeof opts.json || 'number' === typeof opts.json) &&
+    opts.json
+  ) {
     log(
       JSON.stringify(
         report,
@@ -388,5 +391,5 @@ export async function run(opts = {}) {
     }
   }
 
-  return structuredClone(report);
+  return JSON.parse(JSON.stringify(report));
 }

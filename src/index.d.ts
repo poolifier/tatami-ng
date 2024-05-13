@@ -68,9 +68,6 @@ export interface Report {
     samples: number;
     time: number;
     warmup: boolean;
-    before: () => void | Promise<void>;
-    fn: () => void | Promise<void>;
-    after: () => void | Promise<void>;
     async: boolean;
     baseline: boolean;
     group: string | null;

@@ -8,7 +8,12 @@ and this project adheres to
 
 ## [Unreleased]
 
-## [0.4.7] - 2024-05-13
+### Fixed
+
+- Ensure report returned by `run()` is not cleared.
+- Fix `run()` 'json' option handling.
+
+## [0.4.7] - 2024-05-13 (not released)
 
 ### Fixed
 
