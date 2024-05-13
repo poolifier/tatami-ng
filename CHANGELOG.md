@@ -10,7 +10,7 @@ and this project adheres to
 
 ### Fixed
 
-- Ensure report returned by `run()` are not cleared.
+- Ensure report returned by `run()` is not cleared.
 
 ## [0.4.6] - 2024-05-13
 
