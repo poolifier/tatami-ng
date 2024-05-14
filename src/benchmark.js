@@ -378,8 +378,6 @@ export async function run(opts = {}) {
     switch (opts.json) {
       case jsonOutputFormat.bmf:
         jsonReport = JSON.stringify(convertReportToBmf(report));
-        log(jsonReport);
-        if (opts.file) writeFileSync(opts.file, jsonReport);
         break;
       default:
         jsonReport = JSON.stringify(
@@ -387,9 +385,9 @@ export async function run(opts = {}) {
           undefined,
           'number' !== typeof opts.json ? 0 : opts.json,
         );
-        log(jsonReport);
-        if (opts.file) writeFileSync(opts.file, jsonReport);
     }
+    log(jsonReport);
+    if (opts.file) writeFileSync(opts.file, jsonReport);
   }
 
   return JSON.parse(JSON.stringify(report));
