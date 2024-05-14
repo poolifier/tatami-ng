@@ -244,11 +244,10 @@ export async function run(opts = {}) {
         ', ',
       )} as 'json' option, got ${opts.json}`,
     );
-  if (opts.file != null && 'string' !== typeof opts.file) {
+  if (opts.file != null && 'string' !== typeof opts.file)
     throw new TypeError(
       `expected string as 'file' option, got ${opts.file.constructor.name}`,
     );
-  }
   if ('string' === typeof opts.file && opts.file.trim().length === 0)
     throw new TypeError(`expected non-empty string as 'file' option`);
   // biome-ignore lint/style/noParameterAssign: <explanation>
