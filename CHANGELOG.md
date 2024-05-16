@@ -8,6 +8,11 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix `run()` `warmup` option handling.
+- Display summary for no group benchmarks.
+
 ## [0.4.9] - 2024-05-13
 
 ### Changed

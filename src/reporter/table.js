@@ -118,6 +118,11 @@ export function benchmark(
   }${!stats.ss ? ` ${clr.red(colors, '!')}` : ''}`;
 }
 
+/**
+ * Display summary of benchmarks
+ *
+ * @param {Array} benchmarks - array of benchmarks
+ */
 export function summary(benchmarks, { colors = true }) {
   // biome-ignore lint/style/noParameterAssign: <explanation>
   benchmarks = benchmarks.filter(benchmark => benchmark.error == null);

@@ -14,6 +14,7 @@ import {
   measure,
   mergeDeepRight,
   noColor,
+  overrideBenchmarkDefaults,
   version,
   writeFileSync,
 } from './lib.js';
@@ -277,15 +278,12 @@ export async function run(opts = {}) {
     log(table.br(opts));
   }
 
-  let baseline = false;
+  const noGroupBenchmarks = benchmarks.filter(
+    benchmark => benchmark.group == null,
+  );
   let first = false;
-  for (const benchmark of benchmarks) {
-    if (benchmark.group) continue;
-    if (benchmark.baseline) baseline = true;
-
-    benchmark.samples = opts.samples ?? benchmark.samples;
-    benchmark.time = opts.time ?? benchmark.time;
-    benchmark.warmup = opts.warmup ?? benchmark.warmup;
+  for (const benchmark of noGroupBenchmarks) {
+    overrideBenchmarkDefaults(benchmark, opts);
     first = true;
     try {
       benchmark.stats = await measure(
@@ -308,15 +306,11 @@ export async function run(opts = {}) {
     }
   }
 
-  if (baseline && !opts.json) {
+  if (!opts.json && noGroupBenchmarks.length > 0) {
     log('');
-    log(
-      table.summary(
-        benchmarks.filter(benchmark => benchmark.group == null),
-        opts,
-      ),
-    );
+    log(table.summary(noGroupBenchmarks, opts));
   }
+
   for (const [group, groupOpts] of groups) {
     if (!opts.json) {
       if (first) log('');
@@ -329,11 +323,11 @@ export async function run(opts = {}) {
       ? await groupOpts.before()
       : groupOpts.before();
 
-    for (const benchmark of benchmarks) {
-      if (group !== benchmark.group) continue;
-
-      benchmark.samples = opts.samples ?? benchmark.samples;
-      benchmark.time = opts.time ?? benchmark.time;
+    const groupBenchmarks = benchmarks.filter(
+      benchmark => benchmark.group === group,
+    );
+    for (const benchmark of groupBenchmarks) {
+      overrideBenchmarkDefaults(benchmark, opts);
       first = true;
       try {
         benchmark.stats = await measure(
@@ -360,14 +354,13 @@ export async function run(opts = {}) {
       ? await groupOpts.after()
       : groupOpts.after();
 
-    if (groupOpts.summary === true && !opts.json) {
+    if (
+      groupOpts.summary === true &&
+      !opts.json &&
+      groupBenchmarks.length > 0
+    ) {
       log('');
-      log(
-        table.summary(
-          benchmarks.filter(benchmark => group === benchmark.group),
-          opts,
-        ),
-      );
+      log(table.summary(groupBenchmarks, opts));
     }
   }
 

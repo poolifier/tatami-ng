@@ -100,6 +100,12 @@ export const checkBenchmarkArgs = (fn, opts = {}) => {
     );
 };
 
+export const overrideBenchmarkDefaults = (benchmark, opts) => {
+  benchmark.samples = opts.samples ?? benchmark.samples;
+  benchmark.time = opts.time ?? benchmark.time;
+  benchmark.warmup = opts.warmup ?? benchmark.warmup;
+};
+
 export function mergeDeepRight(target, source) {
   const targetClone = structuredClone(target);
 
