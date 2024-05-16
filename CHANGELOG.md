@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [0.4.10] - 2024-05-16
+
 ### Fixed
 
 - Fix `run()` `warmup` option handling.
