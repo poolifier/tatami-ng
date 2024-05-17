@@ -8,7 +8,7 @@ and this project adheres to
 
 ## [Unreleased]
 
-###
+### Changed
 
 - Add benchmark relative speed ratio error margin to summary.
 
@@ -30,7 +30,7 @@ and this project adheres to
 ### Fixed
 
 - Ensure report returned by `run()` is not cleared.
-- Fix `run()` 'json' option handling.
+- Fix `run()` `json` option handling.
 
 ## [0.4.7] - 2024-05-13 (not released)
 
