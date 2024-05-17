@@ -193,25 +193,32 @@ export function clear() {
   benchmarks.length = 0;
 }
 
-const runBenchmark = async (benchmark, log, opts = {}) => {
-  try {
-    benchmark.stats = await measure(
-      benchmark.fn,
-      benchmark.before,
-      benchmark.after,
-      {
-        async: benchmark.async,
-        samples: benchmark.samples,
-        time: benchmark.time,
-        warmup: benchmark.warmup,
-      },
-    );
-    if (!opts.json) log(table.benchmark(benchmark.name, benchmark.stats, opts));
-  } catch (err) {
-    benchmark.error = err;
-    if (!opts.json)
-      log(table.benchmarkError(benchmark.name, benchmark.error, opts));
+const executeBenchmarks = async (benchmarks, log, opts = {}) => {
+  let once = false;
+  for (const benchmark of benchmarks) {
+    once = true;
+    overrideBenchmarkDefaults(benchmark, opts);
+    try {
+      benchmark.stats = await measure(
+        benchmark.fn,
+        benchmark.before,
+        benchmark.after,
+        {
+          async: benchmark.async,
+          samples: benchmark.samples,
+          time: benchmark.time,
+          warmup: benchmark.warmup,
+        },
+      );
+      if (!opts.json)
+        log(table.benchmark(benchmark.name, benchmark.stats, opts));
+    } catch (err) {
+      benchmark.error = err;
+      if (!opts.json)
+        log(table.benchmarkError(benchmark.name, benchmark.error, opts));
+    }
   }
+  return once;
 };
 
 /**
@@ -302,12 +309,7 @@ export async function run(opts = {}) {
   const noGroupBenchmarks = benchmarks.filter(
     benchmark => benchmark.group == null,
   );
-  let first = false;
-  for (const benchmark of noGroupBenchmarks) {
-    overrideBenchmarkDefaults(benchmark, opts);
-    first = true;
-    await runBenchmark(benchmark, log, opts);
-  }
+  let once = await executeBenchmarks(noGroupBenchmarks, log, opts);
 
   if (!opts.json && noGroupBenchmarks.length > 0) {
     log('');
@@ -316,9 +318,9 @@ export async function run(opts = {}) {
 
   for (const [group, groupOpts] of groups) {
     if (!opts.json) {
-      if (first) log('');
+      if (once) log('');
       if (!group.startsWith(tatamiNgGroup)) log(`• ${group}`);
-      if (first || !group.startsWith(tatamiNgGroup))
+      if (once || !group.startsWith(tatamiNgGroup))
         log(clr.gray(opts.colors, table.br(opts)));
     }
 
@@ -329,11 +331,7 @@ export async function run(opts = {}) {
     const groupBenchmarks = benchmarks.filter(
       benchmark => benchmark.group === group,
     );
-    for (const benchmark of groupBenchmarks) {
-      overrideBenchmarkDefaults(benchmark, opts);
-      first = true;
-      await runBenchmark(benchmark, log, opts);
-    }
+    once = await executeBenchmarks(groupBenchmarks, log, opts);
 
     AsyncFunction === groupOpts.after.constructor
       ? await groupOpts.after()
