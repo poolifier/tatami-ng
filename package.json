@@ -3,7 +3,7 @@
   "name": "tatami-ng",
   "type": "module",
   "license": "MIT",
-  "version": "0.4.10",
+  "version": "0.4.11",
   "packageManager": "bun@1.1.8",
   "types": "./src/index.d.ts",
   "main": "./src/index.js",
