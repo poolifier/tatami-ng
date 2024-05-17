@@ -106,7 +106,7 @@ export const overrideBenchmarkDefaults = (benchmark, opts) => {
   benchmark.warmup = opts.warmup ?? benchmark.warmup;
 };
 
-export function mergeDeepRight(target, source) {
+export const mergeDeepRight = (target, source) => {
   const targetClone = structuredClone(target);
 
   for (const key in source) {
@@ -124,7 +124,16 @@ export function mergeDeepRight(target, source) {
   }
 
   return targetClone;
-}
+};
+
+export const validDividend = n => {
+  if ('number' !== typeof n)
+    throw new TypeError(`expected number, got ${n.constructor.name}`);
+  if (n === 0 || Number.isNaN(n)) {
+    throw new RangeError(`Invalid dividend: ${n}`);
+  }
+  return n;
+};
 
 export async function measure(
   fn,
@@ -226,13 +235,14 @@ const buildStats = samples => {
   const time = samples.reduce((a, b) => a + b, 0);
   const avg = time / samples.length;
   const vr =
-    samples.reduce((a, b) => a + (b - avg) ** 2, 0) / (samples.length - 1);
+    samples.reduce((a, b) => a + (b - avg) ** 2, 0) /
+    validDividend(samples.length - 1);
   const sd = Math.sqrt(vr);
   const sem = sd / Math.sqrt(samples.length);
   const critical =
     tTable[(samples.length - 1 || 1).toString()] || tTable.infinity;
   const moe = sem * critical;
-  const rmoe = (moe / avg) * 100;
+  const rmoe = (moe / validDividend(avg)) * 100;
 
   return {
     samples: samples.length,

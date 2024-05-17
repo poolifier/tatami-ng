@@ -1,4 +1,5 @@
 import { tTable, tatamiNgGroup } from '../constants.js';
+import { validDividend } from '../lib.js';
 import * as clr from './clr.js';
 import { duration, errorMargin, iterPerSecond, speedRatio } from './fmt.js';
 
@@ -139,25 +140,28 @@ export function summary(benchmarks, { colors = true }) {
   }`}\n  ${clr.bold(colors, clr.cyan(colors, baseline.name))}${benchmarks
     .filter(benchmark => benchmark !== baseline)
     .map(benchmark => {
-      const ratio = benchmark.stats.avg / baseline.stats.avg;
+      const ratio = benchmark.stats.avg / validDividend(baseline.stats.avg);
       // https://en.wikipedia.org/wiki/Propagation_of_uncertainty#Example_formulae
       const ratioSd =
         ratio *
         Math.sqrt(
-          (baseline.stats.sd / baseline.stats.avg) ** 2 +
-            (benchmark.stats.sd / benchmark.stats.avg) ** 2,
+          (baseline.stats.sd / validDividend(baseline.stats.avg)) ** 2 +
+            (benchmark.stats.sd / validDividend(benchmark.stats.avg)) ** 2,
         );
       const ratioSem =
-        ratioSd / Math.sqrt(baseline.stats.samples + benchmark.stats.samples);
+        ratioSd /
+        validDividend(
+          Math.sqrt(baseline.stats.samples + benchmark.stats.samples),
+        );
       const critical =
         tTable[
           (baseline.stats.samples + benchmark.stats.samples - 1 || 1).toString()
         ] || tTable.infinity;
       const ratioMoe = ratioSem * critical;
-      const ratioRmoe = (ratioMoe / ratio) * 100;
+      const ratioRmoe = (ratioMoe / validDividend(ratio)) * 100;
       return `\n   ${clr[1 > ratio ? 'red' : 'green'](
         colors,
-        1 > ratio ? speedRatio(1 / ratio) : speedRatio(ratio),
+        1 > ratio ? speedRatio(1 / validDividend(ratio)) : speedRatio(ratio),
       )} ± ${clr.yellow(colors, errorMargin(ratioRmoe))} times ${
         1 > ratio ? 'slower' : 'faster'
       } than ${clr.bold(colors, clr.cyan(colors, benchmark.name))}`;
