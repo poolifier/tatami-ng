@@ -119,7 +119,7 @@ export function benchmark(
 }
 
 /**
- * Display summary of benchmarks
+ * Display summary of benchmarks.
  *
  * @param {Array} benchmarks - array of benchmarks
  */
