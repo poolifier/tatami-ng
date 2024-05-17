@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+###
+
+- Add benchmark relative speed ratio error margin to summary.
+
 ## [0.4.10] - 2024-05-16
 
 ### Fixed

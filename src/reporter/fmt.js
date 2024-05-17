@@ -41,8 +41,8 @@ export function errorMargin(rmoe) {
     .replaceAll(',', "'")} %`;
 }
 
-export function speedRatio(speed) {
-  return `${Number(speed.toFixed(2))
+export function speedRatio(ratio) {
+  return `${Number(ratio.toFixed(2))
     .toLocaleString(locale)
     .replaceAll(',', "'")}`;
 }
