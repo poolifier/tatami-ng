@@ -126,7 +126,7 @@ export const mergeDeepRight = (target, source) => {
   return targetClone;
 };
 
-export const validDividend = n => {
+export const checkDividend = n => {
   if ('number' !== typeof n)
     throw new TypeError(`expected number, got ${n.constructor.name}`);
   if (n === 0 || Number.isNaN(n)) {
@@ -236,13 +236,13 @@ const buildStats = samples => {
   const avg = time / samples.length;
   const vr =
     samples.reduce((a, b) => a + (b - avg) ** 2, 0) /
-    validDividend(samples.length - 1);
+    checkDividend(samples.length - 1);
   const sd = Math.sqrt(vr);
   const sem = sd / Math.sqrt(samples.length);
   const critical =
     tTable[(samples.length - 1 || 1).toString()] || tTable.infinity;
   const moe = sem * critical;
-  const rmoe = (moe / validDividend(avg)) * 100;
+  const rmoe = (moe / checkDividend(avg)) * 100;
 
   return {
     samples: samples.length,

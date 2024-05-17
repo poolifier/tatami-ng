@@ -1,5 +1,5 @@
 import { tTable, tatamiNgGroup } from '../constants.js';
-import { validDividend } from '../lib.js';
+import { checkDividend } from '../lib.js';
 import * as clr from './clr.js';
 import { duration, errorMargin, iterPerSecond, speedRatio } from './fmt.js';
 
@@ -140,17 +140,17 @@ export function summary(benchmarks, { colors = true }) {
   }`}\n  ${clr.bold(colors, clr.cyan(colors, baseline.name))}${benchmarks
     .filter(benchmark => benchmark !== baseline)
     .map(benchmark => {
-      const ratio = benchmark.stats.avg / validDividend(baseline.stats.avg);
+      const ratio = benchmark.stats.avg / checkDividend(baseline.stats.avg);
       // https://en.wikipedia.org/wiki/Propagation_of_uncertainty#Example_formulae
       const ratioSd =
         ratio *
         Math.sqrt(
-          (baseline.stats.sd / validDividend(baseline.stats.avg)) ** 2 +
-            (benchmark.stats.sd / validDividend(benchmark.stats.avg)) ** 2,
+          (baseline.stats.sd / checkDividend(baseline.stats.avg)) ** 2 +
+            (benchmark.stats.sd / checkDividend(benchmark.stats.avg)) ** 2,
         );
       const ratioSem =
         ratioSd /
-        validDividend(
+        checkDividend(
           Math.sqrt(baseline.stats.samples + benchmark.stats.samples),
         );
       const critical =
@@ -158,10 +158,10 @@ export function summary(benchmarks, { colors = true }) {
           (baseline.stats.samples + benchmark.stats.samples - 1 || 1).toString()
         ] || tTable.infinity;
       const ratioMoe = ratioSem * critical;
-      const ratioRmoe = (ratioMoe / validDividend(ratio)) * 100;
+      const ratioRmoe = (ratioMoe / checkDividend(ratio)) * 100;
       return `\n   ${clr[1 > ratio ? 'red' : 'green'](
         colors,
-        1 > ratio ? speedRatio(1 / validDividend(ratio)) : speedRatio(ratio),
+        1 > ratio ? speedRatio(1 / checkDividend(ratio)) : speedRatio(ratio),
       )} ± ${clr.yellow(colors, errorMargin(ratioRmoe))} times ${
         1 > ratio ? 'slower' : 'faster'
       } than ${clr.bold(colors, clr.cyan(colors, benchmark.name))}`;
