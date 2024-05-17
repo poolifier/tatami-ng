@@ -193,6 +193,27 @@ export function clear() {
   benchmarks.length = 0;
 }
 
+const runBenchmark = async (benchmark, log, opts = {}) => {
+  try {
+    benchmark.stats = await measure(
+      benchmark.fn,
+      benchmark.before,
+      benchmark.after,
+      {
+        async: benchmark.async,
+        samples: benchmark.samples,
+        time: benchmark.time,
+        warmup: benchmark.warmup,
+      },
+    );
+    if (!opts.json) log(table.benchmark(benchmark.name, benchmark.stats, opts));
+  } catch (err) {
+    benchmark.error = err;
+    if (!opts.json)
+      log(table.benchmarkError(benchmark.name, benchmark.error, opts));
+  }
+};
+
 /**
  * Run defined benchmarks.
  *
@@ -285,25 +306,7 @@ export async function run(opts = {}) {
   for (const benchmark of noGroupBenchmarks) {
     overrideBenchmarkDefaults(benchmark, opts);
     first = true;
-    try {
-      benchmark.stats = await measure(
-        benchmark.fn,
-        benchmark.before,
-        benchmark.after,
-        {
-          async: benchmark.async,
-          samples: benchmark.samples,
-          time: benchmark.time,
-          warmup: benchmark.warmup,
-        },
-      );
-      if (!opts.json)
-        log(table.benchmark(benchmark.name, benchmark.stats, opts));
-    } catch (err) {
-      benchmark.error = err;
-      if (!opts.json)
-        log(table.benchmarkError(benchmark.name, benchmark.error, opts));
-    }
+    await runBenchmark(benchmark, log, opts);
   }
 
   if (!opts.json && noGroupBenchmarks.length > 0) {
@@ -329,25 +332,7 @@ export async function run(opts = {}) {
     for (const benchmark of groupBenchmarks) {
       overrideBenchmarkDefaults(benchmark, opts);
       first = true;
-      try {
-        benchmark.stats = await measure(
-          benchmark.fn,
-          benchmark.before,
-          benchmark.after,
-          {
-            async: benchmark.async,
-            samples: benchmark.samples,
-            time: benchmark.time,
-            warmup: benchmark.warmup,
-          },
-        );
-        if (!opts.json)
-          log(table.benchmark(benchmark.name, benchmark.stats, opts));
-      } catch (err) {
-        benchmark.error = err;
-        if (!opts.json)
-          log(table.benchmarkError(benchmark.name, benchmark.error, opts));
-      }
+      await runBenchmark(benchmark, log, opts);
     }
 
     AsyncFunction === groupOpts.after.constructor
