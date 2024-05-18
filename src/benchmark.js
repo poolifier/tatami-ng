@@ -324,13 +324,14 @@ export async function run(opts = {}) {
         log(clr.gray(opts.colors, table.br(opts)));
     }
 
+    const groupBenchmarks = benchmarks.filter(
+      benchmark => benchmark.group === group,
+    );
+
     AsyncFunction === groupOpts.before.constructor
       ? await groupOpts.before()
       : groupOpts.before();
 
-    const groupBenchmarks = benchmarks.filter(
-      benchmark => benchmark.group === group,
-    );
     once = await executeBenchmarks(groupBenchmarks, log, opts);
 
     AsyncFunction === groupOpts.after.constructor
