@@ -252,7 +252,7 @@ const buildStats = samples => {
     p99: quantile(samples, 0.99),
     p995: quantile(samples, 0.995),
     avg,
-    iter: (1e9 * samples.length) / time,
+    iter: (1e9 * samples.length) / checkDividend(time),
     vr,
     sd,
     rmoe,
