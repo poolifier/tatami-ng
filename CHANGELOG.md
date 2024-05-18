@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix throughput computation.
+
 ## [0.4.11] - 2024-05-17
 
 ### Changed
