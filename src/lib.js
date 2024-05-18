@@ -129,9 +129,8 @@ export const mergeDeepRight = (target, source) => {
 export const checkDividend = n => {
   if ('number' !== typeof n)
     throw new TypeError(`expected number, got ${n.constructor.name}`);
-  if (n === 0 || Number.isNaN(n)) {
+  if (n === 0 || Number.isNaN(n))
     throw new RangeError(`Invalid dividend: ${n}`);
-  }
   return n;
 };
 
