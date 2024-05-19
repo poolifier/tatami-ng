@@ -222,12 +222,10 @@ const quantile = (arr, q) => {
 };
 
 const buildStats = samples => {
-  if (!Array.isArray(samples)) {
+  if (!Array.isArray(samples))
     throw new TypeError(`expected array, got ${samples.constructor.name}`);
-  }
-  if (Array.isArray(samples) && samples.length === 0) {
+  if (Array.isArray(samples) && samples.length === 0)
     throw new Error('expected non-empty array, got empty array');
-  }
 
   samples.sort((a, b) => a - b);
 
