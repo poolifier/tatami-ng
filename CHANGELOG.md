@@ -12,7 +12,7 @@ and this project adheres to
 
 ### Fixed
 
-- Fix throughput computation.
+- Fix benchmark throughput computation.
 
 ## [0.4.11] - 2024-05-17
 
