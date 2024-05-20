@@ -93,7 +93,7 @@ export function benchmark(
   }${
     !rmoe
       ? ''
-      : `± ${clr.yellow(colors, errorMargin(stats.rmoe))}`.padStart(
+      : `± ${clr.blue(colors, errorMargin(stats.rmoe))}`.padStart(
           14 + 10 * colors,
           ' ',
         )
@@ -162,7 +162,7 @@ export function summary(benchmarks, { colors = true }) {
       return `\n   ${clr[1 > ratio ? 'red' : 'green'](
         colors,
         1 > ratio ? speedRatio(1 / checkDividend(ratio)) : speedRatio(ratio),
-      )} ± ${clr.yellow(colors, errorMargin(ratioRmoe))} times ${
+      )} ± ${clr.blue(colors, errorMargin(ratioRmoe))} times ${
         1 > ratio ? 'slower' : 'faster'
       } than ${clr.bold(colors, clr.cyan(colors, benchmark.name))}`;
     })
