@@ -311,7 +311,8 @@ export async function run(opts = {}) {
   );
   let once = await executeBenchmarks(noGroupBenchmarks, log, opts);
 
-  if (!opts.json && noGroupBenchmarks.length > 0) {
+  // TODO: ensure no erroed benchmarks are included in the summary
+  if (!opts.json && noGroupBenchmarks.length > 1) {
     log('');
     log(table.summary(noGroupBenchmarks, opts));
   }
@@ -338,10 +339,11 @@ export async function run(opts = {}) {
       ? await groupOpts.after()
       : groupOpts.after();
 
+    // TODO: ensure no erroed benchmarks are included in the summary
     if (
       groupOpts.summary === true &&
       !opts.json &&
-      groupBenchmarks.length > 0
+      groupBenchmarks.length > 1
     ) {
       log('');
       log(table.summary(groupBenchmarks, opts));

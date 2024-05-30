@@ -7,6 +7,9 @@ bench('noop', () => {}, {
 bench('async noop', async () => {});
 baseline('aaa', () => {});
 bench('async noop2', async () => Promise.resolve());
+bench('error', () => {
+  throw new Error('error');
+});
 
 group(() => {
   bench('a', () => {});
@@ -38,10 +41,6 @@ group({ name: 'group2', summary: false }, () => {
   bench('new Array(1024)', () => {
     new Array(1024);
   });
-});
-
-bench('error', () => {
-  throw new Error('error');
 });
 
 const report = await run({
