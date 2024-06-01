@@ -4,7 +4,7 @@
   "type": "module",
   "license": "MIT",
   "version": "0.4.13",
-  "packageManager": "bun@1.1.10",
+  "packageManager": "bun@1.1.12",
   "types": "./src/index.d.ts",
   "main": "./src/index.js",
   "browser": "./dist/browser/index.js",
@@ -51,6 +51,6 @@
     "release-it": "^17.3.0"
   },
   "peerDependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "^5.4.3"
   }
 }
