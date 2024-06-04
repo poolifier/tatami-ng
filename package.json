@@ -28,9 +28,9 @@
     "prepare": "bun run prepare.ts",
     "format": "biome format . --write",
     "lint": "biome lint .",
-    "lint:apply": "biome lint . --apply",
+    "lint:write": "biome lint . --write",
     "check": "biome check .",
-    "check:apply": "biome check . --apply",
+    "check:write": "biome check . --write",
     "check:ci": "biome ci .",
     "bundle": "bun run bundle.ts",
     "test:node": "node tests/test.js",
@@ -39,7 +39,7 @@
     "release": "release-it"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.7.3",
+    "@biomejs/biome": "^1.8.0",
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
     "@release-it/bumper": "^6.0.1",
