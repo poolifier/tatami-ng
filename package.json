@@ -4,7 +4,7 @@
   "type": "module",
   "license": "MIT",
   "version": "0.4.13",
-  "packageManager": "bun@1.1.12",
+  "packageManager": "bun@1.1.13",
   "types": "./src/index.d.ts",
   "main": "./src/index.js",
   "browser": "./dist/browser/index.js",
