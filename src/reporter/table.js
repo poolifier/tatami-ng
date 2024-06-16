@@ -125,7 +125,7 @@ export function benchmark(
  * @param {Array} benchmarks - array of benchmarks
  */
 export function summary(benchmarks, { colors = true }) {
-  if (benchmarks.every(benchmark => benchmark.error != null)) {
+  if (benchmarks.some(benchmark => benchmark.error != null)) {
     throw new Error('Cannot summarize benchmarks with error');
   }
   if (benchmarks.length < 2) {

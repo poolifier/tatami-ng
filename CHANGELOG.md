@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix a sanity check at benchmarks summary display.
+
 ## [0.4.14] - 2024-06-16
 
 ### Fixed
