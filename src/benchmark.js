@@ -306,12 +306,14 @@ export async function run(opts = {}) {
     log(table.br(opts));
   }
 
-  const noGroupBenchmarks = benchmarks.filter(
+  let noGroupBenchmarks = benchmarks.filter(
     benchmark => benchmark.group == null,
   );
   let once = await executeBenchmarks(noGroupBenchmarks, log, opts);
 
-  // TODO: ensure no erroed benchmarks are included in the summary
+  noGroupBenchmarks = noGroupBenchmarks.filter(
+    noGroupBenchmark => noGroupBenchmark.error == null,
+  );
   if (!opts.json && noGroupBenchmarks.length > 1) {
     log('');
     log(table.summary(noGroupBenchmarks, opts));
@@ -325,7 +327,7 @@ export async function run(opts = {}) {
         log(clr.gray(opts.colors, table.br(opts)));
     }
 
-    const groupBenchmarks = benchmarks.filter(
+    let groupBenchmarks = benchmarks.filter(
       benchmark => benchmark.group === group,
     );
 
@@ -339,7 +341,9 @@ export async function run(opts = {}) {
       ? await groupOpts.after()
       : groupOpts.after();
 
-    // TODO: ensure no erroed benchmarks are included in the summary
+    groupBenchmarks = groupBenchmarks.filter(
+      groupBenchmark => groupBenchmark.error == null,
+    );
     if (
       groupOpts.summary === true &&
       !opts.json &&

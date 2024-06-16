@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Fixed
+
+- Ensure benchmarks summary is only displayed with two valid benchmarks.
+
 ## [0.4.13] - 2024-05-25
 
 ### Changed

@@ -125,8 +125,12 @@ export function benchmark(
  * @param {Array} benchmarks - array of benchmarks
  */
 export function summary(benchmarks, { colors = true }) {
-  // biome-ignore lint/style/noParameterAssign: <explanation>
-  benchmarks = benchmarks.filter(benchmark => benchmark.error == null);
+  if (benchmarks.every(benchmark => benchmark.error != null)) {
+    throw new Error('Cannot summarize benchmarks with error');
+  }
+  if (benchmarks.length < 2) {
+    throw new Error('Cannot summarize less than two benchmarks');
+  }
   benchmarks.sort(
     (benchmarkA, benchmarkB) => benchmarkA.stats.avg - benchmarkB.stats.avg,
   );
