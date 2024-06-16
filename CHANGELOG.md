@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [0.4.14] - 2024-06-16
+
 ### Fixed
 
 - Ensure benchmarks summary is only displayed with two valid benchmarks.
