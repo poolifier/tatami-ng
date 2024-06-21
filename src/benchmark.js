@@ -4,7 +4,7 @@ import {
   emptyFunction,
   jsonOutputFormat,
   tatamiNgGroup,
-} from './constants.js';
+} from './constants.js'
 import {
   os,
   AsyncFunction,
@@ -17,15 +17,15 @@ import {
   overrideBenchmarkDefaults,
   version,
   writeFileSync,
-} from './lib.js';
-import { logger } from './logger.js';
-import * as clr from './reporter/clr.js';
-import * as table from './reporter/table.js';
-import { runtime } from './runtime.js';
+} from './lib.js'
+import { logger } from './logger.js'
+import * as clr from './reporter/clr.js'
+import * as table from './reporter/table.js'
+import { runtime } from './runtime.js'
 
-let groupName = null;
-const groups = new Map();
-const benchmarks = [];
+let groupName = null
+const groups = new Map()
+const benchmarks = []
 
 /**
  * @callback CallbackType
@@ -50,55 +50,55 @@ export function group(name, cb = undefined) {
     ![Function, AsyncFunction].includes(name.constructor)
   )
     throw new TypeError(
-      `expected string, object or function, got ${name.constructor.name}`,
-    );
+      `expected string, object or function, got ${name.constructor.name}`
+    )
   if ([Function, AsyncFunction].includes(name.constructor)) {
     // biome-ignore lint/style/noParameterAssign: <explanation>
-    cb = name;
+    cb = name
   }
   if (![Function, AsyncFunction].includes(cb.constructor))
-    throw new TypeError(`expected function, got ${cb.constructor.name}`);
+    throw new TypeError(`expected function, got ${cb.constructor.name}`)
   if (Object.prototype.toString.call(name).slice(8, -1) === 'Object') {
     if (name.name != null && 'string' !== typeof name.name)
       throw new TypeError(
-        `expected string as 'name' option, got ${name.name.constructor.name}`,
-      );
+        `expected string as 'name' option, got ${name.name.constructor.name}`
+      )
     if (name.summary != null && 'boolean' !== typeof name.summary)
       throw new TypeError(
-        `expected boolean as 'summary' option, got ${name.summary.constructor.name}`,
-      );
+        `expected boolean as 'summary' option, got ${name.summary.constructor.name}`
+      )
     if (
       name.before != null &&
       ![Function, AsyncFunction].includes(name.before.constructor)
     )
       throw new TypeError(
-        `expected function as 'before' option, got ${name.before.constructor.name}`,
-      );
+        `expected function as 'before' option, got ${name.before.constructor.name}`
+      )
     if (
       name.after != null &&
       ![Function, AsyncFunction].includes(name.after.constructor)
     )
       throw new TypeError(
-        `expected function as 'after' option, got ${name.after.constructor.name}`,
-      );
+        `expected function as 'after' option, got ${name.after.constructor.name}`
+      )
   }
 
   groupName =
     ('string' === typeof name ? name.trim() : name.name?.trim()) ||
-    `${tatamiNgGroup}${groups.size + 1}`;
+    `${tatamiNgGroup}${groups.size + 1}`
   if (!groups.has(groupName))
     groups.set(groupName, {
       summary: name.summary ?? true,
       before: name.before ?? emptyFunction,
       after: name.after ?? emptyFunction,
-    });
+    })
   if (AsyncFunction === cb.constructor) {
     cb().then(() => {
-      groupName = null;
-    });
+      groupName = null
+    })
   } else {
-    cb();
-    groupName = null;
+    cb()
+    groupName = null
   }
 }
 
@@ -114,13 +114,13 @@ export function group(name, cb = undefined) {
 export function bench(name, fn = undefined, opts = {}) {
   if ([Function, AsyncFunction].includes(name.constructor)) {
     // biome-ignore lint/style/noParameterAssign: <explanation>
-    fn = name;
+    fn = name
     // biome-ignore lint/style/noParameterAssign: <explanation>
-    name = fn.name;
+    name = fn.name
   }
-  checkBenchmarkArgs(fn, opts);
+  checkBenchmarkArgs(fn, opts)
   // biome-ignore lint/style/noParameterAssign: <explanation>
-  name = name.trim();
+  name = name.trim()
 
   benchmarks.push({
     before: opts.before ?? emptyFunction,
@@ -133,7 +133,7 @@ export function bench(name, fn = undefined, opts = {}) {
     warmup: true,
     baseline: false,
     async: AsyncFunction === fn.constructor,
-  });
+  })
 }
 
 /**
@@ -149,13 +149,13 @@ export function bench(name, fn = undefined, opts = {}) {
 export function baseline(name, fn = undefined, opts = {}) {
   if ([Function, AsyncFunction].includes(name.constructor)) {
     // biome-ignore lint/style/noParameterAssign: <explanation>
-    fn = name;
+    fn = name
     // biome-ignore lint/style/noParameterAssign: <explanation>
-    name = fn.name;
+    name = fn.name
   }
-  checkBenchmarkArgs(fn, opts);
+  checkBenchmarkArgs(fn, opts)
   // biome-ignore lint/style/noParameterAssign: <explanation>
-  name = name.trim();
+  name = name.trim()
 
   benchmarks.push({
     before: opts.before ?? emptyFunction,
@@ -168,7 +168,7 @@ export function baseline(name, fn = undefined, opts = {}) {
     warmup: true,
     baseline: true,
     async: AsyncFunction === fn.constructor,
-  });
+  })
 }
 
 /**
@@ -189,15 +189,15 @@ export function baseline(name, fn = undefined, opts = {}) {
  * await run();
  */
 export function clear() {
-  groups.clear();
-  benchmarks.length = 0;
+  groups.clear()
+  benchmarks.length = 0
 }
 
 const executeBenchmarks = async (benchmarks, log, opts = {}) => {
-  let once = false;
+  let once = false
   for (const benchmark of benchmarks) {
-    once = true;
-    overrideBenchmarkDefaults(benchmark, opts);
+    once = true
+    overrideBenchmarkDefaults(benchmark, opts)
     try {
       benchmark.stats = await measure(
         benchmark.fn,
@@ -208,18 +208,18 @@ const executeBenchmarks = async (benchmarks, log, opts = {}) => {
           samples: benchmark.samples,
           time: benchmark.time,
           warmup: benchmark.warmup,
-        },
-      );
+        }
+      )
       if (!opts.json)
-        log(table.benchmark(benchmark.name, benchmark.stats, opts));
+        log(table.benchmark(benchmark.name, benchmark.stats, opts))
     } catch (err) {
-      benchmark.error = err;
+      benchmark.error = err
       if (!opts.json)
-        log(table.benchmarkError(benchmark.name, benchmark.error, opts));
+        log(table.benchmarkError(benchmark.name, benchmark.error, opts))
     }
   }
-  return once;
-};
+  return once
+}
 
 /**
  * Run defined benchmarks.
@@ -242,19 +242,19 @@ const executeBenchmarks = async (benchmarks, log, opts = {}) => {
  */
 export async function run(opts = {}) {
   if (Object.prototype.toString.call(opts).slice(8, -1) !== 'Object')
-    throw new TypeError(`expected object, got ${opts.constructor.name}`);
+    throw new TypeError(`expected object, got ${opts.constructor.name}`)
   if (opts.samples != null && 'number' !== typeof opts.samples)
     throw new TypeError(
-      `expected number as 'samples' option, got ${opts.samples.constructor.name}`,
-    );
+      `expected number as 'samples' option, got ${opts.samples.constructor.name}`
+    )
   if (opts.time != null && 'number' !== typeof opts.time)
     throw new TypeError(
-      `expected number as 'time' option, got ${opts.time.constructor.name}`,
-    );
+      `expected number as 'time' option, got ${opts.time.constructor.name}`
+    )
   if (opts.warmup != null && 'boolean' !== typeof opts.warmup)
     throw new TypeError(
-      `expected boolean as 'warmup' option, got ${opts.warmup.constructor.name}`,
-    );
+      `expected boolean as 'warmup' option, got ${opts.warmup.constructor.name}`
+    )
   if (
     opts.json != null &&
     'number' !== typeof opts.json &&
@@ -262,23 +262,23 @@ export async function run(opts = {}) {
     'string' !== typeof opts.json
   )
     throw new TypeError(
-      `expected number or boolean or string as 'json' option, got ${opts.json.constructor.name}`,
-    );
+      `expected number or boolean or string as 'json' option, got ${opts.json.constructor.name}`
+    )
   if (
     'string' === typeof opts.json &&
     !Object.values(jsonOutputFormat).includes(opts.json)
   )
     throw new TypeError(
       `expected one of ${Object.values(jsonOutputFormat).join(
-        ', ',
-      )} as 'json' option, got ${opts.json}`,
-    );
+        ', '
+      )} as 'json' option, got ${opts.json}`
+    )
   if (opts.file != null && 'string' !== typeof opts.file)
     throw new TypeError(
-      `expected string as 'file' option, got ${opts.file.constructor.name}`,
-    );
+      `expected string as 'file' option, got ${opts.file.constructor.name}`
+    )
   if ('string' === typeof opts.file && opts.file.trim().length === 0)
-    throw new TypeError(`expected non-empty string as 'file' option`);
+    throw new TypeError(`expected non-empty string as 'file' option`)
   // biome-ignore lint/style/noParameterAssign: <explanation>
   opts = mergeDeepRight(
     {
@@ -286,91 +286,91 @@ export async function run(opts = {}) {
       colors: !noColor,
       size: table.size(benchmarks.map(benchmark => benchmark.name)),
     },
-    opts,
-  );
+    opts
+  )
 
-  const log = opts.silent === true ? emptyFunction : logger;
+  const log = opts.silent === true ? emptyFunction : logger
 
   const report = {
     benchmarks,
     cpu,
     runtime: `${runtime} ${version} (${os})`,
-  };
+  }
 
   if (!opts.json && benchmarks.length > 0) {
-    log(clr.gray(opts.colors, `cpu: ${report.cpu}`));
-    log(clr.gray(opts.colors, `runtime: ${report.runtime}`));
+    log(clr.gray(opts.colors, `cpu: ${report.cpu}`))
+    log(clr.gray(opts.colors, `runtime: ${report.runtime}`))
 
-    log('');
-    log(table.header(opts));
-    log(table.br(opts));
+    log('')
+    log(table.header(opts))
+    log(table.br(opts))
   }
 
   let noGroupBenchmarks = benchmarks.filter(
-    benchmark => benchmark.group == null,
-  );
-  let once = await executeBenchmarks(noGroupBenchmarks, log, opts);
+    benchmark => benchmark.group == null
+  )
+  let once = await executeBenchmarks(noGroupBenchmarks, log, opts)
 
   noGroupBenchmarks = noGroupBenchmarks.filter(
-    noGroupBenchmark => noGroupBenchmark.error == null,
-  );
+    noGroupBenchmark => noGroupBenchmark.error == null
+  )
   if (!opts.json && noGroupBenchmarks.length > 1) {
-    log('');
-    log(table.summary(noGroupBenchmarks, opts));
+    log('')
+    log(table.summary(noGroupBenchmarks, opts))
   }
 
   for (const [group, groupOpts] of groups) {
     if (!opts.json) {
-      if (once) log('');
-      if (!group.startsWith(tatamiNgGroup)) log(`• ${group}`);
+      if (once) log('')
+      if (!group.startsWith(tatamiNgGroup)) log(`• ${group}`)
       if (once || !group.startsWith(tatamiNgGroup))
-        log(clr.gray(opts.colors, table.br(opts)));
+        log(clr.gray(opts.colors, table.br(opts)))
     }
 
     let groupBenchmarks = benchmarks.filter(
-      benchmark => benchmark.group === group,
-    );
+      benchmark => benchmark.group === group
+    )
 
     AsyncFunction === groupOpts.before.constructor
       ? await groupOpts.before()
-      : groupOpts.before();
+      : groupOpts.before()
 
-    once = await executeBenchmarks(groupBenchmarks, log, opts);
+    once = await executeBenchmarks(groupBenchmarks, log, opts)
 
     AsyncFunction === groupOpts.after.constructor
       ? await groupOpts.after()
-      : groupOpts.after();
+      : groupOpts.after()
 
     groupBenchmarks = groupBenchmarks.filter(
-      groupBenchmark => groupBenchmark.error == null,
-    );
+      groupBenchmark => groupBenchmark.error == null
+    )
     if (
       groupOpts.summary === true &&
       !opts.json &&
       groupBenchmarks.length > 1
     ) {
-      log('');
-      log(table.summary(groupBenchmarks, opts));
+      log('')
+      log(table.summary(groupBenchmarks, opts))
     }
   }
 
-  if (!opts.json && opts.units) log(table.units(opts));
+  if (!opts.json && opts.units) log(table.units(opts))
   if (opts.json) {
-    let jsonReport;
+    let jsonReport
     switch (opts.json) {
       case jsonOutputFormat.bmf:
-        jsonReport = JSON.stringify(convertReportToBmf(report));
-        break;
+        jsonReport = JSON.stringify(convertReportToBmf(report))
+        break
       default:
         jsonReport = JSON.stringify(
           report,
           undefined,
-          'number' !== typeof opts.json ? 0 : opts.json,
-        );
+          'number' !== typeof opts.json ? 0 : opts.json
+        )
     }
-    log(jsonReport);
-    if (opts.file) writeFileSync(opts.file, jsonReport);
+    log(jsonReport)
+    if (opts.file) writeFileSync(opts.file, jsonReport)
   }
 
-  return JSON.parse(JSON.stringify(report));
+  return JSON.parse(JSON.stringify(report))
 }

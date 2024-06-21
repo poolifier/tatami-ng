@@ -4,11 +4,11 @@ import {
   emptyFunction,
   minimumSamples,
   tTable,
-} from './constants.js';
-import { runtime } from './runtime.js';
-import { now } from './time.js';
+} from './constants.js'
+import { runtime } from './runtime.js'
+import { now } from './time.js'
 
-export const AsyncFunction = (async () => {}).constructor;
+export const AsyncFunction = (async () => {}).constructor
 
 export const version = (() => {
   return {
@@ -17,8 +17,8 @@ export const version = (() => {
     node: () => process.version,
     deno: () => Deno.version.deno,
     bun: () => process.versions.bun,
-  }[runtime]();
-})();
+  }[runtime]()
+})()
 
 export const os = (() => {
   return {
@@ -27,8 +27,8 @@ export const os = (() => {
     node: () => `${process.arch}-${process.platform}`,
     deno: () => Deno.build.target,
     bun: () => `${process.arch}-${process.platform}`,
-  }[runtime]();
-})();
+  }[runtime]()
+})()
 
 export const cpu = await (async () => {
   return await {
@@ -37,8 +37,8 @@ export const cpu = await (async () => {
     node: async () => (await import('node:os'))?.cpus?.()?.[0]?.model,
     deno: async () => (await import('node:os'))?.cpus?.()?.[0]?.model,
     bun: async () => (await import('node:os'))?.cpus?.()?.[0]?.model,
-  }[runtime]();
-})();
+  }[runtime]()
+})()
 
 export const noColor = (() => {
   return {
@@ -47,8 +47,8 @@ export const noColor = (() => {
     node: () => !!process.env.NO_COLOR,
     deno: () => Deno.noColor,
     bun: () => !!process.env.NO_COLOR,
-  }[runtime]();
-})();
+  }[runtime]()
+})()
 
 export const writeFileSync = await (async () => {
   return await {
@@ -57,8 +57,8 @@ export const writeFileSync = await (async () => {
     node: async () => (await import('node:fs')).writeFileSync,
     deno: () => Deno.writeTextFileSync,
     bun: async () => (await import('node:fs')).writeFileSync,
-  }[runtime]();
-})();
+  }[runtime]()
+})()
 
 export const convertReportToBmf = report => {
   return report.benchmarks
@@ -74,80 +74,79 @@ export const convertReportToBmf = report => {
             value: stats?.iter,
           },
         },
-      };
+      }
     })
-    .reduce((obj, item) => Object.assign(obj, item), {});
-};
+    .reduce((obj, item) => Object.assign(obj, item), {})
+}
 
 export const checkBenchmarkArgs = (fn, opts = {}) => {
   if (![Function, AsyncFunction].includes(fn.constructor))
-    throw new TypeError(`expected function, got ${fn.constructor.name}`);
+    throw new TypeError(`expected function, got ${fn.constructor.name}`)
   if (Object.prototype.toString.call(opts).slice(8, -1) !== 'Object')
-    throw new TypeError(`expected object, got ${opts.constructor.name}`);
+    throw new TypeError(`expected object, got ${opts.constructor.name}`)
   if (
     opts.before != null &&
     ![Function, AsyncFunction].includes(opts.before.constructor)
   )
     throw new TypeError(
-      `expected function as 'before' option, got ${opts.before.constructor.name}`,
-    );
+      `expected function as 'before' option, got ${opts.before.constructor.name}`
+    )
   if (
     opts.after != null &&
     ![Function, AsyncFunction].includes(opts.after.constructor)
   )
     throw new TypeError(
-      `expected function as 'after' option, got ${opts.after.constructor.name}`,
-    );
-};
+      `expected function as 'after' option, got ${opts.after.constructor.name}`
+    )
+}
 
 export const overrideBenchmarkDefaults = (benchmark, opts) => {
-  benchmark.samples = opts.samples ?? benchmark.samples;
-  benchmark.time = opts.time ?? benchmark.time;
-  benchmark.warmup = opts.warmup ?? benchmark.warmup;
-};
+  benchmark.samples = opts.samples ?? benchmark.samples
+  benchmark.time = opts.time ?? benchmark.time
+  benchmark.warmup = opts.warmup ?? benchmark.warmup
+}
 
 export const mergeDeepRight = (target, source) => {
-  const targetClone = structuredClone(target);
+  const targetClone = structuredClone(target)
 
   for (const key in source) {
     if (Object.prototype.toString.call(target[key]).slice(8, -1) === 'Object') {
       if (
         Object.prototype.toString.call(target[key]).slice(8, -1) === 'Object'
       ) {
-        targetClone[key] = mergeDeepRight(target[key], source[key]);
+        targetClone[key] = mergeDeepRight(target[key], source[key])
       } else {
-        targetClone[key] = source[key];
+        targetClone[key] = source[key]
       }
     } else {
-      targetClone[key] = source[key];
+      targetClone[key] = source[key]
     }
   }
 
-  return targetClone;
-};
+  return targetClone
+}
 
 export const checkDividend = n => {
   if ('number' !== typeof n)
-    throw new TypeError(`expected number, got ${n.constructor.name}`);
-  if (n === 0 || Number.isNaN(n))
-    throw new RangeError(`Invalid dividend: ${n}`);
-  return n;
-};
+    throw new TypeError(`expected number, got ${n.constructor.name}`)
+  if (n === 0 || Number.isNaN(n)) throw new RangeError(`Invalid dividend: ${n}`)
+  return n
+}
 
 export async function measure(
   fn,
   before = emptyFunction,
   after = emptyFunction,
-  opts = {},
+  opts = {}
 ) {
   if (![Function, AsyncFunction].includes(fn.constructor))
-    throw new TypeError(`expected function, got ${fn.constructor.name}`);
+    throw new TypeError(`expected function, got ${fn.constructor.name}`)
   if (![Function, AsyncFunction].includes(before.constructor))
-    throw new TypeError(`expected function, got ${before.constructor.name}`);
+    throw new TypeError(`expected function, got ${before.constructor.name}`)
   if (![Function, AsyncFunction].includes(after.constructor))
-    throw new TypeError(`expected function, got ${after.constructor.name}`);
+    throw new TypeError(`expected function, got ${after.constructor.name}`)
   if (Object.prototype.toString.call(opts).slice(8, -1) !== 'Object')
-    throw new TypeError(`expected object, got ${opts.constructor.name}`);
+    throw new TypeError(`expected object, got ${opts.constructor.name}`)
 
   // biome-ignore lint/style/noParameterAssign: <explanation>
   opts = mergeDeepRight(
@@ -157,11 +156,11 @@ export async function measure(
       samples: defaultSamples,
       warmup: true,
     },
-    opts,
-  );
+    opts
+  )
 
-  const asyncBefore = AsyncFunction === before.constructor;
-  const asyncAfter = AsyncFunction === after.constructor;
+  const asyncBefore = AsyncFunction === before.constructor
+  const asyncAfter = AsyncFunction === after.constructor
 
   const benchmark = new (!opts.async ? Function : AsyncFunction)(
     '$fn',
@@ -199,47 +198,47 @@ export async function measure(
     ${asyncAfter ? 'await' : ''} $after();
 
     return samples;
-  `,
-  );
+  `
+  )
 
   const samples = !opts.async
     ? benchmark(fn, before, after, now)
-    : await benchmark(fn, before, after, now);
+    : await benchmark(fn, before, after, now)
 
-  return buildStats(samples);
+  return buildStats(samples)
 }
 
 const quantile = (arr, q) => {
-  const base = (arr.length - 1) * q;
-  const baseIndex = Math.floor(base);
+  const base = (arr.length - 1) * q
+  const baseIndex = Math.floor(base)
   if (arr[baseIndex + 1] != null) {
     return (
       arr[baseIndex] +
       (base - baseIndex) * (arr[baseIndex + 1] - arr[baseIndex])
-    );
+    )
   }
-  return arr[baseIndex];
-};
+  return arr[baseIndex]
+}
 
 const buildStats = samples => {
   if (!Array.isArray(samples))
-    throw new TypeError(`expected array, got ${samples.constructor.name}`);
+    throw new TypeError(`expected array, got ${samples.constructor.name}`)
   if (Array.isArray(samples) && samples.length === 0)
-    throw new Error('expected non-empty array, got empty array');
+    throw new Error('expected non-empty array, got empty array')
 
-  samples.sort((a, b) => a - b);
+  samples.sort((a, b) => a - b)
 
-  const time = samples.reduce((a, b) => a + b, 0);
-  const avg = time / samples.length;
+  const time = samples.reduce((a, b) => a + b, 0)
+  const avg = time / samples.length
   const vr =
     samples.reduce((a, b) => a + (b - avg) ** 2, 0) /
-    checkDividend(samples.length - 1);
-  const sd = Math.sqrt(vr);
-  const sem = sd / Math.sqrt(samples.length);
+    checkDividend(samples.length - 1)
+  const sd = Math.sqrt(vr)
+  const sem = sd / Math.sqrt(samples.length)
   const critical =
-    tTable[(samples.length - 1 || 1).toString()] || tTable.infinity;
-  const moe = sem * critical;
-  const rmoe = (moe / checkDividend(avg)) * 100;
+    tTable[(samples.length - 1 || 1).toString()] || tTable.infinity
+  const moe = sem * critical
+  const rmoe = (moe / checkDividend(avg)) * 100
 
   return {
     samples: samples.length,
@@ -255,5 +254,5 @@ const buildStats = samples => {
     sd,
     rmoe,
     ss: samples.length >= minimumSamples,
-  };
-};
+  }
+}

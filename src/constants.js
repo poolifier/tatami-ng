@@ -4,11 +4,11 @@ export const runtimes = {
   node: 'node',
   workerd: 'workerd',
   browser: 'browser',
-};
+}
 
-export const emptyFunction = () => {};
+export const emptyFunction = () => {}
 
-export const tatamiNgGroup = '$tatami-ng_group';
+export const tatamiNgGroup = '$tatami-ng_group'
 
 /**
  * Student t-distribution two-tailed critical values for 95% confidence level.
@@ -1039,16 +1039,16 @@ export const tTable = {
   1023: 1.9622856196472673,
   1024: 1.962283349789597,
   infinity: 1.96,
-};
+}
 
 // Student two-tailed t-distribution has no minimum samples size.
 // But for 95% confidence level and 80% statistical power on samples with unknown previous standard deviation, 128 samples are recommended.
-export const minimumSamples = 128;
+export const minimumSamples = 128
 
-export const defaultTime = 1e9; // ns
+export const defaultTime = 1e9 // ns
 
-export const defaultSamples = minimumSamples;
+export const defaultSamples = minimumSamples
 
 export const jsonOutputFormat = {
   bmf: 'bmf',
-};
+}
