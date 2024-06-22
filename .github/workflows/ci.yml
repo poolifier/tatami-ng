@@ -29,8 +29,7 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
         with:
-          bun-version: 1.x
-          no-cache: true
+          bun-version-file: package.json
       - name: Install Dependencies
         run: bun install --ignore-scripts --frozen-lockfile
       - name: Run Code Quality Checks
