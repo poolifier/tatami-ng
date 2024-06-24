@@ -6,12 +6,9 @@
 
 [![GitHub commit activity (master)](https://img.shields.io/github/commit-activity/m/poolifier/tatami-ng/master?color=brightgreen&logo=github)](https://github.com/poolifier/tatami-ng/graphs/commit-activity)
 [![Npm Version](https://badgen.net/npm/v/tatami-ng?icon=npm)](https://www.npmjs.com/package/tatami-ng)
-[![Npm Weekly Downloads](https://badgen.net/npm/dw/tatami-ng?icon=npm)](https://www.npmjs.com/package/tatami-ng)
 [![JSR Version](https://jsr.io/badges/@poolifier/tatami-ng)](https://jsr.io/@poolifier/tatami-ng)
 [![CI Workflow](https://github.com/poolifier/tatami-ng/actions/workflows/ci.yml/badge.svg)](https://github.com/poolifier/tatami-ng/actions/workflows/ci.yml)
 [![PRs Welcome](https://badgen.net/static/PRs/welcome/green)](https://makeapullrequest.com)
-
-<!-- [![No Dependencies](<https://badgen.net/static/dependencies/no dependencies/green>)](<https://badgen.net/static/dependencies/no dependencies/green>) -->
 
 </div>
 
