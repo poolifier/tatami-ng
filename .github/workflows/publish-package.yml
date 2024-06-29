@@ -62,8 +62,7 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: 1.x
-          no-cache: true
+          bun-version-file: package.json
 
       - name: Read package.json version
         id: package-version
@@ -90,8 +89,7 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: 1.x
-          no-cache: true
+          bun-version-file: package.json
 
       - name: Bundle
         run: bun bundle
