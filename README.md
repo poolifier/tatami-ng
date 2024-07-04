@@ -65,6 +65,8 @@ Bun versions >= 1.x are supported.
 
 ### Browser
 
+<!-- x-release-please-start-version -->
+
 ```js
 <script type="module">
 import {
@@ -72,6 +74,8 @@ import {
 } from 'https://cdn.jsdelivr.net/npm/tatami-ng@0.4.15/dist/browser/index.js'
 </script>
 ```
+
+<!-- x-release-please-end -->
 
 ## Example
 

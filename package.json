@@ -4,7 +4,7 @@
   "type": "module",
   "license": "MIT",
   "version": "0.4.15",
-  "packageManager": "bun@1.1.17",
+  "packageManager": "bun@1.1.18",
   "types": "./src/index.d.ts",
   "main": "./src/index.js",
   "browser": "./dist/browser/index.js",
@@ -35,20 +35,16 @@
     "bundle": "bun run bundle.ts",
     "test:node": "node tests/test.js",
     "test:deno": "deno run -A tests/test.js && deno run -A tests/test.ts",
-    "test:bun": "bun run tests/test.js && bun run tests/test.ts",
-    "release": "release-it"
+    "test:bun": "bun run tests/test.js && bun run tests/test.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.8.3",
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
-    "@release-it/bumper": "^6.0.1",
-    "@release-it/keep-a-changelog": "^5.0.0",
     "@types/bun": "^1.1.6",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.7",
-    "prettier": "^3.3.2",
-    "release-it": "^17.4.1"
+    "prettier": "^3.3.2"
   },
   "peerDependencies": {
     "typescript": "^5.4.3"
