@@ -6,6 +6,43 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.16](https://github.com/poolifier/tatami-ng/compare/0.4.15...0.4.16) (2024-07-05)
+
+
+### 🚀 Features
+
+* switch to release-please release manager ([234f244](https://github.com/poolifier/tatami-ng/commit/234f244a679656c69c9b8b1a6bdab55c10a664c3))
+
+
+### 📚 Documentation
+
+* add PR template ([ad0fd01](https://github.com/poolifier/tatami-ng/commit/ad0fd01e378f01c0d7914cf20b0534da4d9f151b))
+* refine README.md badges ([8fc2a37](https://github.com/poolifier/tatami-ng/commit/8fc2a373ff685dd59acd70be64b6b5c116eb8cb6))
+
+
+### ✨ Polish
+
+* **ci:** cleanup GH action ([ee255e7](https://github.com/poolifier/tatami-ng/commit/ee255e740160c9b09ceab165b8bfe89895d29b5e))
+* refine GH action setup-bun configuration ([25382b6](https://github.com/poolifier/tatami-ng/commit/25382b696e162e8e35df37f033eefc53a859e40f))
+* switch biome.js configuration to standard.js style ([5d9754a](https://github.com/poolifier/tatami-ng/commit/5d9754a7a395cecbd5e57080b4cf9b5e8b07f589))
+
+
+### 🤖 Automation
+
+* **ci:** add autofix GH action ([736c4f8](https://github.com/poolifier/tatami-ng/commit/736c4f839f1c75a36313922fe5ea8601ff181f7d))
+* **ci:** do not cancel workflow on autofix.ci error ([d2b04dc](https://github.com/poolifier/tatami-ng/commit/d2b04dc873a996ecf119597e173041ac80f134a2))
+* **ci:** fix setup-bun configuration ([a12a9d0](https://github.com/poolifier/tatami-ng/commit/a12a9d0dca53784c115f0327d29828da7c532831))
+* **ci:** really ensure tag version is not prefixed with 'v' ([7dbb1be](https://github.com/poolifier/tatami-ng/commit/7dbb1be94f81c280acefd9c8b4ff14c17ec22584))
+* **ci:** remove v prefix in release-please tag ([1aa36d1](https://github.com/poolifier/tatami-ng/commit/1aa36d13df2375c3367f56b4592bd65751f3a42d))
+* **deps-dev:** apply updates ([51d9eea](https://github.com/poolifier/tatami-ng/commit/51d9eeafdd4fbb4427d053d067fb90300ce9a02e))
+* **deps-dev:** apply updates ([e8d8302](https://github.com/poolifier/tatami-ng/commit/e8d8302f3ea0d8742419160cd75e9051288a39fe))
+* **deps-dev:** apply updates ([8603c48](https://github.com/poolifier/tatami-ng/commit/8603c484dc691ac55660293880711e2d22aa03aa))
+* **deps-dev:** apply updates ([0a7ace0](https://github.com/poolifier/tatami-ng/commit/0a7ace0fbd8fd9fe1d65fc15103106e726d67a3a))
+* **deps-dev:** apply updates ([0785cfc](https://github.com/poolifier/tatami-ng/commit/0785cfcc6fa5e26056a10dd21fed3cebf0a1de3e))
+* **deps-dev:** apply updates ([1f3034e](https://github.com/poolifier/tatami-ng/commit/1f3034e8f6a37f67225c111982849e4384af0392))
+* **deps-dev:** apply updates ([b9bb1e0](https://github.com/poolifier/tatami-ng/commit/b9bb1e0de4e816cf385b9e759a45c13406171306))
+* **deps:** bump oven-sh/setup-bun from 1 to 2 ([9c3fe1b](https://github.com/poolifier/tatami-ng/commit/9c3fe1b62ebe0eb05b3704fe1a5dc44b2347615c))
+
 ## [0.4.15] - 2024-06-16
 
 ### Fixed
