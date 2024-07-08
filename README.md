@@ -135,6 +135,10 @@ clear();
 
 ## CLI usage examples
 
+```shell
+tatami 'hexdump file' 'xxd file'
+```
+
 ## Development
 
 The JavaScript runtime environment used for development is

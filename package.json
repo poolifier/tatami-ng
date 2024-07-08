@@ -6,7 +6,7 @@
   "version": "0.4.16",
   "packageManager": "bun@1.1.18",
   "bin": {
-    "tatami": "cli.mjs"
+    "tatami": "cli.js"
   },
   "types": "./src/index.d.ts",
   "main": "./src/index.js",
