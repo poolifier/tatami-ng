@@ -1,6 +1,6 @@
 <h1 align=center>tatami-ng</h1>
 
-<h2 align=center>Cross JavaScript runtime benchmarking library</h2>
+<h2 align=center>Cross JavaScript runtime benchmarking library and CLI</h2>
 
 <div align="center">
 
@@ -12,15 +12,16 @@
 
 </div>
 
-- API backward compatible with [mitata](https://github.com/evanwashere/mitata) ✔
+- CLI and JS library support ✔
+- Library API backward compatible with [mitata](https://github.com/evanwashere/mitata) ✔
 - Benchmark latency and throughput ✔
 - Support for sync and async benchmark ✔
-- Advanced benchmark statistics report: significance, error margin, variance,
+- Advanced benchmark statistics: significance, error margin, variance,
   standard deviation, p-quantiles, ... ✔
 - Zero cost abstraction for multiple JS runtime support ✔
 - Support for ESM and TypeScript ✔
 
-## Install
+## Library installation
 
 ### Node
 
@@ -77,7 +78,7 @@ import {
 
 <!-- x-release-please-end -->
 
-## Example
+## Library usage example
 
 ```js
 // adapt import to the targeted JS runtime
@@ -123,6 +124,16 @@ await run({
 
 clear();
 ```
+
+## CLI installation
+
+### Node
+
+### Bun
+
+### Deno
+
+## CLI usage examples
 
 ## Development
 
