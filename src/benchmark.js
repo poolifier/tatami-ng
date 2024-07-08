@@ -355,7 +355,7 @@ export async function run(opts = {}) {
   }
 
   if (!opts.json && opts.units) log(table.units(opts))
-  if (opts.json) {
+  if (opts.json || opts.file) {
     let jsonReport
     switch (opts.json) {
       case jsonOutputFormat.bmf:
@@ -368,7 +368,7 @@ export async function run(opts = {}) {
           'number' !== typeof opts.json ? 0 : opts.json
         )
     }
-    log(jsonReport)
+    if (opts.json) log(jsonReport)
     if (opts.file) writeFileSync(opts.file, jsonReport)
   }
 
