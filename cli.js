@@ -101,7 +101,7 @@ const {
     },
   },
   description: 'tatami-ng CLI for running benchmark',
-  examples: ['--baseline <command> --bench <command> --bench <command>'],
+  examples: ["--baseline '<command>' --bench '<command>' --bench '<command>'"],
   name: 'tatami',
   pkg,
 })

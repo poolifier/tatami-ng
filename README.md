@@ -36,7 +36,8 @@
 - [CLI installation](#cli-installation)
   - [Node](#node-1)
   - [Bun](#bun-1)
-  - [Deno](#deno-1)
+  <!-- - [Deno](#deno-1) -->
+- [CLI standalone binary](#cli-standalone-binary)
 - [CLI usage examples](#cli-usage-examples)
 - [Development](#development)
 - [License](#license)
@@ -158,16 +159,31 @@ npm install tatami-ng -g
 bun add tatami-ng -g
 ```
 
-### Deno
+Ensure the global installation directory is in your path:
+
+- Unix: `${HOME}/.bun/bin`
+- Windows: TODO
+
+<!-- ### Deno -->
+
+## CLI standalone binary
+
+In the cloned repository root directory, run:
 
 ```shell
-deno install --allow-sys --allow-read --allow-hrtime --name tatami https://esm.sh/jsr/@poolifier/tatami-ng/cli.js
+deno compile --allow-read ---allow-run --allow-sys -allow-hrtime --output=tatami ./cli.js
 ```
+
+The standalone binary can be moved to a directory in your path.
 
 ## CLI usage examples
 
 ```shell
-tatami 'hexdump <file>' 'xxd <file>'
+tatami --help
+```
+
+```shell
+tatami --bench 'hexdump <file>' --bench 'xxd <file>'
 ```
 
 ## Development
