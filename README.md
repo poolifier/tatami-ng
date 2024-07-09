@@ -171,7 +171,7 @@ Ensure the global installation directory is in your path:
 In the cloned repository root directory, run:
 
 ```shell
-deno compile --allow-read ---allow-run --allow-sys -allow-hrtime --output=tatami ./cli.js
+deno compile --allow-read --allow-run --allow-sys --allow-hrtime --output=tatami ./cli.js
 ```
 
 The standalone binary can be moved to a directory in your path.
