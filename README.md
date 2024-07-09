@@ -45,8 +45,7 @@ deno add @poolifier/tatami-ng
 
 Deno versions >= 1.40.x are supported.
 
-The `--allow-hrtime` permission flag is recommended to allow high-resolution
-time measurement.
+The `--allow-hrtime` permission flag is recommended to allow high-resolution time measurement.
 
 ### Bun
 
@@ -129,22 +128,32 @@ clear();
 
 ### Node
 
+```shell
+npm install tatami-ng -g
+```
+
 ### Bun
 
+```shell
+bun add tatami-ng -g
+```
+
 ### Deno
+
+```shell
+deno install --allow-sys --allow-read --allow-hrtime --name tatami https://esm.sh/jsr/@poolifier/tatami-ng/cli.js
+```
 
 ## CLI usage examples
 
 ```shell
-tatami 'hexdump file' 'xxd file'
+tatami 'hexdump <file>' 'xxd <file>'
 ```
 
 ## Development
 
-The JavaScript runtime environment used for development is
-[bun](https://bun.sh/).
+The JavaScript runtime environment used for development is [bun](https://bun.sh/).
 
 ## License
 
-MIT © [Evan](https://github.com/evanwashere),
-[Jerome Benoit](https://github.com/jerome-benoit)
+MIT © [Evan](https://github.com/evanwashere), [Jerome Benoit](https://github.com/jerome-benoit)
