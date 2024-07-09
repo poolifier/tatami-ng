@@ -54,8 +54,8 @@ export const noColor = (() => {
 
 export const writeFileSync = await (async () => {
   return await {
-    unknown: () => () => {},
-    browser: () => () => {},
+    unknown: () => emptyFunction,
+    browser: () => emptyFunction,
     node: async () => (await import('node:fs')).writeFileSync,
     deno: () => Deno.writeTextFileSync,
     bun: async () => (await import('node:fs')).writeFileSync,
@@ -64,8 +64,8 @@ export const writeFileSync = await (async () => {
 
 export const spawnSync = await (async () => {
   return await {
-    unknown: () => () => {},
-    browser: () => () => {},
+    unknown: () => emptyFunction,
+    browser: () => emptyFunction,
     node: () => command =>
       nodeSpawnSync(command.split(' ')[0], command.split(' ').slice(1)),
     deno: () => command => {
