@@ -1,6 +1,6 @@
 <h1 align=center>tatami-ng</h1>
 
-<h2 align=center>Cross JavaScript runtime benchmarking library</h2>
+<h2 align=center>Cross JavaScript runtime benchmarking library and CLI</h2>
 
 <div align="center">
 
@@ -12,6 +12,7 @@
 
 </div>
 
+- CLI and JS library support ✔
 - Library API backward compatible with [mitata](https://github.com/evanwashere/mitata) ✔
 - Benchmark latency and throughput ✔
 - Support for sync and async benchmark ✔
@@ -20,7 +21,7 @@
 - Zero cost abstraction for multiple JS runtime support ✔
 - Support for ESM and TypeScript ✔
 
-## Install
+## Library installation
 
 ### Node
 
@@ -44,8 +45,7 @@ deno add @poolifier/tatami-ng
 
 Deno versions >= 1.40.x are supported.
 
-The `--allow-hrtime` permission flag is recommended to allow high-resolution
-time measurement.
+The `--allow-hrtime` permission flag is recommended to allow high-resolution time measurement.
 
 ### Bun
 
@@ -77,7 +77,7 @@ import {
 
 <!-- x-release-please-end -->
 
-## Example
+## Library usage example
 
 ```js
 // adapt import to the targeted JS runtime
@@ -124,12 +124,36 @@ await run({
 clear();
 ```
 
+## CLI installation
+
+### Node
+
+```shell
+npm install tatami-ng -g
+```
+
+### Bun
+
+```shell
+bun add tatami-ng -g
+```
+
+### Deno
+
+```shell
+deno install --allow-sys --allow-read --allow-hrtime --name tatami https://esm.sh/jsr/@poolifier/tatami-ng/cli.js
+```
+
+## CLI usage examples
+
+```shell
+tatami 'hexdump <file>' 'xxd <file>'
+```
+
 ## Development
 
-The JavaScript runtime environment used for development is
-[bun](https://bun.sh/).
+The JavaScript runtime environment used for development is [bun](https://bun.sh/).
 
 ## License
 
-MIT © [Evan](https://github.com/evanwashere),
-[Jerome Benoit](https://github.com/jerome-benoit)
+MIT © [Evan](https://github.com/evanwashere), [Jerome Benoit](https://github.com/jerome-benoit)

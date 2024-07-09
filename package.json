@@ -5,6 +5,9 @@
   "license": "MIT",
   "version": "0.4.16",
   "packageManager": "bun@1.1.18",
+  "bin": {
+    "tatami": "cli.js"
+  },
   "types": "./src/index.d.ts",
   "main": "./src/index.js",
   "browser": "./dist/browser/index.js",
@@ -25,17 +28,20 @@
   },
   "files": ["src", "dist"],
   "scripts": {
-    "prepare": "bun run prepare.ts",
+    "prepare": "bun prepare.ts",
     "format": "biome format . --write",
     "lint": "biome lint .",
     "lint:write": "biome lint . --write",
     "check": "biome check .",
     "check:write": "biome check . --write",
     "check:ci": "biome ci .",
-    "bundle": "bun run bundle.ts",
+    "bundle": "bun bundle.ts",
     "test:node": "node tests/test.js",
     "test:deno": "deno run -A tests/test.js && deno run -A tests/test.ts",
-    "test:bun": "bun run tests/test.js && bun run tests/test.ts"
+    "test:bun": "bun tests/test.js && bun tests/test.ts"
+  },
+  "dependencies": {
+    "peowly": "^1.3.2"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.8.3",

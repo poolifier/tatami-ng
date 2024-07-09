@@ -8,6 +8,8 @@ import {
 import { runtime } from './runtime.js'
 import { now } from './time.js'
 
+import { spawnSync as nodeSpawnSync } from 'node:child_process'
+
 export const AsyncFunction = (async () => {}).constructor
 
 export const version = (() => {
@@ -57,6 +59,22 @@ export const writeFileSync = await (async () => {
     node: async () => (await import('node:fs')).writeFileSync,
     deno: () => Deno.writeTextFileSync,
     bun: async () => (await import('node:fs')).writeFileSync,
+  }[runtime]()
+})()
+
+export const spawnSync = await (async () => {
+  return await {
+    unknown: () => () => {},
+    browser: () => () => {},
+    node: () => command =>
+      nodeSpawnSync(command.split(' ')[0], command.split(' ').slice(1)),
+    deno: () => command => {
+      const cmd = new Deno.Command(command.split(' ')[0], {
+        args: command.split(' ').slice(1),
+      })
+      cmd.outputSync()
+    },
+    bun: () => command => Bun.spawnSync(command.split(' ')),
   }[runtime]()
 })()
 

@@ -193,7 +193,12 @@ export function clear() {
   benchmarks.length = 0
 }
 
-const executeBenchmarks = async (benchmarks, log, opts = {}) => {
+const executeBenchmarks = async (
+  benchmarks,
+  logFn,
+  opts = {},
+  groupOpts = {}
+) => {
   let once = false
   for (const benchmark of benchmarks) {
     once = true
@@ -211,12 +216,22 @@ const executeBenchmarks = async (benchmarks, log, opts = {}) => {
         }
       )
       if (!opts.json)
-        log(table.benchmark(benchmark.name, benchmark.stats, opts))
+        logFn(table.benchmark(benchmark.name, benchmark.stats, opts))
     } catch (err) {
       benchmark.error = err
       if (!opts.json)
-        log(table.benchmarkError(benchmark.name, benchmark.error, opts))
+        logFn(table.benchmarkError(benchmark.name, benchmark.error, opts))
     }
+  }
+  // biome-ignore lint/style/noParameterAssign: <explanation>
+  benchmarks = benchmarks.filter(benchmark => benchmark.error == null)
+  if (
+    (Object.keys(groupOpts).length === 0 || groupOpts.summary === true) &&
+    !opts.json &&
+    benchmarks.length > 1
+  ) {
+    logFn('')
+    logFn(table.summary(benchmarks, opts))
   }
   return once
 }
@@ -306,18 +321,11 @@ export async function run(opts = {}) {
     log(table.br(opts))
   }
 
-  let noGroupBenchmarks = benchmarks.filter(
-    benchmark => benchmark.group == null
+  let once = await executeBenchmarks(
+    benchmarks.filter(benchmark => benchmark.group == null),
+    log,
+    opts
   )
-  let once = await executeBenchmarks(noGroupBenchmarks, log, opts)
-
-  noGroupBenchmarks = noGroupBenchmarks.filter(
-    noGroupBenchmark => noGroupBenchmark.error == null
-  )
-  if (!opts.json && noGroupBenchmarks.length > 1) {
-    log('')
-    log(table.summary(noGroupBenchmarks, opts))
-  }
 
   for (const [group, groupOpts] of groups) {
     if (!opts.json) {
@@ -327,31 +335,20 @@ export async function run(opts = {}) {
         log(clr.gray(opts.colors, table.br(opts)))
     }
 
-    let groupBenchmarks = benchmarks.filter(
-      benchmark => benchmark.group === group
-    )
-
     AsyncFunction === groupOpts.before.constructor
       ? await groupOpts.before()
       : groupOpts.before()
 
-    once = await executeBenchmarks(groupBenchmarks, log, opts)
+    once = await executeBenchmarks(
+      benchmarks.filter(benchmark => benchmark.group === group),
+      log,
+      opts,
+      groupOpts
+    )
 
     AsyncFunction === groupOpts.after.constructor
       ? await groupOpts.after()
       : groupOpts.after()
-
-    groupBenchmarks = groupBenchmarks.filter(
-      groupBenchmark => groupBenchmark.error == null
-    )
-    if (
-      groupOpts.summary === true &&
-      !opts.json &&
-      groupBenchmarks.length > 1
-    ) {
-      log('')
-      log(table.summary(groupBenchmarks, opts))
-    }
   }
 
   if (!opts.json && opts.units) log(table.units(opts))
