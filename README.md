@@ -21,6 +21,26 @@
 - Zero cost abstraction for multiple JS runtime support ✔
 - Support for ESM and TypeScript ✔
 
+## Table of contents
+
+- [Library installation](#library-installation)
+  - [Node](#node)
+    - [npmjs](#npmjs)
+    - [JSR](#jsr)
+  - [Deno](#deno)
+  - [Bun](#bun)
+    - [npmjs](#npmjs-1)
+    - [JSR](#jsr-1)
+  - [Browser](#browser)
+- [Library usage example](#library-usage-example)
+- [CLI installation](#cli-installation)
+  - [Node](#node-1)
+  - [Bun](#bun-1)
+  - [Deno](#deno-1)
+- [CLI usage examples](#cli-usage-examples)
+- [Development](#development)
+- [License](#license)
+
 ## Library installation
 
 ### Node
