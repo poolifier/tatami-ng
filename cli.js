@@ -3,12 +3,12 @@
 import { readFileSync } from 'node:fs'
 import { peowly } from 'peowly'
 
-import { execSync } from 'node:child_process'
 import {
   baseline as baselineBenchmark,
   bench as benchmark,
   run,
 } from './src/index.js'
+import { spawnSync } from './src/lib.js'
 
 const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url)))
 
@@ -101,21 +101,20 @@ const {
     },
   },
   description: 'tatami-ng CLI for running benchmark',
-  examples: ['--bench <command> --bench <command>'],
+  examples: ['--baseline <command> --bench <command> --bench <command>'],
   name: 'tatami',
   pkg,
 })
 
-// TODO: make it portable to other JS runtime
 if (baseline != null) {
   baselineBenchmark(baseline, () => {
-    execSync(baseline)
+    spawnSync(baseline)
   })
 }
 if (bench != null) {
   for (const b of bench) {
     benchmark(b, () => {
-      execSync(b)
+      spawnSync(b)
     })
   }
 }
