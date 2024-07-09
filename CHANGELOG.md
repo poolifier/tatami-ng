@@ -6,6 +6,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0](https://github.com/poolifier/tatami-ng/compare/0.4.16...0.5.0) (2024-07-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* add CLI ([#8](https://github.com/poolifier/tatami-ng/issues/8))
+
+### 🚀 Features
+
+* add CLI ([#8](https://github.com/poolifier/tatami-ng/issues/8)) ([d20b094](https://github.com/poolifier/tatami-ng/commit/d20b0940891741ec04a510423aca0e6839559bee))
+
+
+### 🐞 Bug Fixes
+
+* ensure `file` write default JSON output to configured file ([394b033](https://github.com/poolifier/tatami-ng/commit/394b03323ecc030467011aaa0954a2a88ea87dc3))
+
+
+### 📚 Documentation
+
+* add ToC in README.md ([abd1504](https://github.com/poolifier/tatami-ng/commit/abd15047735b67e5b0f931d037a08a5244719c20))
+
 ## [0.4.16](https://github.com/poolifier/tatami-ng/compare/0.4.15...0.4.16) (2024-07-05)
 
 
