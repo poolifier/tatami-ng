@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.2](https://github.com/poolifier/tatami-ng/compare/0.5.1...0.5.2) (2024-07-10)
+
+
+### 🚀 Features
+
+* allow to specify the number of warmup runs ([9f29086](https://github.com/poolifier/tatami-ng/commit/9f2908640bf9112f59908738795b9f7d4e2c468b))
+* **cli:** allow to execute custom commands at benchmarking steps ([69c1fdc](https://github.com/poolifier/tatami-ng/commit/69c1fdc52d3c2818520d124014dc0ef48a9cff0c))
+
+
+### ✨ Polish
+
+* cleanup empty function usage ([007345d](https://github.com/poolifier/tatami-ng/commit/007345da0f00e0a39aa948e4e1a7ad96c3c71e3c))
+
 ## [0.5.1](https://github.com/poolifier/tatami-ng/compare/0.5.0...0.5.1) (2024-07-09)
 
 
