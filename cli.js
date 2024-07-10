@@ -43,9 +43,24 @@ const {
     },
     warmup: {
       listGroup: 'Benchmark options',
-      description: 'Number of warmup runs',
+      description: 'Number of warmup run(s)',
       type: 'string',
       short: 'w',
+    },
+    prepare: {
+      listGroup: 'Benchmark options',
+      description: 'Command to prepare benchmark(s)',
+      type: 'string',
+    },
+    before: {
+      listGroup: 'Benchmark options',
+      description: 'Command before each benchmark',
+      type: 'string',
+    },
+    after: {
+      listGroup: 'Benchmark options',
+      description: 'Command after each benchmark',
+      type: 'string',
     },
     silent: {
       listGroup: 'Output options',
@@ -108,15 +123,29 @@ const {
 })
 
 if (baseline != null) {
-  baselineBenchmark(baseline, () => {
-    spawnSync(baseline)
-  })
+  baselineBenchmark(
+    baseline,
+    () => {
+      spawnSync(baseline)
+    },
+    {
+      ...(flags.before != null && { before: () => spawnSync(flags.before) }),
+      ...(flags.after != null && { after: () => spawnSync(flags.after) }),
+    }
+  )
 }
 if (bench != null) {
   for (const b of bench) {
-    benchmark(b, () => {
-      spawnSync(b)
-    })
+    benchmark(
+      b,
+      () => {
+        spawnSync(b)
+      },
+      {
+        ...(flags.before != null && { before: () => spawnSync(flags.before) }),
+        ...(flags.after != null && { after: () => spawnSync(flags.after) }),
+      }
+    )
   }
 }
 
@@ -125,6 +154,10 @@ if (flags.json != null) {
   if (!Number.isNaN(json)) {
     flags.json = json
   }
+}
+
+if (flags.prepare != null) {
+  spawnSync(flags.prepare)
 }
 
 await run({
