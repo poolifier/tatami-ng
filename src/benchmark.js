@@ -242,12 +242,12 @@ const executeBenchmarks = async (
  * @param {Object} [opts={}] options object
  * @param {Boolean} [opts.units=false] print units cheatsheet
  * @param {Boolean} [opts.silent=false] enable/disable stdout output
- * @param {Boolean|Number|'bmf'} [opts.json=false] enable/disable json output
+ * @param {Boolean|Number|'bmf'} [opts.json=false] enable/disable json output or set json output format
  * @param {String} [opts.file=undefined] write json output to file
  * @param {Boolean} [opts.colors=true] enable/disable colors
  * @param {Number} [opts.samples=128] minimum number of benchmark samples
  * @param {Number} [opts.time=1_000_000_000] minimum benchmark time in nanoseconds
- * @param {Boolean} [opts.warmup=true] enable/disable benchmark warmup
+ * @param {Boolean|Number} [opts.warmup=true] enable/disable benchmark warmup or set benchmark warmup runs
  * @param {Boolean} [opts.avg=true] enable/disable time (avg) column
  * @param {Boolean} [opts.iter=true] enable/disable iter/s column
  * @param {Boolean} [opts.rmoe=true] enable/disable error margin column
@@ -266,9 +266,13 @@ export async function run(opts = {}) {
     throw new TypeError(
       `expected number as 'time' option, got ${opts.time.constructor.name}`
     )
-  if (opts.warmup != null && 'boolean' !== typeof opts.warmup)
+  if (
+    opts.warmup != null &&
+    'number' !== typeof opts.warmup &&
+    'boolean' !== typeof opts.warmup
+  )
     throw new TypeError(
-      `expected boolean as 'warmup' option, got ${opts.warmup.constructor.name}`
+      `expected number or boolean as 'warmup' option, got ${opts.warmup.constructor.name}`
     )
   if (
     opts.json != null &&

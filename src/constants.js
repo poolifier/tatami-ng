@@ -1045,9 +1045,11 @@ export const tTable = {
 // But for 95% confidence level and 80% statistical power on samples with unknown previous standard deviation, 128 samples are recommended.
 export const minimumSamples = 128
 
+export const defaultSamples = minimumSamples
+
 export const defaultTime = 1e9 // ns
 
-export const defaultSamples = minimumSamples
+export const defaultWarmupRuns = 5
 
 export const jsonOutputFormat = {
   bmf: 'bmf',

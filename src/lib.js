@@ -1,6 +1,7 @@
 import {
   defaultSamples,
   defaultTime,
+  defaultWarmupRuns,
   emptyFunction,
   minimumSamples,
   tTable,
@@ -177,6 +178,13 @@ export async function measure(
     opts
   )
 
+  opts.warmup =
+    'number' === typeof opts.warmup
+      ? opts.warmup
+      : opts.warmup === true
+        ? defaultWarmupRuns
+        : 0
+
   const asyncBefore = AsyncFunction === before.constructor
   const asyncAfter = AsyncFunction === after.constructor
 
@@ -191,7 +199,7 @@ export async function measure(
         ? ''
         : `
           ${asyncBefore ? 'await' : ''} $before();
-          for (let i = 0; i < ${opts.samples - 1}; i++) {
+          for (let i = 0; i < ${opts.warmup}; i++) {
             const t0 = $now();
             ${!opts.async ? '' : 'await'} $fn();
             const t1 = $now();

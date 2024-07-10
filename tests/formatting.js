@@ -103,7 +103,7 @@ group({ summary: true }, () => {
 const report = await run({
   units: true, // print units cheatsheet (default: false)
   avg: true, // enable/disable avg column (default: true)
-  json: false, // enable/disable json output (default: false)
+  json: false, // enable/disable json output or set json output format (default: false)
   colors: true, // enable/disable colors (default: true)
   min_max: true, // enable/disable (min...max) column (default: true)
   percentiles: false, // enable/disable percentile columns (default: true)

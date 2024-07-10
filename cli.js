@@ -41,10 +41,11 @@ const {
       type: 'string',
       short: 't',
     },
-    'no-warmup': {
+    warmup: {
       listGroup: 'Benchmark options',
-      description: 'No warmup',
-      type: 'boolean',
+      description: 'Number of warmup runs',
+      type: 'string',
+      short: 'w',
     },
     silent: {
       listGroup: 'Output options',
@@ -95,7 +96,7 @@ const {
     },
     units: {
       listGroup: 'Output options',
-      description: 'Print units cheatsheet',
+      description: 'Prints units cheatsheet',
       type: 'boolean',
       short: 'u',
     },
@@ -129,7 +130,7 @@ if (flags.json != null) {
 await run({
   ...(flags.samples != null && { samples: Number.parseInt(flags.samples) }),
   ...(flags.time != null && { time: Number.parseFloat(flags.time) }),
-  ...(flags['no-warmup'] != null && { warmup: !flags['no-warmup'] }),
+  ...(flags.warmup != null && { warmup: Number.parseInt(flags.warmup) }),
   ...(flags.silent != null && { silent: flags.silent }),
   ...(flags.json != null && { json: flags.json }),
   ...(flags.file != null && { file: flags.file }),
