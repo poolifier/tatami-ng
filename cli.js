@@ -1,16 +1,14 @@
 #!/usr/bin/env node
 
-import { readFileSync } from 'node:fs'
 import { peowly } from 'peowly'
 
+import pkg from './package.json' with { type: 'json' }
 import {
   baseline as baselineBenchmark,
   bench as benchmark,
   run,
 } from './src/index.js'
 import { spawnSync } from './src/lib.js'
-
-const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url)))
 
 const {
   flags: { baseline, bench, ...flags },
