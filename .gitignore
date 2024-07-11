@@ -175,6 +175,7 @@ dist
 .DS_Store
 
 tatami
+tatami.blob
 target/
 *.orig
 deno.lock

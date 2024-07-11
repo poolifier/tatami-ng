@@ -1,0 +1,5 @@
+{
+  "main": "./cli.js",
+  "output": "./tatami.blob",
+  "disableExperimentalSEAWarning": true
+}
