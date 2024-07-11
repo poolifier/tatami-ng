@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.3](https://github.com/poolifier/tatami-ng/compare/0.5.2...0.5.3) (2024-07-11)
+
+
+### 🚀 Features
+
+* add node single executable application configuration ([e48ed77](https://github.com/poolifier/tatami-ng/commit/e48ed77fd53ae4e04bd6f7755f819cfac753dada))
+
+
+### 🐞 Bug Fixes
+
+* ensure CLI standalone binary includes required files ([1589024](https://github.com/poolifier/tatami-ng/commit/1589024f6468dc2b6efbee3599b7da890d4155cd))
+
 ## [0.5.2](https://github.com/poolifier/tatami-ng/compare/0.5.1...0.5.2) (2024-07-10)
 
 
