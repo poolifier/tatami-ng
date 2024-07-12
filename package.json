@@ -16,7 +16,7 @@
     "import": "./src/index.js",
     "browser": "./dist/browser/index.js"
   },
-  "description": "cross javascript runtime benchmarking library",
+  "description": "Cross JavaScript runtime benchmarking library and CLI",
   "homepage": "https://github.com/poolifier/tatami-ng#readme",
   "keywords": ["benchmark", "browser", "bun", "deno", "node"],
   "bugs": {
