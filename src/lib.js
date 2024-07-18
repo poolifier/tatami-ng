@@ -67,7 +67,7 @@ export const spawnSync = await (async () => {
   return await {
     unknown: () => emptyFunction,
     browser: () => emptyFunction,
-    node: () =>
+    node: () => command =>
       nodeSpawnSync(command.split(/\s+/)[0], command.split(/\s+/).slice(1)),
     deno: () => command => {
       const cmd = new Deno.Command(command.split(/\s+/)[0], {
