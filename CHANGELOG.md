@@ -6,6 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.4](https://github.com/poolifier/tatami-ng/compare/0.5.3...0.5.4) (2024-07-18)
+
+
+### 🐞 Bug Fixes
+
+* handle extrageanous space in CLI benchmarks ([8b50d44](https://github.com/poolifier/tatami-ng/commit/8b50d4463311b025810952f013be289446a545a5))
+* make node sea generation works ([06fdc40](https://github.com/poolifier/tatami-ng/commit/06fdc40d901e7511350c1f84bd9c1536244855ec))
+* make node sea works which n ([de36378](https://github.com/poolifier/tatami-ng/commit/de36378eb5b00a24aca67a9d0b5bda19ba1365ac))
+
+
+### ✨ Polish
+
+* add scripts for CLI binary generation ([82c15f5](https://github.com/poolifier/tatami-ng/commit/82c15f53af74ac3ba4423098d4923db6842371d5))
+* npx -&gt; bunx where appropriates ([db7b392](https://github.com/poolifier/tatami-ng/commit/db7b392b26c45150feeee413458ecb3a3b26c5b4))
+
 ## [0.5.3](https://github.com/poolifier/tatami-ng/compare/0.5.2...0.5.3) (2024-07-11)
 
 
