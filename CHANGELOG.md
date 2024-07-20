@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.5](https://github.com/poolifier/tatami-ng/compare/0.5.4...0.5.5) (2024-07-20)
+
+
+### ✨ Polish
+
+* make benchmarks more friendly with dark theme ([a85c9a6](https://github.com/poolifier/tatami-ng/commit/a85c9a6deab2a0c260c19fcc90cb588b4f059d8c))
+
+
+### 📚 Documentation
+
+* fix ms conversion to ps in units cheatsheet ([acd154a](https://github.com/poolifier/tatami-ng/commit/acd154ae9676bbfd728f9399bfe67580033e1db6))
+
 ## [0.5.4](https://github.com/poolifier/tatami-ng/compare/0.5.3...0.5.4) (2024-07-18)
 
 
