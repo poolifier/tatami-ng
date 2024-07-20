@@ -317,8 +317,10 @@ export async function run(opts = {}) {
   }
 
   if (!opts.json && benchmarks.length > 0) {
-    log(clr.gray(opts.colors, `cpu: ${report.cpu}`))
-    log(clr.gray(opts.colors, `runtime: ${report.runtime}`))
+    log(clr.dim(opts.colors, clr.white(opts.colors, `cpu: ${report.cpu}`)))
+    log(
+      clr.dim(opts.colors, clr.white(opts.colors, `runtime: ${report.runtime}`))
+    )
 
     log('')
     log(table.header(opts))
@@ -334,9 +336,10 @@ export async function run(opts = {}) {
   for (const [group, groupOpts] of groups) {
     if (!opts.json) {
       if (once) log('')
-      if (!group.startsWith(tatamiNgGroup)) log(`• ${group}`)
+      if (!group.startsWith(tatamiNgGroup))
+        log(`• ${clr.bold(opts.colors, group)}`)
       if (once || !group.startsWith(tatamiNgGroup))
-        log(clr.gray(opts.colors, table.br(opts)))
+        log(clr.dim(opts.colors, clr.white(opts.colors, table.br(opts))))
     }
 
     AsyncFunction === groupOpts.before.constructor

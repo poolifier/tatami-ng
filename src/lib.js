@@ -68,14 +68,17 @@ export const spawnSync = await (async () => {
     unknown: () => emptyFunction,
     browser: () => emptyFunction,
     node: () => command =>
-      nodeSpawnSync(command.split(/\s+/)[0], command.split(/\s+/).slice(1)),
+      nodeSpawnSync(
+        command.trim().split(/\s+/)[0],
+        command.trim().split(/\s+/).slice(1)
+      ),
     deno: () => command => {
-      const cmd = new Deno.Command(command.split(/\s+/)[0], {
-        args: command.split(/\s+/).slice(1),
+      const cmd = new Deno.Command(command.trim().split(/\s+/)[0], {
+        args: command.trim().split(/\s+/).slice(1),
       })
       cmd.outputSync()
     },
-    bun: () => command => Bun.spawnSync(command.split(/\s+/)),
+    bun: () => command => Bun.spawnSync(command.trim().split(/\s+/)),
   }[runtime]()
 })()
 

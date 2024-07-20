@@ -58,6 +58,16 @@ export const cyan = init(36, 39)
 export const white = init(37, 39)
 export const gray = init(90, 39)
 
+// bright colors
+export const blackBright = init(90, 39)
+export const redBright = init(91, 39)
+export const greenBright = init(92, 39)
+export const yellowBright = init(93, 39)
+export const blueBright = init(94, 39)
+export const magentaBright = init(95, 39)
+export const cyanBright = init(96, 39)
+export const whiteBright = init(97, 39)
+
 // background colors
 export const bgBlack = init(40, 49)
 export const bgRed = init(41, 49)
@@ -67,3 +77,13 @@ export const bgBlue = init(44, 49)
 export const bgMagenta = init(45, 49)
 export const bgCyan = init(46, 49)
 export const bgWhite = init(47, 49)
+
+// bright background colors
+export const bgBlackBright = init(100, 49)
+export const bgRedBright = init(101, 49)
+export const bgGreenBright = init(102, 49)
+export const bgYellowBright = init(103, 49)
+export const bgBlueBright = init(104, 49)
+export const bgMagentaBright = init(105, 49)
+export const bgCyanBright = init(106, 49)
+export const bgWhiteBright = init(107, 49)

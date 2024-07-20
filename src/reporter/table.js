@@ -30,14 +30,17 @@ export function benchmarkError(name, error, { size, colors = true }) {
 }
 
 export function units({ colors = true } = {}) {
-  return clr.gray(
+  return clr.dim(
     colors,
-    `
+    clr.white(
+      colors,
+      `
       1 ps = 1 picosecond = 1e-12s
       1 ns = 1 nanosecond = 1'000ps = 1e-9s
       1 μs = 1 microsecond = 1'000ns = 1'000'000ps = 1e-6s
       1 ms = 1 millisecond = 1'000μs = 1'000'000ns = 1e9ps = 1e-3s
     `
+    )
   )
 }
 
@@ -108,13 +111,13 @@ export function benchmark(
     !percentiles
       ? ''
       : ` ${clr
-          .gray(colors, duration(stats.p50))
+          .green(colors, duration(stats.p50))
           .padStart(9 + 10 * colors, ' ')} ${clr
-          .gray(colors, duration(stats.p75))
+          .green(colors, duration(stats.p75))
           .padStart(9 + 10 * colors, ' ')} ${clr
-          .gray(colors, duration(stats.p99))
+          .green(colors, duration(stats.p99))
           .padStart(9 + 10 * colors, ' ')} ${clr
-          .gray(colors, duration(stats.p995))
+          .green(colors, duration(stats.p995))
           .padStart(9 + 10 * colors, ' ')}`
   }${!stats.ss ? ` ${clr.red(colors, '!')}` : ''}`
 }
@@ -137,11 +140,11 @@ export function summary(benchmarks, { colors = true }) {
   const baseline =
     benchmarks.find(benchmark => benchmark.baseline) ?? benchmarks[0]
 
-  return `${`${clr.bold(colors, 'summary')}${
+  return `${`${
     baseline.group == null || baseline.group.startsWith(tatamiNgGroup)
       ? ''
-      : clr.gray(colors, ` for ${baseline.group}`)
-  }`}\n  ${clr.bold(colors, clr.cyan(colors, baseline.name))}${benchmarks
+      : `${clr.bold(colors, clr.white(colors, baseline.group.trim().split(/\s+/).length > 1 ? `'${baseline.group}'` : `${baseline.group}`))} `
+  }${clr.bold(colors, clr.white(colors, 'summary'))}`}\n ${clr.bold(colors, clr.cyan(colors, baseline.name))}${benchmarks
     .filter(benchmark => benchmark !== baseline)
     .map(benchmark => {
       const ratio = benchmark.stats.avg / checkDividend(baseline.stats.avg)
