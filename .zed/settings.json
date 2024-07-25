@@ -1,5 +1,10 @@
 {
-  "language_servers": ["biome", "vtsls", "json-language-server"],
+  "language_servers": [
+    "biome",
+    "!typescript-language-server",
+    "!eslint",
+    "..."
+  ],
   "code_actions_on_format": {
     "source.fixAll.biome": true,
     "source.organizeImports.biome": true
