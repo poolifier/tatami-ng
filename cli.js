@@ -2,6 +2,7 @@
 
 import { peowly } from 'peowly'
 
+import { exit } from 'node:process'
 import pkg from './package.json' with { type: 'json' }
 import {
   baseline as baselineBenchmark,
@@ -9,6 +10,11 @@ import {
   run,
 } from './src/index.js'
 import { spawnSync } from './src/lib.js'
+
+if (pkg == null) {
+  console.error('package.json not found in the current directory')
+  exit(1)
+}
 
 const {
   flags: { baseline, bench, ...flags },
