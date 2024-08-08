@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.6](https://github.com/poolifier/tatami-ng/compare/0.5.5...0.5.6) (2024-08-08)
+
+
+### 🚀 Features
+
+* add bun single-file executable for CLI support ([7961789](https://github.com/poolifier/tatami-ng/commit/7961789f26fa29dafba50efc33ccf54251812c84))
+
+
+### 🐞 Bug Fixes
+
+* **cli:** print meaningful message if package.json not found ([bda431f](https://github.com/poolifier/tatami-ng/commit/bda431f21c0c0cdbd4bf9a63defaac1407320cf2))
+
 ## [0.5.5](https://github.com/poolifier/tatami-ng/compare/0.5.4...0.5.5) (2024-07-20)
 
 
