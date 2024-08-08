@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.8](https://github.com/poolifier/tatami-ng/compare/0.5.7...0.5.8) (2024-08-08)
+
+
+### 🐞 Bug Fixes
+
+* make standalone CLI executable generation works on Windows™ ([50b3e6e](https://github.com/poolifier/tatami-ng/commit/50b3e6e2ca7311456529504c642bbfc1f6a8fb5e))
+
 ## [0.5.7](https://github.com/poolifier/tatami-ng/compare/0.5.6...0.5.7) (2024-08-08)
 
 
