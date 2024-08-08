@@ -3,7 +3,7 @@
   "name": "tatami-ng",
   "type": "module",
   "license": "MIT",
-  "version": "0.5.6",
+  "version": "0.5.7",
   "packageManager": "bun@1.1.22",
   "bin": {
     "tatami": "cli.js"
