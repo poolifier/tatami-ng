@@ -35,9 +35,11 @@
 - [Library usage example](#library-usage-example)
 - [CLI installation](#cli-installation)
   - [Node](#node-1)
+  - [Deno](#deno-1)
   - [Bun](#bun-1)
-  <!-- - [Deno](#deno-1) -->
 - [CLI standalone binary](#cli-standalone-binary)
+  - [Deno](#deno-2)
+  - [Bun](#bun-2)
 - [CLI usage examples](#cli-usage-examples)
 - [Development](#development)
 - [License](#license)
@@ -153,6 +155,12 @@ clear()
 npm install tatami-ng -g
 ```
 
+### Deno
+
+```shell
+deno install -g --allow-read --allow-run --allow-sys --allow-hrtime -n tatami npm:tatami-ng
+```
+
 ### Bun
 
 ```shell
@@ -163,8 +171,6 @@ Ensure the global installation directory is in your path:
 
 - Unix: `${HOME}/.bun/bin`
 - Windows: TODO
-
-<!-- ### Deno -->
 
 ## CLI standalone binary
 
