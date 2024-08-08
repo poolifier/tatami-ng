@@ -39,9 +39,9 @@
     "test:node": "node tests/test.js",
     "test:deno": "deno run -A tests/test.js && deno run -A tests/test.ts",
     "test:bun": "bun tests/test.js && bun tests/test.ts",
-    "cli:node": "rm -f tatami tatami.blob && node --experimental-sea-config sea-config.json && cp $(volta which node || n which lts || nvm which node || command -v node) tatami && npx postject tatami NODE_SEA_BLOB tatami.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2",
-    "cli:deno": "rm -f tatami && deno compile --allow-read --allow-run --allow-sys --allow-hrtime --output=tatami ./cli.js",
-    "cli:bun": "rm -f tatami && bun build --compile --minify --sourcemap ./cli.js --outfile tatami"
+    "cli:node": "rimraf tatami && node --experimental-sea-config sea-config.json && cp $(volta which node || n which lts || nvm which node || command -v node) tatami && npx postject tatami NODE_SEA_BLOB tatami.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2 && rimraf tatami.blob",
+    "cli:deno": "rimraf tatami && deno compile --allow-read --allow-run --allow-sys --allow-hrtime --output=tatami ./cli.js",
+    "cli:bun": "rimraf tatami && bun build --compile --minify --sourcemap ./cli.js --outfile tatami"
   },
   "dependencies": {
     "peowly": "^1.3.2"
@@ -53,7 +53,8 @@
     "@types/bun": "^1.1.6",
     "husky": "^9.1.4",
     "lint-staged": "^15.2.8",
-    "prettier": "^3.3.3"
+    "prettier": "^3.3.3",
+    "rimraf": "^6.0.1"
   },
   "peerDependencies": {
     "typescript": "^5.4.3"
