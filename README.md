@@ -102,29 +102,29 @@ import {
 
 ```js
 // adapt import to the targeted JS runtime
-import { baseline, bench, clear, group, run } from 'tatami-ng';
+import { baseline, bench, clear, group, run } from 'tatami-ng'
 
-bench('noop', () => {});
-bench('noop2', () => {});
+bench('noop', () => {})
+bench('noop2', () => {})
 
 group('group', () => {
-  baseline('baseline', () => {});
+  baseline('baseline', () => {})
   bench('Date.now()', () => {
-    Date.now();
-  });
+    Date.now()
+  })
   bench('performance.now()', () => {
-    performance.now();
-  });
-});
+    performance.now()
+  })
+})
 
 group({ name: 'group2', summary: false }, () => {
   bench('new Array(0)', () => {
-    new Array(0);
-  });
+    new Array(0)
+  })
   bench('new Array(1024)', () => {
-    new Array(1024);
-  });
-});
+    new Array(1024)
+  })
+})
 
 await run({
   units: false, // print units cheatsheet (default: false)
@@ -140,9 +140,9 @@ await run({
   rmoe: true, // enable/disable error margin column (default: true)
   min_max: true, // enable/disable (min...max) column (default: true)
   percentiles: false, // enable/disable percentile columns (default: true)
-});
+})
 
-clear();
+clear()
 ```
 
 ## CLI installation
@@ -170,8 +170,16 @@ Ensure the global installation directory is in your path:
 
 In the cloned repository root directory, run:
 
+### Deno
+
 ```shell
 bun cli:deno
+```
+
+### Bun
+
+```shell
+bun cli:bun
 ```
 
 The standalone binary can be moved to a directory in your path.
