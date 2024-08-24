@@ -37,11 +37,11 @@
     "check:ci": "biome ci .",
     "bundle": "bun bundle.ts",
     "test:node": "node tests/test.js",
-    "test:deno": "deno run -A tests/test.js && deno run -A tests/test.ts",
+    "test:deno": "deno run --allow-sys --allow-hrtime tests/test.js && deno run --allow-sys --allow-hrtime tests/test.ts",
     "test:bun": "bun tests/test.js && bun tests/test.ts",
     "cli:node": "npx rimraf tatami && node --experimental-sea-config sea-config.json && npx ncp $(volta which node || n which lts || nvm which node || command -v node) tatami && npx postject tatami NODE_SEA_BLOB tatami.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2 && npx rimraf tatami.blob",
-    "cli:deno": "npx rimraf tatami && deno compile --allow-read --allow-run --allow-sys --allow-hrtime --output=tatami ./cli.js",
-    "cli:bun": "npx rimraf tatami && bun build --compile --minify --sourcemap ./cli.js --outfile tatami"
+    "cli:deno": "deno run --allow-env --allow-read --allow-write npm:rimraf tatami && deno compile --allow-read --allow-run --allow-sys --allow-hrtime --output=tatami ./cli.js",
+    "cli:bun": "bunx rimraf tatami && bun build --compile --minify --sourcemap ./cli.js --outfile tatami"
   },
   "dependencies": {
     "peowly": "^1.3.2"
