@@ -40,7 +40,7 @@
     "test:node": "node tests/test.js",
     "test:deno": "deno run --allow-sys --allow-hrtime tests/test.js && deno run --allow-sys --allow-hrtime tests/test.ts",
     "test:bun": "bun tests/test.js && bun tests/test.ts",
-    "build:cli": "run-p build:*",
+    "build:cli": "run-p build:cli:*",
     "build:cli:node": "npx --yes rimraf ./dist/node/tatami && npx --yes mkdirp ./dist/node && node --experimental-sea-config sea-config.json && npx --yes ncp $(volta which node || n which lts || nvm which node || command -v node) ./dist/node/tatami && npx --yes postject ./dist/node/tatami NODE_SEA_BLOB ./dist/node/tatami.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2 && npx --yes rimraf ./dist/node/tatami.blob",
     "build:cli:deno": "deno run --allow-env --allow-read --allow-write npm:rimraf tatami && deno compile --allow-read --allow-run --allow-sys --allow-hrtime --output=./dist/deno/tatami ./cli.js",
     "build:cli:bun": "bunx rimraf ./dist/bun/tatami && bun build --compile --minify --sourcemap ./cli.js --outfile ./dist/bun/tatami"
