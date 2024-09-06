@@ -179,16 +179,16 @@ In the cloned repository root directory, run:
 ### Deno
 
 ```shell
-bun cli:deno
+bun build:cli:deno
 ```
 
 ### Bun
 
 ```shell
-bun cli:bun
+bun build:cli:bun
 ```
 
-The standalone binary can be moved to a directory in your path.
+The standalone binary in `./dist/<runtime_name>` can be moved to a directory in your path.
 
 ## CLI usage examples
 

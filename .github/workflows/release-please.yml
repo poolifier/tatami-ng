@@ -62,10 +62,7 @@ jobs:
         run: bun bundle
 
       - name: Run Tests
-        run: |
-          bun test:node
-          bun test:deno
-          bun test:bun
+        run: bun run test
 
   publish-jsr:
     needs: build-release
