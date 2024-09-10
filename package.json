@@ -52,7 +52,7 @@
     "@biomejs/biome": "^1.8.3",
     "@commitlint/cli": "^19.4.1",
     "@commitlint/config-conventional": "^19.4.1",
-    "@types/bun": "^1.1.8",
+    "@types/bun": "^1.1.9",
     "husky": "^9.1.5",
     "lint-staged": "^15.2.10",
     "npm-run-all2": "^6.2.2",
