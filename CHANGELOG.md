@@ -6,6 +6,34 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.0](https://github.com/poolifier/tatami-ng/compare/0.5.7...0.6.0) (2024-09-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove clear() from the public API
+
+### 🐞 Bug Fixes
+
+* ensure unknown JS runtime has proper defaults ([5705403](https://github.com/poolifier/tatami-ng/commit/5705403b8664ea7795b7809c697fb27468afc6b3))
+* make standalone CLI executable generation works on Windows™ ([50b3e6e](https://github.com/poolifier/tatami-ng/commit/50b3e6e2ca7311456529504c642bbfc1f6a8fb5e))
+* remove clear() from the public API ([3bfdb3c](https://github.com/poolifier/tatami-ng/commit/3bfdb3c5a5cf52d11c4bca38766c3ba6c85d2b66))
+
+
+### ✨ Polish
+
+* cleanup deps for standalone binary generation ([3f2329a](https://github.com/poolifier/tatami-ng/commit/3f2329a5f6d827ba0c22be035e0430ad1b1498c1))
+* cleanup test and cli building scripts usage ([44e5b93](https://github.com/poolifier/tatami-ng/commit/44e5b93493451533434aa479f7047b48cdc6f74a))
+* enable `.editorconfig` in biome formatter￼ ([de27a2c](https://github.com/poolifier/tatami-ng/commit/de27a2c5e836de99e01d87f4e54b6bebd0de963f))
+* refine package.json cli:* scripts ([20c9dfc](https://github.com/poolifier/tatami-ng/commit/20c9dfc7b36b9a2e55d507c650aa792ae7e7decf))
+
+
+### 🤖 Automation
+
+* **cli:** fix `build:cli` script recursion ([47aac22](https://github.com/poolifier/tatami-ng/commit/47aac2221aca0ad15298b45918ea36e2f66bded3))
+* **cli:** run sequentially cli build scripts ([44d90e0](https://github.com/poolifier/tatami-ng/commit/44d90e0cf6fe73e1dd043f97ee438dfb3dd29287))
+* sync bun packages lock file ([a064be1](https://github.com/poolifier/tatami-ng/commit/a064be1b89ecb56c3aa3000320a1a7868bbfe725))
+
 ## [0.5.7](https://github.com/poolifier/tatami-ng/compare/0.5.6...0.5.7) (2024-08-08)
 
 
