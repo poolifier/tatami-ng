@@ -2,6 +2,7 @@ export const runtimes = {
   bun: 'bun',
   deno: 'deno',
   node: 'node',
+  hermes: 'hermes',
   workerd: 'workerd',
   browser: 'browser',
 }

@@ -13,7 +13,7 @@
 </div>
 
 - CLI and JS library support ✔
-- Library API backward compatible with [mitata](https://github.com/evanwashere/mitata) ✔
+- Library API backward compatible with [mitata](https://github.com/evanwashere/mitata) up to version 0.1.14 ✔
 - Benchmark latency and throughput ✔
 - Support for sync and async benchmark ✔
 - Advanced benchmark statistics: significance, error margin, variance,
