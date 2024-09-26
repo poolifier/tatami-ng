@@ -11,6 +11,7 @@ import {
   checkBenchmarkArgs,
   convertReportToBmf,
   cpu,
+  gc,
   measure,
   mergeDeepRight,
   noColor,
@@ -173,22 +174,8 @@ export function baseline(name, fn = undefined, opts = {}) {
 
 /**
  * Clear previously defined benchmarks.
- * Permits to define and run benchmarks in multiple steps.
- *
- * @example
- * group(() => {
- *   bench('foo1', () => {});
- *   baseline('bar1', () => {});
- * });
- * await run();
- * clear();
- * group(() => {
- *   bench('foo2', () => {});
- *   baseline('bar2', () => {});
- * });
- * await run();
  */
-export function clear() {
+function clear() {
   groups.clear()
   benchmarks.length = 0
 }
@@ -199,6 +186,7 @@ const executeBenchmarks = async (
   opts = {},
   groupOpts = {}
 ) => {
+  gc()
   let once = false
   for (const benchmark of benchmarks) {
     once = true
@@ -376,5 +364,7 @@ export async function run(opts = {}) {
     if (opts.file) writeFileSync(opts.file, jsonReport)
   }
 
-  return JSON.parse(JSON.stringify(report))
+  const clonedReport = JSON.parse(JSON.stringify(report))
+  clear()
+  return clonedReport
 }

@@ -10,6 +10,8 @@ import { runtime } from './runtime.js'
 import { now } from './time.js'
 
 import { spawnSync as nodeSpawnSync } from 'node:child_process'
+import { setFlagsFromString } from 'node:v8'
+import { runInNewContext } from 'node:vm'
 
 export const AsyncFunction = (async () => {}).constructor
 
@@ -63,8 +65,8 @@ export const writeFileSync = await (async () => {
   }[runtime]()
 })()
 
-export const spawnSync = await (async () => {
-  return await {
+export const spawnSync = (() => {
+  return {
     unknown: () => emptyFunction,
     browser: () => emptyFunction,
     node: () => command =>
@@ -79,6 +81,20 @@ export const spawnSync = await (async () => {
       cmd.outputSync()
     },
     bun: () => command => Bun.spawnSync(command.trim().split(/\s+/)),
+  }[runtime]()
+})()
+
+export const gc = (() => {
+  return {
+    unknown: () => emptyFunction,
+    browser: () => emptyFunction,
+    node: () => () => {
+      setFlagsFromString('--expose_gc')
+      const gc = runInNewContext('gc')
+      gc()
+    },
+    deno: () => emptyFunction,
+    bun: () => () => Bun.gc(true),
   }[runtime]()
 })()
 

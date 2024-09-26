@@ -42,8 +42,6 @@ export function baseline(
   }
 ): void
 
-export function clear(): void
-
 export function run(options?: {
   silent?: boolean
   colors?: boolean

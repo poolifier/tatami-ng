@@ -104,7 +104,7 @@ import {
 
 ```js
 // adapt import to the targeted JS runtime
-import { baseline, bench, clear, group, run } from 'tatami-ng'
+import { baseline, bench, group, run } from 'tatami-ng'
 
 bench('noop', () => {})
 bench('noop2', () => {})
@@ -143,8 +143,6 @@ await run({
   min_max: true, // enable/disable (min...max) column (default: true)
   percentiles: false, // enable/disable percentile columns (default: true)
 })
-
-clear()
 ```
 
 ## CLI installation

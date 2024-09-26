@@ -1,1 +1,1 @@
-export { group, bench, baseline, clear, run } from './benchmark.js'
+export { group, bench, baseline, run } from './benchmark.js'

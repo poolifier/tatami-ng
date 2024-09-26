@@ -1,4 +1,4 @@
-import { baseline, bench, clear, group, run } from '../src/index.js'
+import { baseline, bench, group, run } from '../src/index.js'
 
 bench('noop', () => {}, {
   before: () => {},
@@ -50,8 +50,6 @@ const report = await run({
   min_max: true, // enable/disable (min...max) column (default: true)
   percentiles: false, // enable/disable percentile columns (default: true)
 })
-
-clear()
 
 await run({
   avg: true, // enable/disable avg column (default: true)
