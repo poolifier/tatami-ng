@@ -22,6 +22,10 @@ export const version = (() => {
     node: () => process.version,
     deno: () => Deno.version.deno,
     bun: () => process.versions.bun,
+    // hermes: () =>
+    //   globalThis.HermesInternal?.getRuntimeProperties?.()?.[
+    //     'OSS Release Version'
+    //   ],
   }[runtime]()
 })()
 
@@ -87,7 +91,14 @@ export const spawnSync = (() => {
 export const gc = (() => {
   return {
     unknown: () => emptyFunction,
-    browser: () => emptyFunction,
+    browser: () => {
+      try {
+        globalThis.$262.gc()
+
+        return () => globalThis.$262.gc()
+      } catch {}
+      return emptyFunction
+    },
     node: () => () => {
       setFlagsFromString('--expose_gc')
       const gc = runInNewContext('gc')
