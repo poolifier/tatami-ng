@@ -1,16 +1,16 @@
 /**
  * @returns {Function} logger
  */
-const buildLogger = () => {
+const getLogger = () => {
   let logger
-  try {
-    logger = console.log
-  } catch {
-    logger = print
+  if (typeof globalThis.console?.log === 'function') {
+    logger = globalThis.console.log
+  } else if (typeof globalThis.print === 'function') {
+    logger = globalThis.print
+  } else {
+    throw new Error('no logger function found')
   }
-  if ('function' !== typeof logger)
-    throw new TypeError(`logger is not a function: ${typeof logger}`)
   return logger
 }
 
-export const logger = buildLogger()
+export const logger = getLogger()

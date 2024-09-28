@@ -90,7 +90,8 @@ export const spawnSync = (() => {
 
 export const gc = (() => {
   return {
-    unknown: () => emptyFunction,
+    unknown: () =>
+      typeof globalThis.gc === 'function' ? globalThis.gc() : emptyFunction,
     browser: () => {
       try {
         globalThis.$262.gc()
