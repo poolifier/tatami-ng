@@ -61,7 +61,15 @@ export const noColor = (() => {
 
 export const writeFileSync = await (async () => {
   return await {
-    unknown: () => emptyFunction,
+    unknown: async () => {
+      try {
+        await import('node:fs')
+
+        return (await import('node:fs')).writeFileSync
+      } catch {
+        return emptyFunction
+      }
+    },
     browser: () => emptyFunction,
     node: async () => (await import('node:fs')).writeFileSync,
     deno: () => Deno.writeTextFileSync,
@@ -88,12 +96,12 @@ export const spawnSync = (() => {
   }[runtime]()
 })()
 
-const conditionalGC = () =>
-  typeof globalThis.gc === 'function' ? () => globalThis.gc() : emptyFunction
-
 export const gc = (() => {
   return {
-    unknown: conditionalGC(),
+    unknown: () =>
+      typeof globalThis.gc === 'function'
+        ? () => globalThis.gc()
+        : emptyFunction,
     browser: () => {
       try {
         globalThis.$262.gc()
@@ -108,7 +116,10 @@ export const gc = (() => {
       const gc = runInNewContext('gc')
       gc()
     },
-    deno: conditionalGC(),
+    deno: () =>
+      typeof globalThis.gc === 'function'
+        ? () => globalThis.gc()
+        : emptyFunction,
     bun: () => () => Bun.gc(true),
   }[runtime]()
 })()
