@@ -16,10 +16,8 @@
 - Library API backward compatible with [mitata](https://github.com/evanwashere/mitata) up to version 0.1.14 ✔
 - Benchmark latency and throughput ✔
 - Support for sync and async benchmark ✔
-- Advanced benchmark statistics: significance, error margin, variance,
-  standard deviation, p-quantiles, ... ✔
-- Support for multiple JS runtime (primary support for node, deno, bun and browsers but works with all JS runtime) ✔
-- Multiple JS runtime support at zero cost abstraction ✔
+- Advanced benchmark statistics: significance, error margin, variance, standard deviation, p-quantiles, ... ✔
+- Multiple JS runtime support at zero cost abstraction (primary support for node, deno, bun and browsers but works with all JS runtime) ✔
 - Support for ESM and TypeScript ✔
 
 ## Table of contents
