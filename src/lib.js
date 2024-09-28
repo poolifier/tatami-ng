@@ -88,10 +88,12 @@ export const spawnSync = (() => {
   }[runtime]()
 })()
 
+const conditionalGC =
+  typeof globalThis.gc === 'function' ? globalThis.gc() : emptyFunction
+
 export const gc = (() => {
   return {
-    unknown: () =>
-      typeof globalThis.gc === 'function' ? globalThis.gc() : emptyFunction,
+    unknown: () => conditionalGC,
     browser: () => {
       try {
         globalThis.$262.gc()
@@ -105,7 +107,7 @@ export const gc = (() => {
       const gc = runInNewContext('gc')
       gc()
     },
-    deno: () => emptyFunction,
+    deno: () => conditionalGC,
     bun: () => () => Bun.gc(true),
   }[runtime]()
 })()
