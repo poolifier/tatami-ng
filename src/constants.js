@@ -1050,7 +1050,7 @@ export const defaultSamples = minimumSamples
 
 export const defaultTime = 1e9 // ns
 
-export const defaultWarmupRuns = 5
+export const defaultWarmupRuns = 12
 
 export const jsonOutputFormat = {
   bmf: 'bmf',

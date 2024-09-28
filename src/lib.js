@@ -88,26 +88,27 @@ export const spawnSync = (() => {
   }[runtime]()
 })()
 
-const conditionalGC =
-  typeof globalThis.gc === 'function' ? globalThis.gc() : emptyFunction
+const conditionalGC = () =>
+  typeof globalThis.gc === 'function' ? () => globalThis.gc() : emptyFunction
 
 export const gc = (() => {
   return {
-    unknown: () => conditionalGC,
+    unknown: conditionalGC(),
     browser: () => {
       try {
         globalThis.$262.gc()
 
         return () => globalThis.$262.gc()
-      } catch {}
-      return emptyFunction
+      } catch {
+        return emptyFunction
+      }
     },
     node: () => () => {
       setFlagsFromString('--expose_gc')
       const gc = runInNewContext('gc')
       gc()
     },
-    deno: () => conditionalGC,
+    deno: conditionalGC(),
     bun: () => () => Bun.gc(true),
   }[runtime]()
 })()
