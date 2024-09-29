@@ -77,18 +77,18 @@ export interface Report {
       samples: number
       min: number
       max: number
-      p50: number
+      p50: number // median
       p75: number
       p99: number
       p995: number
-      avg: number
-      iter: number
-      vr: number
-      sd: number
-      rmoe: number
-      aad: number
-      mad: number
-      ss: boolean
+      avg: number // average time per iteration
+      iter: number // iterations per second
+      vr: number // variance
+      sd: number // standard deviation
+      rmoe: number // relative margin of error
+      aad: number // average time absolute deviation
+      mad: number // median time absolute deviation
+      ss: boolean // statistical significance
     }
   }[]
 }
