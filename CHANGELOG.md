@@ -6,6 +6,31 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.1](https://github.com/poolifier/tatami-ng/compare/0.6.0...0.6.1) (2024-09-29)
+
+
+### 🐞 Bug Fixes
+
+* call garbage collector before each benchmark ([21bdbf3](https://github.com/poolifier/tatami-ng/commit/21bdbf31163a06a2fc150561c265d8509994b5c3))
+* fix gc() call on unknown JS runtime ([893f960](https://github.com/poolifier/tatami-ng/commit/893f960625771cf4e285d2f0df1b7436e9a7a20c))
+* fix gc() implementation on Deno runtime ([b386e8a](https://github.com/poolifier/tatami-ng/commit/b386e8a384b4440184bcaa3c189b9a81911736ff))
+* improve gc() detection on browser ([5146ef7](https://github.com/poolifier/tatami-ng/commit/5146ef7cec8d18dcea14c04adca5a49e18f5d813))
+* try to run gc() with more JS runtimes ([1cef68c](https://github.com/poolifier/tatami-ng/commit/1cef68c0a63741f235bda86658dc14098313a1c7))
+
+
+### ✨ Polish
+
+* cleanup colors in output detection ([551df36](https://github.com/poolifier/tatami-ng/commit/551df3611ad3baf9a158e8dca3709eaf82cd1857))
+* cleanup gc() implementation ([5ebe98a](https://github.com/poolifier/tatami-ng/commit/5ebe98a253f6e426090e31dd60569031297bfa08))
+* cleanup variables namespace ([f84c010](https://github.com/poolifier/tatami-ng/commit/f84c010ef1a8be246fd4ee6279c5269e47b334cf))
+* deno 2.x.x support ([fd39123](https://github.com/poolifier/tatami-ng/commit/fd39123a658af07c072070ee90e398147b65b97a))
+
+
+### 📚 Documentation
+
+* **README.md:** cleanup description ([93963cb](https://github.com/poolifier/tatami-ng/commit/93963cbba431394c2195d5acfdec415cf4931af9))
+* **README.md:** refine description ([83fa873](https://github.com/poolifier/tatami-ng/commit/83fa873d116b5d7e933261f4587db86736fd664e))
+
 ## [0.6.0](https://github.com/poolifier/tatami-ng/compare/0.5.7...0.6.0) (2024-09-26)
 
 
