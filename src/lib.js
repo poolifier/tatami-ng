@@ -39,7 +39,7 @@ export const os = (() => {
   }[runtime]()
 })()
 
-export const cpu = await (async () => {
+export const cpuModel = await (async () => {
   return await {
     unknown: () => 'unknown',
     browser: () => 'unknown',
@@ -174,9 +174,9 @@ export const checkBenchmarkArgs = (fn, opts = {}) => {
 }
 
 export const overrideBenchmarkDefaults = (benchmark, opts) => {
-  benchmark.samples = opts.samples ?? benchmark.samples
-  benchmark.time = opts.time ?? benchmark.time
-  benchmark.warmup = opts.warmup ?? benchmark.warmup
+  benchmark.samples ??= opts.samples
+  benchmark.time ??= opts.time
+  benchmark.warmup ??= opts.warmup
 }
 
 export const mergeDeepRight = (target, source) => {

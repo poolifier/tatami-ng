@@ -11,7 +11,7 @@ import {
   checkBenchmarkArgs,
   colors,
   convertReportToBmf,
-  cpu,
+  cpuModel,
   gc,
   measure,
   mergeDeepRight,
@@ -300,7 +300,7 @@ export async function run(opts = {}) {
 
   const report = {
     benchmarks,
-    cpu,
+    cpu: `${cpuModel}`,
     runtime: `${runtime} ${version} (${os})`,
   }
 
