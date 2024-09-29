@@ -82,7 +82,7 @@ export function benchmark(
   return `${name.padEnd(size, ' ')}${
     !avg
       ? ''
-      : `${clr.yellow(colors, duration(stats.avg))}/iter`.padStart(
+      : `${clr.yellow(colors, duration(stats.avg))}`.padStart(
           14 + 10 * colors,
           ' '
         )
