@@ -6,6 +6,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.2](https://github.com/poolifier/tatami-ng/compare/0.6.1...0.6.2) (2024-09-29)
+
+
+### 🚀 Features
+
+* add average and median absolute deviation to stats ([cdf968a](https://github.com/poolifier/tatami-ng/commit/cdf968a226b4b4b0447fb99e4a659818f6940714))
+
+
+### 🐞 Bug Fixes
+
+* fix absolute deviation computation ([c2ad613](https://github.com/poolifier/tatami-ng/commit/c2ad613130f4650462945464b9c58fc21b7c9b4d))
+
+
+### ✨ Polish
+
+* cleanup quantile computation implementation ([8279e44](https://github.com/poolifier/tatami-ng/commit/8279e44a2e960ea26c007265807a3f668b48dda2))
+* median() -&gt; medianSorted() ([850e46c](https://github.com/poolifier/tatami-ng/commit/850e46c9ad002f81ba1edd2529be571a8bb12d68))
+* refine benchmark time measurement displaying ([c5e2c8e](https://github.com/poolifier/tatami-ng/commit/c5e2c8e032a5d2d9190638c6e9363fe74f1ab619))
+* rename mean() -&gt; average() ([81749fb](https://github.com/poolifier/tatami-ng/commit/81749fb271b55aae0ed1dc508f50e611cf5d5301))
+
 ## [0.6.1](https://github.com/poolifier/tatami-ng/compare/0.6.0...0.6.1) (2024-09-29)
 
 
