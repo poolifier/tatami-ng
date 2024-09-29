@@ -307,7 +307,7 @@ const absoluteDeviation = (arr, aggFn) => {
   const value = aggFn(arr)
   const absoluteDeviations = []
 
-  for (const elt in arr) {
+  for (const elt of arr) {
     absoluteDeviations.push(Math.abs(elt - value))
   }
 
