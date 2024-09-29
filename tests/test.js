@@ -5,7 +5,7 @@ bench('noop', () => {}, {
   after: () => {},
 })
 bench('async noop', async () => {})
-baseline('aaa', () => {})
+baseline('baseline noop', () => {})
 bench('async noop2', async () => Promise.resolve())
 bench('error', () => {
   throw new Error('error')
@@ -20,7 +20,7 @@ group(() => {
 })
 
 group('group', () => {
-  baseline('baseline', () => {})
+  baseline('baseline noop', () => {})
   bench('Date.now()', () => {
     Date.now()
   })

@@ -67,7 +67,7 @@ deno add @poolifier/tatami-ng
 
 Deno versions >= 1.40.x are supported.
 
-The `--allow-hrtime` permission flag is recommended to allow high-resolution time measurement.
+The `--allow-hrtime` permission flag is recommended to allow high-resolution time measurement with Deno v1.x.x.
 
 ### Bun
 
@@ -155,7 +155,7 @@ npm install tatami-ng -g
 ### Deno
 
 ```shell
-deno install -g --allow-read --allow-run --allow-sys --allow-hrtime -n tatami npm:tatami-ng
+deno install -g --allow-read --allow-run --allow-sys -n tatami npm:tatami-ng
 ```
 
 ### Bun
