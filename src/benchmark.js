@@ -186,12 +186,12 @@ const executeBenchmarks = async (
   opts = {},
   groupOpts = {}
 ) => {
-  gc()
   let once = false
   for (const benchmark of benchmarks) {
     once = true
     overrideBenchmarkDefaults(benchmark, opts)
     try {
+      gc()
       benchmark.stats = await measure(
         benchmark.fn,
         benchmark.before,
