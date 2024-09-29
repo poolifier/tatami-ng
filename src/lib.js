@@ -288,7 +288,22 @@ export async function measure(
   return buildStats(samples)
 }
 
-const quantile = (arr, q) => {
+const quantileSorted = (arr, q) => {
+  if (!Array.isArray(arr)) {
+    throw new TypeError(`expected array, got ${arr.constructor.name}`)
+  }
+  if (arr.length === 0) {
+    throw new Error('expected non-empty array, got empty array')
+  }
+  if (q < 0 || q > 1) {
+    throw new Error('q must be between 0 and 1')
+  }
+  if (q === 0) {
+    return arr[0]
+  }
+  if (q === 1) {
+    return arr[arr.length - 1]
+  }
   const base = (arr.length - 1) * q
   const baseIndex = Math.floor(base)
   if (arr[baseIndex + 1] != null) {
@@ -303,7 +318,7 @@ const quantile = (arr, q) => {
 const buildStats = samples => {
   if (!Array.isArray(samples))
     throw new TypeError(`expected array, got ${samples.constructor.name}`)
-  if (Array.isArray(samples) && samples.length === 0)
+  if (samples.length === 0)
     throw new Error('expected non-empty array, got empty array')
 
   samples.sort((a, b) => a - b)
@@ -312,7 +327,7 @@ const buildStats = samples => {
   const avg = time / samples.length
   const vr =
     samples.reduce((a, b) => a + (b - avg) ** 2, 0) /
-    checkDividend(samples.length - 1)
+    checkDividend(samples.length - 1) // Bessel's Correction
   const sd = Math.sqrt(vr)
   const sem = sd / Math.sqrt(samples.length)
   const critical =
@@ -324,10 +339,10 @@ const buildStats = samples => {
     samples: samples.length,
     min: samples[0],
     max: samples[samples.length - 1],
-    p50: quantile(samples, 0.5),
-    p75: quantile(samples, 0.75),
-    p99: quantile(samples, 0.99),
-    p995: quantile(samples, 0.995),
+    p50: quantileSorted(samples, 0.5),
+    p75: quantileSorted(samples, 0.75),
+    p99: quantileSorted(samples, 0.99),
+    p995: quantileSorted(samples, 0.995),
     avg,
     iter: (1e9 * samples.length) / checkDividend(time),
     vr,
