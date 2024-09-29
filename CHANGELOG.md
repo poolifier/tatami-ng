@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.3](https://github.com/poolifier/tatami-ng/compare/0.6.2...0.6.3) (2024-09-29)
+
+
+### 🐞 Bug Fixes
+
+* fix benchmark related functions async detection ([038340c](https://github.com/poolifier/tatami-ng/commit/038340cb7c6caa90c2f300dc0b8060eda067d620))
+
+
+### 📚 Documentation
+
+* comment a bit benchmark stats data structure ([2bcd724](https://github.com/poolifier/tatami-ng/commit/2bcd7247a603e840c492a8b1b9b5aa6c5a403f49))
+
 ## [0.6.2](https://github.com/poolifier/tatami-ng/compare/0.6.1...0.6.2) (2024-09-29)
 
 
