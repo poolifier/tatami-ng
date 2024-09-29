@@ -9,12 +9,12 @@ import {
   os,
   AsyncFunction,
   checkBenchmarkArgs,
+  colors,
   convertReportToBmf,
   cpu,
   gc,
   measure,
   mergeDeepRight,
-  noColor,
   overrideBenchmarkDefaults,
   version,
   writeFileSync,
@@ -290,7 +290,7 @@ export async function run(opts = {}) {
   opts = mergeDeepRight(
     {
       silent: false,
-      colors: !noColor,
+      colors,
       size: table.size(benchmarks.map(benchmark => benchmark.name)),
     },
     opts

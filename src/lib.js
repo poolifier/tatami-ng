@@ -19,9 +19,9 @@ export const version = (() => {
   return {
     unknown: () => '',
     browser: () => '',
-    node: () => process.version,
-    deno: () => Deno.version.deno,
-    bun: () => process.versions.bun,
+    node: () => globalThis.process.version,
+    deno: () => globalThis.Deno.version.deno,
+    bun: () => globalThis.process.versions.bun,
     // hermes: () =>
     //   globalThis.HermesInternal?.getRuntimeProperties?.()?.[
     //     'OSS Release Version'
@@ -33,9 +33,9 @@ export const os = (() => {
   return {
     unknown: () => 'unknown',
     browser: () => 'unknown',
-    node: () => `${process.arch}-${process.platform}`,
+    node: () => `${globalThis.process.arch}-${globalThis.process.platform}`,
     deno: () => Deno.build.target,
-    bun: () => `${process.arch}-${process.platform}`,
+    bun: () => `${globalThis.process.arch}-${globalThis.process.platform}`,
   }[runtime]()
 })()
 
@@ -49,13 +49,22 @@ export const cpu = await (async () => {
   }[runtime]()
 })()
 
-export const noColor = (() => {
+export const colors = (() => {
   return {
-    unknown: () => false,
-    browser: () => true,
-    node: () => !!process.env.NO_COLOR,
-    deno: () => Deno.noColor,
-    bun: () => !!process.env.NO_COLOR,
+    unknown: () =>
+      globalThis.process?.env?.FORCE_COLOR != null ||
+      (!globalThis.process?.env?.NO_COLOR &&
+        !globalThis.process?.env?.NODE_DISABLE_COLORS),
+    browser: () => false,
+    node: () =>
+      globalThis.process.env.FORCE_COLOR != null ||
+      (!globalThis.process.env.NO_COLOR &&
+        !globalThis.process.env.NODE_DISABLE_COLORS),
+    deno: () => !Deno.noColor,
+    bun: () =>
+      globalThis.process.env.FORCE_COLOR != null ||
+      (!globalThis.process.env.NO_COLOR &&
+        !globalThis.process.env.NODE_DISABLE_COLORS),
   }[runtime]()
 })()
 
