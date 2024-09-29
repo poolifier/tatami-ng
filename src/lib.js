@@ -288,7 +288,7 @@ export async function measure(
   return buildStats(samples)
 }
 
-const mean = arr => {
+const average = arr => {
   if (!Array.isArray(arr)) {
     throw new TypeError(`expected array, got ${arr.constructor.name}`)
   }
@@ -374,7 +374,7 @@ const buildStats = samples => {
     vr,
     sd,
     rmoe,
-    aad: absoluteDeviation(samples, mean),
+    aad: absoluteDeviation(samples, average),
     mad: absoluteDeviation(samples, median),
     ss: samples.length >= minimumSamples,
   }
