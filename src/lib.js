@@ -288,6 +288,32 @@ export async function measure(
   return buildStats(samples)
 }
 
+const mean = arr => {
+  if (!Array.isArray(arr)) {
+    throw new TypeError(`expected array, got ${arr.constructor.name}`)
+  }
+  if (arr.length === 0) {
+    throw new Error('expected non-empty array, got empty array')
+  }
+
+  return arr.reduce((a, b) => a + b, 0) / arr.length
+}
+
+const median = arr => {
+  return quantileSorted(arr, 0.5)
+}
+
+const absoluteDeviation = (arr, aggFn) => {
+  const value = aggFn(arr)
+  const absoluteDeviations = []
+
+  for (const elt in arr) {
+    absoluteDeviations.push(Math.abs(elt - value))
+  }
+
+  return aggFn(absoluteDeviations)
+}
+
 const quantileSorted = (arr, q) => {
   if (!Array.isArray(arr)) {
     throw new TypeError(`expected array, got ${arr.constructor.name}`)
@@ -339,7 +365,7 @@ const buildStats = samples => {
     samples: samples.length,
     min: samples[0],
     max: samples[samples.length - 1],
-    p50: quantileSorted(samples, 0.5),
+    p50: median(samples),
     p75: quantileSorted(samples, 0.75),
     p99: quantileSorted(samples, 0.99),
     p995: quantileSorted(samples, 0.995),
@@ -348,6 +374,8 @@ const buildStats = samples => {
     vr,
     sd,
     rmoe,
+    aad: absoluteDeviation(samples, mean),
+    mad: absoluteDeviation(samples, median),
     ss: samples.length >= minimumSamples,
   }
 }

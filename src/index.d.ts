@@ -86,6 +86,8 @@ export interface Report {
       vr: number
       sd: number
       rmoe: number
+      aad: number
+      mad: number
       ss: boolean
     }
   }[]

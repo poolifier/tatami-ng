@@ -53,7 +53,7 @@ export function header({
   percentiles = true,
 }) {
   return `${'benchmark'.padEnd(size, ' ')}${
-    !avg ? '' : 'time (avg)'.padStart(14, ' ')
+    !avg ? '' : 'time/iter'.padStart(14, ' ')
   }${!iter ? '' : 'iter/s'.padStart(14, ' ')}${
     !rmoe ? '' : 'error margin'.padStart(14, ' ')
   }${!min_max ? '' : '(min … max)'.padStart(24, ' ')}${

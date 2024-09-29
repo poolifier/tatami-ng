@@ -51,6 +51,8 @@ const report = await run({
   percentiles: false, // enable/disable percentile columns (default: true)
 })
 
+console.log(report)
+
 await run({
   avg: true, // enable/disable avg column (default: true)
   json: false, // enable/disable json output or set json output format (default: false)

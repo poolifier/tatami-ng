@@ -100,7 +100,7 @@ group({ summary: true }, () => {
   })
 })
 
-const report = await run({
+await run({
   units: true, // print units cheatsheet (default: false)
   avg: true, // enable/disable avg column (default: true)
   json: false, // enable/disable json output or set json output format (default: false)
