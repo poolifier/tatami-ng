@@ -242,7 +242,9 @@ export async function measure(
   const asyncBefore = AsyncFunction === before.constructor
   const asyncAfter = AsyncFunction === after.constructor
 
-  const benchmark = new (!opts.async ? Function : AsyncFunction)(
+  const asyncFunction = opts.async || asyncBefore || asyncAfter
+
+  const benchmark = new (asyncFunction ? AsyncFunction : Function)(
     '$fn',
     '$before',
     '$after',
@@ -255,7 +257,7 @@ export async function measure(
           ${asyncBefore ? 'await' : ''} $before();
           for (let i = 0; i < ${opts.warmup}; i++) {
             const t0 = $now();
-            ${!opts.async ? '' : 'await'} $fn();
+            ${opts.async ? 'await' : ''} $fn();
             const t1 = $now();
           }
           ${asyncAfter ? 'await' : ''} $after();
@@ -268,7 +270,7 @@ export async function measure(
     ${asyncBefore ? 'await' : ''} $before();
     while (time < ${opts.time} || ${opts.samples} > samples.length) {
       const t0 = $now();
-      ${!opts.async ? '' : 'await'} $fn();
+      ${opts.async ? 'await' : ''} $fn();
       const t1 = $now();
 
       const diff = t1 - t0;
@@ -281,9 +283,9 @@ export async function measure(
   `
   )
 
-  const samples = !opts.async
-    ? benchmark(fn, before, after, now)
-    : await benchmark(fn, before, after, now)
+  const samples = asyncFunction
+    ? await benchmark(fn, before, after, now)
+    : benchmark(fn, before, after, now)
 
   return buildStats(samples)
 }
