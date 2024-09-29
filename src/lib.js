@@ -299,7 +299,7 @@ const average = arr => {
   return arr.reduce((a, b) => a + b, 0) / arr.length
 }
 
-const median = arr => {
+const medianSorted = arr => {
   return quantileSorted(arr, 0.5)
 }
 
@@ -365,7 +365,7 @@ const buildStats = samples => {
     samples: samples.length,
     min: samples[0],
     max: samples[samples.length - 1],
-    p50: median(samples),
+    p50: medianSorted(samples),
     p75: quantileSorted(samples, 0.75),
     p99: quantileSorted(samples, 0.99),
     p995: quantileSorted(samples, 0.995),
@@ -375,7 +375,7 @@ const buildStats = samples => {
     sd,
     rmoe,
     aad: absoluteDeviation(samples, average),
-    mad: absoluteDeviation(samples, median),
+    mad: absoluteDeviation(samples, medianSorted),
     ss: samples.length >= minimumSamples,
   }
 }
