@@ -6,6 +6,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.4](https://github.com/poolifier/tatami-ng/compare/0.6.3...0.6.4) (2024-09-30)
+
+
+### 🐞 Bug Fixes
+
+* do not round timestamping ([bc2f605](https://github.com/poolifier/tatami-ng/commit/bc2f6050b28a8a1b1af6f92d617b515d744efe6c))
+
+
+### ✨ Polish
+
+* display MAD when necessary in p50 percentile ([4e42c6a](https://github.com/poolifier/tatami-ng/commit/4e42c6a93a33be3ff697f912212a9918db40a297))
+
+
+### 📚 Documentation
+
+* **README.md:** refine examples ([f811d56](https://github.com/poolifier/tatami-ng/commit/f811d56ee684f1425cefaf55305381d99fc4a732))
+* refine documentation ([45a405e](https://github.com/poolifier/tatami-ng/commit/45a405e7dfcd571facf454965486fb8fa4be9776))
+
 ## [0.6.3](https://github.com/poolifier/tatami-ng/compare/0.6.2...0.6.3) (2024-09-29)
 
 
