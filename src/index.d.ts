@@ -64,8 +64,8 @@ export interface Report {
 
   benchmarks: {
     name: string
-    samples: number
-    time: number
+    samples: number // minimum number of samples
+    time: number // minimum execution time
     warmup: number | boolean
     async: boolean
     baseline: boolean
@@ -74,7 +74,7 @@ export interface Report {
     error?: Error
 
     stats?: {
-      samples: number
+      samples: number // number of samples
       min: number
       max: number
       p50: number // median
