@@ -102,7 +102,7 @@ group({ summary: true }, () => {
 
 await run({
   units: true, // print units cheatsheet (default: false)
-  avg: true, // enable/disable avg column (default: true)
+  avg: true, // enable/disable time/iter average column (default: true)
   json: false, // enable/disable json output or set json output format (default: false)
   colors: true, // enable/disable colors (default: true)
   min_max: true, // enable/disable (min...max) column (default: true)

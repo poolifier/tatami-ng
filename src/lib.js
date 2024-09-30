@@ -145,6 +145,14 @@ export const convertReportToBmf = report => {
           },
           throughput: {
             value: stats?.iters,
+            ...(typeof stats?.max === 'number' &&
+              stats.max > 0 && {
+                lower_value: 1e9 / checkDividend(stats.max),
+              }),
+            ...(typeof stats?.min === 'number' &&
+              stats.min > 0 && {
+                upper_value: 1e9 / checkDividend(stats.min),
+              }),
           },
         },
       }
@@ -200,6 +208,7 @@ export const mergeDeepRight = (target, source) => {
 }
 
 export const checkDividend = n => {
+  if (n == null) throw new TypeError(`Invalid dividend: ${n}`)
   if ('number' !== typeof n)
     throw new TypeError(`expected number, got ${n.constructor.name}`)
   if (n === 0 || Number.isNaN(n)) throw new RangeError(`Invalid dividend: ${n}`)

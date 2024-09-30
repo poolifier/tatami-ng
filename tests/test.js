@@ -44,7 +44,7 @@ group({ name: 'group2', summary: false }, () => {
 })
 
 const report = await run({
-  avg: true, // enable/disable avg column (default: true)
+  avg: true, // enable/disable time/iter average column (default: true)
   json: false, // enable/disable json output or set json output format (default: false)
   colors: true, // enable/disable colors (default: true)
   min_max: true, // enable/disable (min...max) column (default: true)
@@ -54,7 +54,7 @@ const report = await run({
 console.log(report)
 
 await run({
-  avg: true, // enable/disable avg column (default: true)
+  avg: true, // enable/disable time/iter average column (default: true)
   json: false, // enable/disable json output or set json output format (default: false)
   colors: true, // enable/disable colors (default: true)
   min_max: true, // enable/disable (min...max) column (default: true)
