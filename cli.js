@@ -84,12 +84,12 @@ const {
     },
     'no-avg': {
       listGroup: 'Output options',
-      description: 'No average column',
+      description: 'No time/iter average column',
       type: 'boolean',
     },
-    'no-iter': {
+    'no-iters': {
       listGroup: 'Output options',
-      description: 'No iterations per second column',
+      description: 'No iters/s column',
       type: 'boolean',
     },
     'no-min_max': {
@@ -168,7 +168,7 @@ await run({
   ...(flags['no-colors'] != null && { colors: !flags['no-colors'] }),
   ...(flags['no-avg'] != null && { avg: !flags['no-avg'] }),
   ...(flags['no-rmoe'] != null && { rmoe: !flags['no-rmoe'] }),
-  ...(flags['no-iter'] != null && { iter: !flags['no-iter'] }),
+  ...(flags['no-iters'] != null && { iters: !flags['no-iters'] }),
   ...(flags['no-min_max'] != null && { min_max: !flags['no-min_max'] }),
   ...(flags['no-percentiles'] != null && {
     percentiles: !flags['no-percentiles'],

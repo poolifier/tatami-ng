@@ -144,7 +144,7 @@ export const convertReportToBmf = report => {
             upper_value: stats?.max,
           },
           throughput: {
-            value: stats?.iter,
+            value: stats?.iters,
           },
         },
       }
@@ -370,7 +370,7 @@ const buildStats = samples => {
     p99: quantileSorted(samples, 0.99),
     p995: quantileSorted(samples, 0.995),
     avg,
-    iter: (1e9 * samples.length) / checkDividend(time),
+    iters: (1e9 * samples.length) / checkDividend(time),
     vr,
     sd,
     rmoe,

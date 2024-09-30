@@ -18,8 +18,8 @@ export function duration(ns, strToAppend = '') {
   return `${ns.toFixed(2)}${strToAppend} h`
 }
 
-export function iterPerSecond(iter) {
-  return `${iter.toFixed(0)}`
+export function itersPerSecond(iters) {
+  return `${iters.toFixed(0)}`
 }
 
 export function errorMargin(rmoe) {

@@ -49,7 +49,7 @@ export function run(options?: {
   time?: number
   warmup?: number | boolean
   avg?: boolean
-  iter?: boolean
+  iters?: boolean
   min_max?: boolean
   rmoe?: boolean
   percentiles?: boolean
@@ -82,7 +82,7 @@ export interface Report {
       p99: number
       p995: number
       avg: number // average time per iteration
-      iter: number // iterations per second
+      iters: number // iterations per second
       vr: number // variance
       sd: number // standard deviation
       rmoe: number // relative margin of error

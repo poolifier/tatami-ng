@@ -1,7 +1,7 @@
 import { tTable, tatamiNgGroup } from '../constants.js'
 import { checkDividend } from '../lib.js'
 import * as clr from './clr.js'
-import { duration, errorMargin, iterPerSecond, speedRatio } from './fmt.js'
+import { duration, errorMargin, itersPerSecond, speedRatio } from './fmt.js'
 
 export function size(names) {
   let size = 9
@@ -13,13 +13,13 @@ export function size(names) {
 export function br({
   size,
   avg = true,
-  iter = true,
+  iters = true,
   rmoe = true,
   min_max = true,
   percentiles = true,
 }) {
   return `${'-'.repeat(
-    size + 14 * avg + 14 * iter + 14 * rmoe + 24 * min_max
+    size + 14 * avg + 14 * iters + 14 * rmoe + 24 * min_max
   )}${!percentiles ? '' : ` ${'-'.repeat(18 + 10 + 10 + 10)}`}`
 }
 
@@ -47,14 +47,14 @@ export function units({ colors = true } = {}) {
 export function header({
   size,
   avg = true,
-  iter = true,
+  iters = true,
   rmoe = true,
   min_max = true,
   percentiles = true,
 }) {
   return `${'benchmark'.padEnd(size, ' ')}${
     !avg ? '' : 'time/iter'.padStart(14, ' ')
-  }${!iter ? '' : 'iter/s'.padStart(14, ' ')}${
+  }${!iters ? '' : 'iters/s'.padStart(14, ' ')}${
     !rmoe ? '' : 'error margin'.padStart(14, ' ')
   }${!min_max ? '' : '(min … max)'.padStart(24, ' ')}${
     !percentiles
@@ -69,7 +69,7 @@ export function benchmark(
   {
     size,
     avg = true,
-    iter = true,
+    iters = true,
     colors = true,
     rmoe = true,
     min_max = true,
@@ -84,9 +84,9 @@ export function benchmark(
           ' '
         )
   }${
-    !iter
+    !iters
       ? ''
-      : `${clr.yellow(colors, iterPerSecond(stats.iter))}`.padStart(
+      : `${clr.yellow(colors, itersPerSecond(stats.iters))}`.padStart(
           14 + 10 * colors,
           ' '
         )
