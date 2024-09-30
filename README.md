@@ -144,6 +144,8 @@ await run({
 })
 ```
 
+The [tests](./tests) directory contains more examples.
+
 ## CLI installation
 
 ### Node
