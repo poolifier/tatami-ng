@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.0](https://github.com/poolifier/tatami-ng/compare/0.6.4...0.7.0) (2024-09-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* rename iter/s to iters/s (like ops/s)
+
+### ✨ Polish
+
+* cleanup statistics helper arguments namespace ([846655b](https://github.com/poolifier/tatami-ng/commit/846655b8a35689d7632d3ad0c410029d2532d919))
+* rename iter/s to iters/s (like ops/s) ([f188e81](https://github.com/poolifier/tatami-ng/commit/f188e812d479f7ba6664ce01ddd6e37d2ee75cf5))
+
 ## [0.6.4](https://github.com/poolifier/tatami-ng/compare/0.6.3...0.6.4) (2024-09-30)
 
 
