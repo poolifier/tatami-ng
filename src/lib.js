@@ -290,57 +290,55 @@ export async function measure(
   return buildStats(samples)
 }
 
-const average = arr => {
-  if (!Array.isArray(arr)) {
-    throw new TypeError(`expected array, got ${arr.constructor.name}`)
+const quantileSorted = (samples, q) => {
+  if (!Array.isArray(samples)) {
+    throw new TypeError(`expected array, got ${samples.constructor.name}`)
   }
-  if (arr.length === 0) {
-    throw new Error('expected non-empty array, got empty array')
-  }
-
-  return arr.reduce((a, b) => a + b, 0) / arr.length
-}
-
-const medianSorted = arr => {
-  return quantileSorted(arr, 0.5)
-}
-
-const absoluteDeviation = (arr, aggFn) => {
-  const value = aggFn(arr)
-  const absoluteDeviations = []
-
-  for (const elt of arr) {
-    absoluteDeviations.push(Math.abs(elt - value))
-  }
-
-  return aggFn(absoluteDeviations)
-}
-
-const quantileSorted = (arr, q) => {
-  if (!Array.isArray(arr)) {
-    throw new TypeError(`expected array, got ${arr.constructor.name}`)
-  }
-  if (arr.length === 0) {
+  if (samples.length === 0) {
     throw new Error('expected non-empty array, got empty array')
   }
   if (q < 0 || q > 1) {
     throw new Error('q must be between 0 and 1')
   }
   if (q === 0) {
-    return arr[0]
+    return samples[0]
   }
   if (q === 1) {
-    return arr[arr.length - 1]
+    return samples[samples.length - 1]
   }
-  const base = (arr.length - 1) * q
+  const base = (samples.length - 1) * q
   const baseIndex = Math.floor(base)
-  if (arr[baseIndex + 1] != null) {
+  if (samples[baseIndex + 1] != null) {
     return (
-      arr[baseIndex] +
-      (base - baseIndex) * (arr[baseIndex + 1] - arr[baseIndex])
+      samples[baseIndex] +
+      (base - baseIndex) * (samples[baseIndex + 1] - samples[baseIndex])
     )
   }
-  return arr[baseIndex]
+  return samples[baseIndex]
+}
+
+const medianSorted = samples => quantileSorted(samples, 0.5)
+
+const average = samples => {
+  if (!Array.isArray(samples)) {
+    throw new TypeError(`expected array, got ${samples.constructor.name}`)
+  }
+  if (samples.length === 0) {
+    throw new Error('expected non-empty array, got empty array')
+  }
+
+  return samples.reduce((a, b) => a + b, 0) / samples.length
+}
+
+const absoluteDeviation = (samples, aggFn) => {
+  const value = aggFn(samples)
+  const absoluteDeviations = []
+
+  for (const elt of samples) {
+    absoluteDeviations.push(Math.abs(elt - value))
+  }
+
+  return aggFn(absoluteDeviations)
 }
 
 const buildStats = samples => {
