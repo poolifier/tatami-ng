@@ -20,7 +20,7 @@ export function br({
 }) {
   return `${'-'.repeat(
     size + 14 * avg + 14 * iter + 14 * rmoe + 24 * min_max
-  )}${!percentiles ? '' : ` ${'-'.repeat(9 + 10 + 10 + 10)}`}`
+  )}${!percentiles ? '' : ` ${'-'.repeat(18 + 10 + 10 + 10)}`}`
 }
 
 export function benchmarkError(name, error, { size, colors = true }) {
@@ -59,10 +59,7 @@ export function header({
   }${!min_max ? '' : '(min … max)'.padStart(24, ' ')}${
     !percentiles
       ? ''
-      : ` ${'p50'.padStart(9, ' ')} ${'p75'.padStart(9, ' ')} ${'p99'.padStart(
-          9,
-          ' '
-        )} ${'p995'.padStart(9, ' ')}`
+      : ` ${'p50/median'.padStart(17, ' ')} ${'p75'.padStart(9, ' ')} ${'p99'.padStart(9, ' ')} ${'p995'.padStart(9, ' ')}`
   }`
 }
 
@@ -110,15 +107,7 @@ export function benchmark(
   }${
     !percentiles
       ? ''
-      : ` ${clr
-          .green(colors, duration(stats.p50))
-          .padStart(9 + 10 * colors, ' ')} ${clr
-          .green(colors, duration(stats.p75))
-          .padStart(9 + 10 * colors, ' ')} ${clr
-          .green(colors, duration(stats.p99))
-          .padStart(9 + 10 * colors, ' ')} ${clr
-          .green(colors, duration(stats.p995))
-          .padStart(9 + 10 * colors, ' ')}`
+      : ` ${clr.green(colors, duration(stats.p50, stats.mad > 0 ? ` ± ${stats.mad.toFixed(2)}` : '')).padStart(17 + 10 * colors, ' ')} ${clr.green(colors, duration(stats.p75)).padStart(9 + 10 * colors, ' ')} ${clr.green(colors, duration(stats.p99)).padStart(9 + 10 * colors, ' ')} ${clr.green(colors, duration(stats.p995)).padStart(9 + 10 * colors, ' ')}`
   }${!stats.ss ? ` ${clr.red(colors, '!')}` : ''}`
 }
 

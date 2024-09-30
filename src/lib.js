@@ -355,7 +355,7 @@ const buildStats = samples => {
   const avg = time / samples.length
   const vr =
     samples.reduce((a, b) => a + (b - avg) ** 2, 0) /
-    checkDividend(samples.length - 1) // Bessel's Correction
+    checkDividend(samples.length - 1) // Bessel's correction
   const sd = Math.sqrt(vr)
   const sem = sd / Math.sqrt(samples.length)
   const critical =

@@ -48,7 +48,7 @@ const report = await run({
   json: false, // enable/disable json output or set json output format (default: false)
   colors: true, // enable/disable colors (default: true)
   min_max: true, // enable/disable (min...max) column (default: true)
-  percentiles: false, // enable/disable percentile columns (default: true)
+  percentiles: true, // enable/disable percentile columns (default: true)
 })
 
 console.log(report)
@@ -58,5 +58,5 @@ await run({
   json: false, // enable/disable json output or set json output format (default: false)
   colors: true, // enable/disable colors (default: true)
   min_max: true, // enable/disable (min...max) column (default: true)
-  percentiles: false, // enable/disable percentile columns (default: true)
+  percentiles: true, // enable/disable percentile columns (default: true)
 })

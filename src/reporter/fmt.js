@@ -1,48 +1,31 @@
-const locale = 'en-us'
-
-export function duration(time) {
-  if (time < 1) return `${Number((time * 1e3).toFixed(0)).toString()} ps`
-
-  if (time < 1e2) return `${Number(time.toFixed(2)).toString()} ns`
-  if (time < 1e3) return `${Number(time.toFixed(0)).toString()} ns`
-  if (time < 1e5)
-    return `${Number(time.toFixed(0))
-      .toLocaleString(locale)
-      .replace(',', "'")} ns`
-
-  if (time < 1e6) return `${Number((time / 1e3).toFixed(0)).toString()} µs`
-  if (time < 1e8)
-    return `${Number((time / 1e3).toFixed(0))
-      .toLocaleString(locale)
-      .replace(',', "'")} µs`
-
-  if (time < 1e9) return `${Number((time / 1e6).toFixed(0)).toString()} ms`
-  if (time < 1e11)
-    return `${Number((time / 1e6).toFixed(0))
-      .toLocaleString(locale)
-      .replace(',', "'")} ms`
-
-  if (time < 1e12) return `${Number((time / 1e9).toFixed(0)).toString()} s`
-  if (time < 36e11) return `${Number((time / 60e9).toFixed(0)).toString()} m`
-  return `${Number((time / 36e11).toFixed(2)).toLocaleString(locale, {
-    notation: 'compact',
-  })} h`
+export function duration(ns, strToAppend = '') {
+  if (ns < 1) return `${(ns * 1e3).toFixed(2)}${strToAppend} ps`
+  if (ns < 1e3) return `${ns.toFixed(2)}${strToAppend} ns`
+  // biome-ignore lint/style/noParameterAssign: <explanation>
+  ns /= 1000
+  if (ns < 1e3) return `${ns.toFixed(2)}${strToAppend} µs`
+  // biome-ignore lint/style/noParameterAssign: <explanation>
+  ns /= 1000
+  if (ns < 1e3) return `${ns.toFixed(2)}${strToAppend} ms`
+  // biome-ignore lint/style/noParameterAssign: <explanation>
+  ns /= 1000
+  if (ns < 1e3) return `${ns.toFixed(2)}${strToAppend} s`
+  // biome-ignore lint/style/noParameterAssign: <explanation>
+  ns /= 60
+  if (ns < 1e3) return `${ns.toFixed(2)}${strToAppend} m`
+  // biome-ignore lint/style/noParameterAssign: <explanation>
+  ns /= 60
+  return `${ns.toFixed(2)}${strToAppend} h`
 }
 
 export function iterPerSecond(iter) {
-  return `${Number(iter.toFixed(1))
-    .toLocaleString(locale)
-    .replaceAll(',', "'")}`
+  return `${iter.toFixed(0)}`
 }
 
 export function errorMargin(rmoe) {
-  return `${Number(rmoe.toFixed(2))
-    .toLocaleString(locale)
-    .replaceAll(',', "'")} %`
+  return `${rmoe.toFixed(2)} %`
 }
 
 export function speedRatio(ratio) {
-  return `${Number(ratio.toFixed(2))
-    .toLocaleString(locale)
-    .replaceAll(',', "'")}`
+  return `${ratio.toFixed(2)}`
 }
