@@ -163,7 +163,7 @@ export const convertReportToBmf = report => {
 export const checkBenchmarkArgs = (fn, opts = {}) => {
   if (![Function, AsyncFunction].includes(fn.constructor))
     throw new TypeError(`expected function, got ${fn.constructor.name}`)
-  if (Object.prototype.toString.call(opts).slice(8, -1) !== 'Object')
+  if (!isObject(opts))
     throw new TypeError(`expected object, got ${opts.constructor.name}`)
   if (opts.samples != null && 'number' !== typeof opts.samples)
     throw new TypeError(
