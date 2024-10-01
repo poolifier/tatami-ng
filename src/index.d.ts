@@ -1,52 +1,56 @@
+export type GroupOptions = {
+  name?: string
+  summary?: boolean
+  samples?: number // minimum number of samples
+  time?: number // minimum execution time
+  warmup?: number | boolean
+  now?: () => number
+  before?: () => void | Promise<void>
+  after?: () => void | Promise<void>
+}
+
 export function group(cb: () => void | Promise<void>): void
 export function group(name: string, cb: () => void | Promise<void>): void
 export function group(
-  options: {
-    name?: string
-    summary?: boolean
-    before?: () => void | Promise<void>
-    after?: () => void | Promise<void>
-  },
+  options: GroupOptions,
   cb: () => void | Promise<void>
 ): void
 
+export type BenchmarkOptions = {
+  samples?: number // minimum number of samples
+  time?: number // minimum execution time
+  warmup?: number | boolean
+  now?: () => number
+  before?: () => void | Promise<void>
+  after?: () => void | Promise<void>
+}
+
 export function bench(
   fn: () => void | Promise<void>,
-  options?: {
-    before?: () => void | Promise<void>
-    after?: () => void | Promise<void>
-  }
+  options?: BenchmarkOptions
 ): void
 export function bench(
   name: string,
   fn: () => void | Promise<void>,
-  options?: {
-    before?: () => void | Promise<void>
-    after?: () => void | Promise<void>
-  }
+  options?: BenchmarkOptions
 ): void
 
 export function baseline(
   fn: () => void | Promise<void>,
-  options?: {
-    before?: () => void | Promise<void>
-    after?: () => void | Promise<void>
-  }
+  options?: BenchmarkOptions
 ): void
 export function baseline(
   name: string,
   fn: () => void | Promise<void>,
-  options?: {
-    before?: () => void | Promise<void>
-    after?: () => void | Promise<void>
-  }
+  options?: BenchmarkOptions
 ): void
 
 export function run(options?: {
+  now?: () => number
   silent?: boolean
   colors?: boolean
-  samples?: number
-  time?: number
+  samples?: number // minimum number of samples
+  time?: number // minimum execution time
   warmup?: number | boolean
   avg?: boolean
   iters?: boolean
@@ -70,6 +74,9 @@ export interface Report {
     async: boolean
     baseline: boolean
     group: string | null
+    now: () => number
+    before?: () => void | Promise<void>
+    after?: () => void | Promise<void>
 
     error?: Error
 

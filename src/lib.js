@@ -165,6 +165,26 @@ export const checkBenchmarkArgs = (fn, opts = {}) => {
     throw new TypeError(`expected function, got ${fn.constructor.name}`)
   if (Object.prototype.toString.call(opts).slice(8, -1) !== 'Object')
     throw new TypeError(`expected object, got ${opts.constructor.name}`)
+  if (opts.samples != null && 'number' !== typeof opts.samples)
+    throw new TypeError(
+      `expected number as 'samples' option, got ${opts.samples.constructor.name}`
+    )
+  if (opts.time != null && 'number' !== typeof opts.time)
+    throw new TypeError(
+      `expected number as 'time' option, got ${opts.time.constructor.name}`
+    )
+  if (
+    opts.warmup != null &&
+    'number' !== typeof opts.warmup &&
+    'boolean' !== typeof opts.warmup
+  )
+    throw new TypeError(
+      `expected number or boolean as 'warmup' option, got ${opts.warmup.constructor.name}`
+    )
+  if (opts.now != null && Function !== opts.now.constructor)
+    throw new TypeError(
+      `expected function as 'now' option, got ${opts.now.constructor.name}`
+    )
   if (
     opts.before != null &&
     ![Function, AsyncFunction].includes(opts.before.constructor)
@@ -181,30 +201,15 @@ export const checkBenchmarkArgs = (fn, opts = {}) => {
     )
 }
 
-export const overrideBenchmarkDefaults = (benchmark, opts) => {
+export const overrideBenchmarkOptions = (benchmark, opts) => {
+  benchmark.now = opts.now ?? benchmark.now
   benchmark.samples = opts.samples ?? benchmark.samples
   benchmark.time = opts.time ?? benchmark.time
   benchmark.warmup = opts.warmup ?? benchmark.warmup
 }
 
-export const mergeDeepRight = (target, source) => {
-  const targetClone = structuredClone(target)
-
-  for (const key in source) {
-    if (Object.prototype.toString.call(target[key]).slice(8, -1) === 'Object') {
-      if (
-        Object.prototype.toString.call(target[key]).slice(8, -1) === 'Object'
-      ) {
-        targetClone[key] = mergeDeepRight(target[key], source[key])
-      } else {
-        targetClone[key] = source[key]
-      }
-    } else {
-      targetClone[key] = source[key]
-    }
-  }
-
-  return targetClone
+export const isObject = value => {
+  return Object.prototype.toString.call(value).slice(8, -1) === 'Object'
 }
 
 export const checkDividend = n => {
@@ -215,41 +220,41 @@ export const checkDividend = n => {
   return n
 }
 
-export async function measure(
-  fn,
-  before = emptyFunction,
-  after = emptyFunction,
-  opts = {}
-) {
-  if (![Function, AsyncFunction].includes(fn.constructor))
-    throw new TypeError(`expected function, got ${fn.constructor.name}`)
-  if (![Function, AsyncFunction].includes(before.constructor))
-    throw new TypeError(`expected function, got ${before.constructor.name}`)
-  if (![Function, AsyncFunction].includes(after.constructor))
-    throw new TypeError(`expected function, got ${after.constructor.name}`)
-  if (Object.prototype.toString.call(opts).slice(8, -1) !== 'Object')
-    throw new TypeError(`expected object, got ${opts.constructor.name}`)
+/**
+ * Measure a function runtime.
+ *
+ * @param {Function} [fn] function to measure
+ * @param {Object} [opts={}] options object
+ * @param {Boolean} [opts.async=undefined] function is async
+ * @param {Number} [opts.samples=128] minimum number of benchmark samples
+ * @param {Number} [opts.time=1_000_000_000] minimum benchmark execution time in nanoseconds
+ * @param {Boolean|Number} [opts.warmup=true] benchmark warmup or benchmark warmup run(s)
+ * @param {Function} [opts.now=undefined] nanoseconds timestamp function
+ * @param {Function} [opts.before=()=>{}] before function hook
+ * @param {Function} [opts.after=()=>{}] after function hook
+ */
+export async function measure(fn, opts = {}) {
+  checkBenchmarkArgs(fn, opts)
+  if (opts.async != null && 'boolean' !== typeof opts.async)
+    throw new TypeError(
+      `expected boolean as 'async' option, got ${opts.async.constructor.name}`
+    )
 
-  // biome-ignore lint/style/noParameterAssign: <explanation>
-  opts = mergeDeepRight(
-    {
-      async: AsyncFunction === fn.constructor,
-      time: defaultTime,
-      samples: defaultSamples,
-      warmup: true,
-    },
-    opts
-  )
-
+  opts.async = opts.async ?? AsyncFunction === fn.constructor
+  opts.time = opts.time ?? defaultTime
+  opts.samples = opts.samples ?? defaultSamples
   opts.warmup =
     'number' === typeof opts.warmup
       ? opts.warmup
       : opts.warmup === true
         ? defaultWarmupRuns
         : 0
+  opts.now = opts.now ?? now
+  opts.before = opts.before ?? emptyFunction
+  opts.after = opts.after ?? emptyFunction
 
-  const asyncBefore = AsyncFunction === before.constructor
-  const asyncAfter = AsyncFunction === after.constructor
+  const asyncBefore = AsyncFunction === opts.before.constructor
+  const asyncAfter = AsyncFunction === opts.after.constructor
 
   const asyncFunction = opts.async || asyncBefore || asyncAfter
 
@@ -293,8 +298,8 @@ export async function measure(
   )
 
   const samples = asyncFunction
-    ? await benchmark(fn, before, after, now)
-    : benchmark(fn, before, after, now)
+    ? await benchmark(fn, opts.before, opts.after, opts.now)
+    : benchmark(fn, opts.before, opts.after, opts.now)
 
   return buildStats(samples)
 }

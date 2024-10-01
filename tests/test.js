@@ -1,6 +1,9 @@
 import { baseline, bench, group, run } from '../src/index.js'
 
 bench('noop', () => {}, {
+  samples: 64,
+  time: 1000,
+  now: () => 1e6 * performance.now.bind(performance)(),
   before: () => {},
   after: () => {},
 })
@@ -29,7 +32,7 @@ group('group', () => {
   })
 })
 
-group({ summary: false, after: () => {} }, () => {
+group({ summary: false, samples: 64, time: 10000, after: () => {} }, () => {
   bench('aa', () => {})
   bench('bb', () => {})
 })

@@ -1,4 +1,8 @@
-import { tTable, tatamiNgGroup } from '../constants.js'
+import {
+  highRelativeMarginOfError,
+  tTable,
+  tatamiNgGroup,
+} from '../constants.js'
 import { checkDividend } from '../lib.js'
 import * as clr from './clr.js'
 import { duration, errorMargin, itersPerSecond, speedRatio } from './fmt.js'
@@ -119,7 +123,12 @@ export function warning(benchmarks, { colors = true }) {
   for (const benchmark of benchmarks) {
     if (benchmark.stats.ss === false) {
       warnings.push(
-        `${clr.bold(colors, clr.yellow(colors, 'Warning'))}: ${clr.bold(colors, clr.cyan(colors, benchmark.name))} has a sample size ${clr.red(colors, benchmark.samples)} below statistical significance`
+        `${clr.bold(colors, clr.yellow(colors, 'Warning'))}: ${clr.bold(colors, clr.cyan(colors, benchmark.name))} has a sample size below statistical significance: ${clr.red(colors, benchmark.samples)}`
+      )
+    }
+    if (benchmark.stats.rmoe > highRelativeMarginOfError) {
+      warnings.push(
+        `${clr.bold(colors, clr.yellow(colors, 'Warning'))}: ${clr.bold(colors, clr.cyan(colors, benchmark.name))} has a high relative margin of error: ${clr.red(colors, errorMargin(benchmark.stats.rmoe))}`
       )
     }
   }

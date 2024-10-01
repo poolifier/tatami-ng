@@ -1055,3 +1055,5 @@ export const defaultWarmupRuns = 12
 export const jsonOutputFormat = {
   bmf: 'bmf',
 }
+
+export const highRelativeMarginOfError = 8

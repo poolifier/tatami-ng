@@ -13,9 +13,9 @@ import {
   convertReportToBmf,
   cpuModel,
   gc,
+  isObject,
   measure,
-  mergeDeepRight,
-  overrideBenchmarkDefaults,
+  overrideBenchmarkOptions,
   version,
   writeFileSync,
 } from './lib.js'
@@ -23,6 +23,7 @@ import { logger } from './logger.js'
 import * as clr from './reporter/clr.js'
 import * as table from './reporter/table.js'
 import { runtime } from './runtime.js'
+import { now } from './time.js'
 
 let groupName = null
 const groups = new Map()
@@ -34,11 +35,20 @@ const benchmarks = []
  */
 
 /**
+ * @callback NowType
+ * @returns {number}
+ */
+
+/**
  * Define a group of benchmarks.
  *
  * @param {String|Object|CallbackType} name name of the group or options object or callback function
  * @param {String} [name.name] name of the group
  * @param {Boolean} [name.summary=true] display summary
+ * @param {Number} [name.samples=128] minimum number of benchmark samples
+ * @param {Number} [name.time=1_000_000_000] minimum benchmark execution time in nanoseconds
+ * @param {Boolean|Number} [name.warmup=true] enable/disable benchmark warmup or set benchmark warmup run(s)
+ * @param {NowType} [name.now=undefined] custom nanoseconds timestamp function to replace default one
  * @param {CallbackType} [name.before=()=>{}] before hook
  * @param {CallbackType} [name.after=()=>{}] after hook
  * @param {CallbackType} [cb] callback function
@@ -47,7 +57,7 @@ export function group(name, cb = undefined) {
   if (
     name != null &&
     'string' !== typeof name &&
-    Object.prototype.toString.call(name).slice(8, -1) !== 'Object' &&
+    !isObject(name) &&
     ![Function, AsyncFunction].includes(name.constructor)
   )
     throw new TypeError(
@@ -59,7 +69,7 @@ export function group(name, cb = undefined) {
   }
   if (![Function, AsyncFunction].includes(cb.constructor))
     throw new TypeError(`expected function, got ${cb.constructor.name}`)
-  if (Object.prototype.toString.call(name).slice(8, -1) === 'Object') {
+  if (isObject(name)) {
     if (name.name != null && 'string' !== typeof name.name)
       throw new TypeError(
         `expected string as 'name' option, got ${name.name.constructor.name}`
@@ -67,6 +77,26 @@ export function group(name, cb = undefined) {
     if (name.summary != null && 'boolean' !== typeof name.summary)
       throw new TypeError(
         `expected boolean as 'summary' option, got ${name.summary.constructor.name}`
+      )
+    if (name.samples != null && 'number' !== typeof name.samples)
+      throw new TypeError(
+        `expected number as 'samples' option, got ${name.samples.constructor.name}`
+      )
+    if (name.time != null && 'number' !== typeof name.time)
+      throw new TypeError(
+        `expected number as 'time' option, got ${name.time.constructor.name}`
+      )
+    if (
+      name.warmup != null &&
+      'number' !== typeof name.warmup &&
+      'boolean' !== typeof name.warmup
+    )
+      throw new TypeError(
+        `expected number or boolean as 'warmup' option, got ${name.warmup.constructor.name}`
+      )
+    if (name.now != null && Function !== name.now.constructor)
+      throw new TypeError(
+        `expected function as 'now' option, got ${name.now.constructor.name}`
       )
     if (
       name.before != null &&
@@ -90,6 +120,10 @@ export function group(name, cb = undefined) {
   if (!groups.has(groupName))
     groups.set(groupName, {
       summary: name.summary ?? true,
+      samples: name.samples ?? defaultSamples,
+      time: name.time ?? defaultTime,
+      warmup: name.warmup ?? true,
+      now: name.now ?? now,
       before: name.before ?? emptyFunction,
       after: name.after ?? emptyFunction,
     })
@@ -109,6 +143,10 @@ export function group(name, cb = undefined) {
  * @param {String|CallbackType} name name of the benchmark or benchmark function
  * @param {CallbackType} [fn] benchmark function
  * @param {Object} [opts={}] options object
+ * @param {Number} [opts.samples=128] minimum number of benchmark samples
+ * @param {Number} [opts.time=1_000_000_000] minimum benchmark execution time in nanoseconds
+ * @param {Boolean|Number} [opts.warmup=true] enable/disable benchmark warmup or set benchmark warmup run(s)
+ * @param {NowType} [opts.now=undefined] custom nanoseconds timestamp function to replace default one
  * @param {CallbackType} [opts.before=()=>{}] before hook
  * @param {CallbackType} [opts.after=()=>{}] after hook
  */
@@ -128,10 +166,11 @@ export function bench(name, fn = undefined, opts = {}) {
     fn,
     after: opts.after ?? emptyFunction,
     name,
+    now: opts.now ?? now,
     group: groupName,
-    time: defaultTime,
-    samples: defaultSamples,
-    warmup: true,
+    time: opts.time ?? defaultTime,
+    samples: opts.samples ?? defaultSamples,
+    warmup: opts.warmup ?? true,
     baseline: false,
     async: AsyncFunction === fn.constructor,
   })
@@ -144,6 +183,10 @@ export function bench(name, fn = undefined, opts = {}) {
  * @param {String|CallbackType} name name of the baseline benchmark or baseline benchmark function
  * @param {CallbackType} [fn] baseline benchmark function
  * @param {Object} [opts={}] options object
+ * @param {Number} [opts.samples=128] minimum number of benchmark samples
+ * @param {Number} [opts.time=1_000_000_000] minimum benchmark execution time in nanoseconds
+ * @param {Boolean|Number} [opts.warmup=true] enable/disable benchmark warmup or set benchmark warmup run(s)
+ * @param {NowType} [opts.now=undefined] custom nanoseconds timestamp function to replace default one
  * @param {CallbackType} [opts.before=()=>{}] before hook
  * @param {CallbackType} [opts.after=()=>{}] after hook
  */
@@ -163,10 +206,11 @@ export function baseline(name, fn = undefined, opts = {}) {
     fn,
     after: opts.after ?? emptyFunction,
     name,
+    now: opts.now ?? now,
     group: groupName,
-    time: defaultTime,
-    samples: defaultSamples,
-    warmup: true,
+    time: opts.time ?? defaultTime,
+    samples: opts.samples ?? defaultSamples,
+    warmup: opts.warmup ?? true,
     baseline: true,
     async: AsyncFunction === fn.constructor,
   })
@@ -189,20 +233,19 @@ const executeBenchmarks = async (
   let once = false
   for (const benchmark of benchmarks) {
     once = true
-    overrideBenchmarkDefaults(benchmark, opts)
+    overrideBenchmarkOptions(benchmark, groupOpts)
+    overrideBenchmarkOptions(benchmark, opts)
     try {
       gc()
-      benchmark.stats = await measure(
-        benchmark.fn,
-        benchmark.before,
-        benchmark.after,
-        {
-          async: benchmark.async,
-          samples: benchmark.samples,
-          time: benchmark.time,
-          warmup: benchmark.warmup,
-        }
-      )
+      benchmark.stats = await measure(benchmark.fn, {
+        async: benchmark.async,
+        samples: benchmark.samples,
+        time: benchmark.time,
+        warmup: benchmark.warmup,
+        now: benchmark.now,
+        before: benchmark.before,
+        after: benchmark.after,
+      })
       if (!opts.json)
         logFn(table.benchmark(benchmark.name, benchmark.stats, opts))
     } catch (err) {
@@ -213,7 +256,7 @@ const executeBenchmarks = async (
   }
   // biome-ignore lint/style/noParameterAssign: <explanation>
   benchmarks = benchmarks.filter(benchmark => benchmark.error == null)
-  if (table.warning(benchmarks, opts)) {
+  if (!opts.json && table.warning(benchmarks, opts)) {
     logFn('')
     logFn(table.warning(benchmarks, opts))
   }
@@ -236,6 +279,7 @@ const executeBenchmarks = async (
  * @param {Boolean} [opts.silent=false] enable/disable stdout output
  * @param {Boolean|Number|'bmf'} [opts.json=false] enable/disable json output or set json output format
  * @param {String} [opts.file=undefined] write json output to file
+ * @param {NowType} [opts.now=undefined] custom nanoseconds timestamp function to replace default one
  * @param {Boolean} [opts.colors=true] enable/disable colors
  * @param {Number} [opts.samples=128] minimum number of benchmark samples
  * @param {Number} [opts.time=1_000_000_000] minimum benchmark execution time in nanoseconds
@@ -248,7 +292,7 @@ const executeBenchmarks = async (
  * @returns {Promise<Object>} defined benchmarks report
  */
 export async function run(opts = {}) {
-  if (Object.prototype.toString.call(opts).slice(8, -1) !== 'Object')
+  if (!isObject(opts))
     throw new TypeError(`expected object, got ${opts.constructor.name}`)
   if (opts.samples != null && 'number' !== typeof opts.samples)
     throw new TypeError(
@@ -290,15 +334,14 @@ export async function run(opts = {}) {
     )
   if ('string' === typeof opts.file && opts.file.trim().length === 0)
     throw new TypeError(`expected non-empty string as 'file' option`)
-  // biome-ignore lint/style/noParameterAssign: <explanation>
-  opts = mergeDeepRight(
-    {
-      silent: false,
-      colors,
-      size: table.size(benchmarks.map(benchmark => benchmark.name)),
-    },
-    opts
-  )
+  if (opts.now != null && Function !== opts.now.constructor)
+    throw new TypeError(
+      `expected function as 'now' option, got ${opts.now.constructor.name}`
+    )
+  opts.silent = opts.silent ?? false
+  opts.units = opts.units ?? false
+  opts.colors = opts.colors ?? colors
+  opts.size = table.size(benchmarks.map(benchmark => benchmark.name))
 
   const log = opts.silent === true ? emptyFunction : logger
 
