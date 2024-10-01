@@ -108,7 +108,22 @@ export function benchmark(
     !percentiles
       ? ''
       : ` ${clr.green(colors, duration(stats.p50, stats.mad > 0 ? ` ± ${stats.mad.toFixed(2)}` : '')).padStart(17 + 10 * colors, ' ')} ${clr.green(colors, duration(stats.p75)).padStart(9 + 10 * colors, ' ')} ${clr.green(colors, duration(stats.p99)).padStart(9 + 10 * colors, ' ')} ${clr.green(colors, duration(stats.p995)).padStart(9 + 10 * colors, ' ')}`
-  }${!stats.ss ? ` ${clr.red(colors, '!')}` : ''}`
+  }`
+}
+
+export function warning(benchmarks, { colors = true }) {
+  if (benchmarks.some(benchmark => benchmark.error != null)) {
+    throw new Error('Cannot display warning on benchmarks with error')
+  }
+  const warnings = []
+  for (const benchmark of benchmarks) {
+    if (benchmark.stats.ss === false) {
+      warnings.push(
+        `${clr.bold(colors, clr.yellow(colors, 'Warning'))}: ${clr.bold(colors, clr.cyan(colors, benchmark.name))} has a sample size ${clr.red(colors, benchmark.samples)} below statistical significance`
+      )
+    }
+  }
+  return warnings.join('\n')
 }
 
 /**
@@ -133,7 +148,7 @@ export function summary(benchmarks, { colors = true }) {
     baseline.group == null || baseline.group.startsWith(tatamiNgGroup)
       ? ''
       : `${clr.bold(colors, clr.white(colors, baseline.group.trim().split(/\s+/).length > 1 ? `'${baseline.group}'` : `${baseline.group}`))} `
-  }${clr.bold(colors, clr.white(colors, 'summary'))}`}\n ${clr.bold(colors, clr.cyan(colors, baseline.name))}${benchmarks
+  }${clr.bold(colors, clr.white(colors, 'summary'))}`}\n  ${clr.bold(colors, clr.cyan(colors, baseline.name))}${benchmarks
     .filter(benchmark => benchmark !== baseline)
     .map(benchmark => {
       const ratio = benchmark.stats.avg / checkDividend(baseline.stats.avg)
@@ -155,7 +170,7 @@ export function summary(benchmarks, { colors = true }) {
         ] || tTable.infinity
       const ratioMoe = ratioSem * critical
       const ratioRmoe = (ratioMoe / checkDividend(ratio)) * 100
-      return `\n   ${clr[1 > ratio ? 'red' : 'green'](
+      return `\n    ${clr[1 > ratio ? 'red' : 'green'](
         colors,
         1 > ratio ? speedRatio(1 / checkDividend(ratio)) : speedRatio(ratio)
       )} ± ${clr.blue(colors, errorMargin(ratioRmoe))} times ${

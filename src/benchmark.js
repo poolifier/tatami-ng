@@ -213,6 +213,10 @@ const executeBenchmarks = async (
   }
   // biome-ignore lint/style/noParameterAssign: <explanation>
   benchmarks = benchmarks.filter(benchmark => benchmark.error == null)
+  if (table.warning(benchmarks, opts)) {
+    logFn('')
+    logFn(table.warning(benchmarks, opts))
+  }
   if (
     (Object.keys(groupOpts).length === 0 || groupOpts.summary === true) &&
     !opts.json &&
