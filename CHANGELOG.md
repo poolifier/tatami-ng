@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.2](https://github.com/poolifier/tatami-ng/compare/0.7.1...0.7.2) (2024-10-01)
+
+
+### 🚀 Features
+
+* allow to define benchmark behavior at all levels ([a86ced9](https://github.com/poolifier/tatami-ng/commit/a86ced99e9fcddab3f38dcb2a2eca659a2863476))
+
+
+### ✨ Polish
+
+* display explicit warning about samples statistical ([82d08ea](https://github.com/poolifier/tatami-ng/commit/82d08ea6a495f9c9a30defd666cd8bebb02fd666))
+* refine variable name ([ced909a](https://github.com/poolifier/tatami-ng/commit/ced909a458718fe7497d5bf7c0c7990609cfaf4d))
+* use isObject() helper in more places ([d7f20f4](https://github.com/poolifier/tatami-ng/commit/d7f20f4da11e4c1a25ff3c5791902e97231bdd5a))
+
 ## [0.7.1](https://github.com/poolifier/tatami-ng/compare/0.7.0...0.7.1) (2024-09-30)
 
 
