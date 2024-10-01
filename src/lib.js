@@ -343,8 +343,8 @@ const absoluteDeviation = (samples, aggFn) => {
   const value = aggFn(samples)
   const absoluteDeviations = []
 
-  for (const elt of samples) {
-    absoluteDeviations.push(Math.abs(elt - value))
+  for (const sample of samples) {
+    absoluteDeviations.push(Math.abs(sample - value))
   }
 
   return aggFn(absoluteDeviations)
