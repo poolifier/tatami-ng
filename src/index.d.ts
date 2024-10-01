@@ -75,8 +75,8 @@ export interface Report {
     baseline: boolean
     group: string | null
     now: () => number
-    before?: () => void | Promise<void>
-    after?: () => void | Promise<void>
+    before: () => void | Promise<void>
+    after: () => void | Promise<void>
 
     error?: Error
 
