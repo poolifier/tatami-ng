@@ -24,7 +24,7 @@ export function br({
 }) {
   return `${'-'.repeat(
     size + 14 * avg + 14 * iters + 14 * rmoe + 24 * min_max
-  )}${!percentiles ? '' : ` ${'-'.repeat(18 + 10 + 10 + 10)}`}`
+  )}${!percentiles ? '' : ` ${'-'.repeat(20 + 10 + 10 + 10)}`}`
 }
 
 export function benchmarkError(name, error, { size, colors = true }) {
@@ -63,7 +63,7 @@ export function header({
   }${!min_max ? '' : '(min … max)'.padStart(24, ' ')}${
     !percentiles
       ? ''
-      : ` ${'p50/median'.padStart(17, ' ')} ${'p75'.padStart(9, ' ')} ${'p99'.padStart(9, ' ')} ${'p995'.padStart(9, ' ')}`
+      : ` ${'p50/median'.padStart(20, ' ')} ${'p75'.padStart(9, ' ')} ${'p99'.padStart(9, ' ')} ${'p995'.padStart(9, ' ')}`
   }`
 }
 
@@ -80,6 +80,13 @@ export function benchmark(
     percentiles = true,
   }
 ) {
+  const p50 =
+    stats.mad > 0
+      ? `${clr.green(colors, duration(stats.p50))} ± ${clr.red(colors, duration(stats.mad))}`.padStart(
+          20 + 2 * 10 * colors,
+          ' '
+        )
+      : clr.green(colors, duration(stats.p50)).padStart(20 + 10 * colors, ' ')
   return `${name.padEnd(size, ' ')}${
     !avg
       ? ''
@@ -97,7 +104,7 @@ export function benchmark(
   }${
     !rmoe
       ? ''
-      : `± ${clr.blue(colors, errorMargin(stats.rmoe))}`.padStart(
+      : `± ${clr[stats.rmoe > highRelativeMarginOfError ? 'red' : 'blue'](colors, errorMargin(stats.rmoe))}`.padStart(
           14 + 10 * colors,
           ' '
         )
@@ -111,7 +118,7 @@ export function benchmark(
   }${
     !percentiles
       ? ''
-      : ` ${clr.green(colors, duration(stats.p50, stats.mad > 0 ? ` ± ${stats.mad.toFixed(2)}` : '')).padStart(17 + 10 * colors, ' ')} ${clr.green(colors, duration(stats.p75)).padStart(9 + 10 * colors, ' ')} ${clr.green(colors, duration(stats.p99)).padStart(9 + 10 * colors, ' ')} ${clr.green(colors, duration(stats.p995)).padStart(9 + 10 * colors, ' ')}`
+      : ` ${p50} ${clr.green(colors, duration(stats.p75)).padStart(9 + 10 * colors, ' ')} ${clr.green(colors, duration(stats.p99)).padStart(9 + 10 * colors, ' ')} ${clr.green(colors, duration(stats.p995)).padStart(9 + 10 * colors, ' ')}`
   }`
 }
 
@@ -129,6 +136,11 @@ export function warning(benchmarks, { colors = true }) {
     if (benchmark.stats.rmoe > highRelativeMarginOfError) {
       warnings.push(
         `${clr.bold(colors, clr.yellow(colors, 'Warning'))}: ${clr.bold(colors, clr.cyan(colors, benchmark.name))} has a high relative margin of error: ${clr.red(colors, errorMargin(benchmark.stats.rmoe))}`
+      )
+    }
+    if (benchmark.stats.mad > 0) {
+      warnings.push(
+        `${clr.bold(colors, clr.yellow(colors, 'Warning'))}: ${clr.bold(colors, clr.cyan(colors, benchmark.name))} has a high median absolute deviation: ${clr.red(colors, duration(benchmark.stats.mad))}`
       )
     }
   }

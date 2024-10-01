@@ -232,6 +232,7 @@ export const checkDividend = n => {
  * @param {Function} [opts.now=undefined] nanoseconds timestamp function
  * @param {Function} [opts.before=()=>{}] before function hook
  * @param {Function} [opts.after=()=>{}] after function hook
+ * @returns {Object} benchmark stats
  */
 export async function measure(fn, opts = {}) {
   checkBenchmarkArgs(fn, opts)
