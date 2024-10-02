@@ -80,13 +80,6 @@ export function benchmark(
     percentiles = true,
   }
 ) {
-  const p50 =
-    stats.mad > 0
-      ? `${clr.green(colors, duration(stats.p50))} ± ${clr.red(colors, duration(stats.mad))}`.padStart(
-          20 + 2 * 10 * colors,
-          ' '
-        )
-      : clr.green(colors, duration(stats.p50)).padStart(20 + 10 * colors, ' ')
   return `${name.padEnd(size, ' ')}${
     !avg
       ? ''
@@ -118,7 +111,16 @@ export function benchmark(
   }${
     !percentiles
       ? ''
-      : ` ${p50} ${clr.green(colors, duration(stats.p75)).padStart(9 + 10 * colors, ' ')} ${clr.green(colors, duration(stats.p99)).padStart(9 + 10 * colors, ' ')} ${clr.green(colors, duration(stats.p995)).padStart(9 + 10 * colors, ' ')}`
+      : ` ${
+          stats.mad > 0
+            ? `${clr.green(colors, duration(stats.p50))} ± ${clr.red(colors, duration(stats.mad))}`.padStart(
+                20 + 2 * 10 * colors,
+                ' '
+              )
+            : clr
+                .green(colors, duration(stats.p50))
+                .padStart(20 + 10 * colors, ' ')
+        } ${clr.green(colors, duration(stats.p75)).padStart(9 + 10 * colors, ' ')} ${clr.green(colors, duration(stats.p99)).padStart(9 + 10 * colors, ' ')} ${clr.green(colors, duration(stats.p995)).padStart(9 + 10 * colors, ' ')}`
   }`
 }
 
@@ -140,7 +142,7 @@ export function warning(benchmarks, { colors = true }) {
     }
     if (benchmark.stats.mad > 0) {
       warnings.push(
-        `${clr.bold(colors, clr.yellow(colors, 'Warning'))}: ${clr.bold(colors, clr.cyan(colors, benchmark.name))} has a high median absolute deviation: ${clr.red(colors, duration(benchmark.stats.mad))}`
+        `${clr.bold(colors, clr.yellow(colors, 'Warning'))}: ${clr.bold(colors, clr.cyan(colors, benchmark.name))} has a non zero median absolute deviation: ${clr.red(colors, duration(benchmark.stats.mad))}`
       )
     }
   }
