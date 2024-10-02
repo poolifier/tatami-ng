@@ -62,7 +62,7 @@ export function run(options?: {
   units?: boolean
 }): Promise<Report>
 
-export interface Report {
+export type BenchmarkReport = {
   cpu: string
   runtime: string
 
@@ -97,5 +97,7 @@ export interface Report {
       mad: number // median time absolute deviation
       ss: boolean // statistical significance
     }
-  }[]
+  }
 }
+
+export type Report = BenchmarkReport[]

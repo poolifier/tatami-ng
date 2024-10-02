@@ -1,1 +1,2 @@
-export { group, bench, baseline, run } from './benchmark.js'
+export { baseline, bench, group, run } from './benchmark.js'
+export { bmf } from './reporter/json/index.js'

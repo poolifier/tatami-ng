@@ -10,20 +10,31 @@ import {
   AsyncFunction,
   checkBenchmarkArgs,
   colors,
-  convertReportToBmf,
   cpuModel,
   gc,
-  isObject,
   measure,
   overrideBenchmarkOptions,
   version,
   writeFileSync,
 } from './lib.js'
 import { logger } from './logger.js'
-import * as clr from './reporter/clr.js'
-import * as table from './reporter/table.js'
+import { bmf } from './reporter/json/index.js'
+import {
+  benchmarkError,
+  benchmarkReport,
+  bold,
+  br,
+  dim,
+  header,
+  size,
+  summary,
+  units,
+  warning,
+  white,
+} from './reporter/terminal/index.js'
 import { runtime } from './runtime.js'
 import { now } from './time.js'
+import { isObject } from './utils.js'
 
 let groupName = null
 const groups = new Map()
@@ -247,18 +258,18 @@ const executeBenchmarks = async (
         after: benchmark.after,
       })
       if (!opts.json)
-        logFn(table.benchmark(benchmark.name, benchmark.stats, opts))
+        logFn(benchmarkReport(benchmark.name, benchmark.stats, opts))
     } catch (err) {
       benchmark.error = err
       if (!opts.json)
-        logFn(table.benchmarkError(benchmark.name, benchmark.error, opts))
+        logFn(benchmarkError(benchmark.name, benchmark.error, opts))
     }
   }
   // biome-ignore lint/style/noParameterAssign: <explanation>
   benchmarks = benchmarks.filter(benchmark => benchmark.error == null)
-  if (!opts.json && table.warning(benchmarks, opts)) {
+  if (!opts.json && warning(benchmarks, opts)) {
     logFn('')
-    logFn(table.warning(benchmarks, opts))
+    logFn(warning(benchmarks, opts))
   }
   if (
     (Object.keys(groupOpts).length === 0 || groupOpts.summary === true) &&
@@ -266,7 +277,7 @@ const executeBenchmarks = async (
     benchmarks.length > 1
   ) {
     logFn('')
-    logFn(table.summary(benchmarks, opts))
+    logFn(summary(benchmarks, opts))
   }
   return once
 }
@@ -341,7 +352,7 @@ export async function run(opts = {}) {
   opts.silent = opts.silent ?? false
   opts.units = opts.units ?? false
   opts.colors = opts.colors ?? colors
-  opts.size = table.size(benchmarks.map(benchmark => benchmark.name))
+  opts.size = size(benchmarks.map(benchmark => benchmark.name))
 
   const log = opts.silent === true ? emptyFunction : logger
 
@@ -352,14 +363,12 @@ export async function run(opts = {}) {
   }
 
   if (!opts.json && benchmarks.length > 0) {
-    log(clr.dim(opts.colors, clr.white(opts.colors, `cpu: ${report.cpu}`)))
-    log(
-      clr.dim(opts.colors, clr.white(opts.colors, `runtime: ${report.runtime}`))
-    )
+    log(dim(opts.colors, white(opts.colors, `cpu: ${report.cpu}`)))
+    log(dim(opts.colors, white(opts.colors, `runtime: ${report.runtime}`)))
 
     log('')
-    log(table.header(opts))
-    log(table.br(opts))
+    log(header(opts))
+    log(br(opts))
   }
 
   let once = await executeBenchmarks(
@@ -371,10 +380,9 @@ export async function run(opts = {}) {
   for (const [group, groupOpts] of groups) {
     if (!opts.json) {
       if (once) log('')
-      if (!group.startsWith(tatamiNgGroup))
-        log(`• ${clr.bold(opts.colors, group)}`)
+      if (!group.startsWith(tatamiNgGroup)) log(`• ${bold(opts.colors, group)}`)
       if (once || !group.startsWith(tatamiNgGroup))
-        log(clr.dim(opts.colors, clr.white(opts.colors, table.br(opts))))
+        log(dim(opts.colors, white(opts.colors, br(opts))))
     }
 
     AsyncFunction === groupOpts.before.constructor
@@ -393,12 +401,12 @@ export async function run(opts = {}) {
       : groupOpts.after()
   }
 
-  if (!opts.json && opts.units) log(table.units(opts))
+  if (!opts.json && opts.units) log(units(opts))
   if (opts.json || opts.file) {
     let jsonReport
     switch (opts.json) {
       case jsonOutputFormat.bmf:
-        jsonReport = JSON.stringify(convertReportToBmf(report))
+        jsonReport = JSON.stringify(bmf(report))
         break
       default:
         jsonReport = JSON.stringify(

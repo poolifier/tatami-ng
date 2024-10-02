@@ -1,3 +1,6 @@
+import { spawnSync as nodeSpawnSync } from 'node:child_process'
+import { setFlagsFromString } from 'node:v8'
+import { runInNewContext } from 'node:vm'
 import {
   defaultSamples,
   defaultTime,
@@ -7,11 +10,15 @@ import {
   tTable,
 } from './constants.js'
 import { runtime } from './runtime.js'
+import {
+  absoluteDeviation,
+  average,
+  medianSorted,
+  quantileSorted,
+  variance,
+} from './stats-utils.js'
 import { now } from './time.js'
-
-import { spawnSync as nodeSpawnSync } from 'node:child_process'
-import { setFlagsFromString } from 'node:v8'
-import { runInNewContext } from 'node:vm'
+import { checkDividend, isObject } from './utils.js'
 
 export const AsyncFunction = (async () => {}).constructor
 
@@ -133,28 +140,6 @@ export const gc = (() => {
   }[runtime]()
 })()
 
-export const convertReportToBmf = report => {
-  return report.benchmarks
-    .map(({ name, stats }) => {
-      const throughputSd = ratioStandardDeviation(1e9, 0, stats.avg, stats.sd)
-      return {
-        [name]: {
-          latency: {
-            value: stats?.avg,
-            lower_value: stats?.avg - stats?.sd,
-            upper_value: stats?.avg + stats?.sd,
-          },
-          throughput: {
-            value: stats?.iters,
-            lower_value: stats?.iters - throughputSd,
-            upper_value: stats?.iters + throughputSd,
-          },
-        },
-      }
-    })
-    .reduce((obj, item) => Object.assign(obj, item), {})
-}
-
 export const checkBenchmarkArgs = (fn, opts = {}) => {
   if (![Function, AsyncFunction].includes(fn.constructor))
     throw new TypeError(`expected function, got ${fn.constructor.name}`)
@@ -201,18 +186,6 @@ export const overrideBenchmarkOptions = (benchmark, opts) => {
   benchmark.samples = opts.samples ?? benchmark.samples
   benchmark.time = opts.time ?? benchmark.time
   benchmark.warmup = opts.warmup ?? benchmark.warmup
-}
-
-export const isObject = value => {
-  return Object.prototype.toString.call(value).slice(8, -1) === 'Object'
-}
-
-export const checkDividend = n => {
-  if (n == null) throw new TypeError(`Invalid dividend: ${n}`)
-  if ('number' !== typeof n)
-    throw new TypeError(`expected number, got ${n.constructor.name}`)
-  if (n === 0 || Number.isNaN(n)) throw new RangeError(`Invalid dividend: ${n}`)
-  return n
 }
 
 /**
@@ -297,68 +270,10 @@ export async function measure(fn, opts = {}) {
     ? await benchmark(fn, opts.before, opts.after, opts.now)
     : benchmark(fn, opts.before, opts.after, opts.now)
 
-  return buildStats(samples)
+  return buildMeasurementStats(samples)
 }
 
-const variance = (samples, avg = average(samples)) => {
-  return (
-    samples.reduce((a, b) => a + (b - avg) ** 2, 0) /
-    checkDividend(samples.length - 1) // Bessel's correction
-  )
-}
-
-const quantileSorted = (samples, q) => {
-  if (!Array.isArray(samples)) {
-    throw new TypeError(`expected array, got ${samples.constructor.name}`)
-  }
-  if (samples.length === 0) {
-    throw new Error('expected non-empty array, got empty array')
-  }
-  if (q < 0 || q > 1) {
-    throw new Error('q must be between 0 and 1')
-  }
-  if (q === 0) {
-    return samples[0]
-  }
-  if (q === 1) {
-    return samples[samples.length - 1]
-  }
-  const base = (samples.length - 1) * q
-  const baseIndex = Math.floor(base)
-  if (samples[baseIndex + 1] != null) {
-    return (
-      samples[baseIndex] +
-      (base - baseIndex) * (samples[baseIndex + 1] - samples[baseIndex])
-    )
-  }
-  return samples[baseIndex]
-}
-
-const medianSorted = samples => quantileSorted(samples, 0.5)
-
-const average = samples => {
-  if (!Array.isArray(samples)) {
-    throw new TypeError(`expected array, got ${samples.constructor.name}`)
-  }
-  if (samples.length === 0) {
-    throw new Error('expected non-empty array, got empty array')
-  }
-
-  return samples.reduce((a, b) => a + b, 0) / samples.length
-}
-
-const absoluteDeviation = (samples, aggFn) => {
-  const value = aggFn(samples)
-  const absoluteDeviations = []
-
-  for (const sample of samples) {
-    absoluteDeviations.push(Math.abs(sample - value))
-  }
-
-  return aggFn(absoluteDeviations)
-}
-
-const buildStats = samples => {
+const buildMeasurementStats = samples => {
   if (!Array.isArray(samples))
     throw new TypeError(`expected array, got ${samples.constructor.name}`)
   if (samples.length === 0)
@@ -393,14 +308,4 @@ const buildStats = samples => {
     mad: absoluteDeviation(samples, medianSorted),
     ss: samples.length >= minimumSamples,
   }
-}
-
-// https://en.wikipedia.org/wiki/Propagation_of_uncertainty#Example_formulae
-export const ratioStandardDeviation = (avgA, sdA, avgB, sdB) => {
-  return (
-    (avgA / checkDividend(avgB)) *
-    Math.sqrt(
-      (sdA / checkDividend(avgA)) ** 2 + (sdB / checkDividend(avgB)) ** 2
-    )
-  )
 }

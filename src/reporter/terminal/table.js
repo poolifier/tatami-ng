@@ -2,9 +2,21 @@ import {
   highRelativeMarginOfError,
   tTable,
   tatamiNgGroup,
-} from '../constants.js'
-import { checkDividend, ratioStandardDeviation } from '../lib.js'
-import * as clr from './clr.js'
+} from '../../constants.js'
+import { ratioStandardDeviation } from '../../stats-utils.js'
+import { checkDividend } from '../../utils.js'
+import {
+  blue,
+  bold,
+  cyan,
+  dim,
+  gray,
+  green,
+  magenta,
+  red,
+  white,
+  yellow,
+} from './clr.js'
 import { duration, errorMargin, itersPerSecond, speedRatio } from './fmt.js'
 
 export function size(names) {
@@ -28,15 +40,15 @@ export function br({
 }
 
 export function benchmarkError(name, error, { size, colors = true }) {
-  return `${name.padEnd(size, ' ')}${clr.red(colors, 'error')}: ${
+  return `${name.padEnd(size, ' ')}${red(colors, 'error')}: ${
     error.message
-  }${error.stack ? `\n${clr.gray(colors, error.stack)}` : ''}`
+  }${error.stack ? `\n${gray(colors, error.stack)}` : ''}`
 }
 
 export function units({ colors = true } = {}) {
-  return clr.dim(
+  return dim(
     colors,
-    clr.white(
+    white(
       colors,
       `
       1 ps = 1 picosecond = 1e-12s
@@ -67,7 +79,7 @@ export function header({
   }`
 }
 
-export function benchmark(
+export function benchmarkReport(
   name,
   stats,
   {
@@ -83,28 +95,25 @@ export function benchmark(
   return `${name.padEnd(size, ' ')}${
     !avg
       ? ''
-      : `${clr.yellow(colors, duration(stats.avg))}`.padStart(
-          14 + 10 * colors,
-          ' '
-        )
+      : `${yellow(colors, duration(stats.avg))}`.padStart(14 + 10 * colors, ' ')
   }${
     !iters
       ? ''
-      : `${clr.yellow(colors, itersPerSecond(stats.iters))}`.padStart(
+      : `${yellow(colors, itersPerSecond(stats.iters))}`.padStart(
           14 + 10 * colors,
           ' '
         )
   }${
     !rmoe
       ? ''
-      : `± ${clr[stats.rmoe > highRelativeMarginOfError ? 'red' : 'blue'](colors, errorMargin(stats.rmoe))}`.padStart(
+      : `± ${(stats.rmoe > highRelativeMarginOfError ? red : blue)(colors, errorMargin(stats.rmoe))}`.padStart(
           14 + 10 * colors,
           ' '
         )
   }${
     !min_max
       ? ''
-      : `(${clr.cyan(colors, duration(stats.min))} … ${clr.magenta(
+      : `(${cyan(colors, duration(stats.min))} … ${magenta(
           colors,
           duration(stats.max)
         )})`.padStart(24 + 2 * 10 * colors, ' ')
@@ -113,14 +122,12 @@ export function benchmark(
       ? ''
       : ` ${
           stats.mad > 0
-            ? `${clr.green(colors, duration(stats.p50))} ± ${clr.red(colors, duration(stats.mad))}`.padStart(
+            ? `${green(colors, duration(stats.p50))} ± ${red(colors, duration(stats.mad))}`.padStart(
                 20 + 2 * 10 * colors,
                 ' '
               )
-            : clr
-                .green(colors, duration(stats.p50))
-                .padStart(20 + 10 * colors, ' ')
-        } ${clr.green(colors, duration(stats.p75)).padStart(9 + 10 * colors, ' ')} ${clr.green(colors, duration(stats.p99)).padStart(9 + 10 * colors, ' ')} ${clr.green(colors, duration(stats.p995)).padStart(9 + 10 * colors, ' ')}`
+            : green(colors, duration(stats.p50)).padStart(20 + 10 * colors, ' ')
+        } ${green(colors, duration(stats.p75)).padStart(9 + 10 * colors, ' ')} ${green(colors, duration(stats.p99)).padStart(9 + 10 * colors, ' ')} ${green(colors, duration(stats.p995)).padStart(9 + 10 * colors, ' ')}`
   }`
 }
 
@@ -132,17 +139,17 @@ export function warning(benchmarks, { colors = true }) {
   for (const benchmark of benchmarks) {
     if (benchmark.stats.ss === false) {
       warnings.push(
-        `${clr.bold(colors, clr.yellow(colors, 'Warning'))}: ${clr.bold(colors, clr.cyan(colors, benchmark.name))} has a sample size below statistical significance: ${clr.red(colors, benchmark.samples)}`
+        `${bold(colors, yellow(colors, 'Warning'))}: ${bold(colors, cyan(colors, benchmark.name))} has a sample size below statistical significance: ${red(colors, benchmark.samples)}`
       )
     }
     if (benchmark.stats.rmoe > highRelativeMarginOfError) {
       warnings.push(
-        `${clr.bold(colors, clr.yellow(colors, 'Warning'))}: ${clr.bold(colors, clr.cyan(colors, benchmark.name))} has a high relative margin of error: ${clr.red(colors, errorMargin(benchmark.stats.rmoe))}`
+        `${bold(colors, yellow(colors, 'Warning'))}: ${bold(colors, cyan(colors, benchmark.name))} has a high relative margin of error: ${red(colors, errorMargin(benchmark.stats.rmoe))}`
       )
     }
     if (benchmark.stats.mad > 0) {
       warnings.push(
-        `${clr.bold(colors, clr.yellow(colors, 'Warning'))}: ${clr.bold(colors, clr.cyan(colors, benchmark.name))} has a non zero median absolute deviation: ${clr.red(colors, duration(benchmark.stats.mad))}`
+        `${bold(colors, yellow(colors, 'Warning'))}: ${bold(colors, cyan(colors, benchmark.name))} has a non zero median absolute deviation: ${red(colors, duration(benchmark.stats.mad))}`
       )
     }
   }
@@ -170,8 +177,8 @@ export function summary(benchmarks, { colors = true }) {
   return `${`${
     baseline.group == null || baseline.group.startsWith(tatamiNgGroup)
       ? ''
-      : `${clr.bold(colors, clr.white(colors, baseline.group.trim().split(/\s+/).length > 1 ? `'${baseline.group}'` : `${baseline.group}`))} `
-  }${clr.bold(colors, clr.white(colors, 'summary'))}`}\n  ${clr.bold(colors, clr.cyan(colors, baseline.name))}${benchmarks
+      : `${bold(colors, white(colors, baseline.group.trim().split(/\s+/).length > 1 ? `'${baseline.group}'` : `${baseline.group}`))} `
+  }${bold(colors, white(colors, 'summary'))}`}\n  ${bold(colors, cyan(colors, baseline.name))}${benchmarks
     .filter(benchmark => benchmark !== baseline)
     .map(benchmark => {
       const ratio = benchmark.stats.avg / checkDividend(baseline.stats.avg)
@@ -192,12 +199,12 @@ export function summary(benchmarks, { colors = true }) {
         ] || tTable.infinity
       const ratioMoe = ratioSem * critical
       const ratioRmoe = (ratioMoe / checkDividend(ratio)) * 100
-      return `\n    ${clr[1 > ratio ? 'red' : 'green'](
+      return `\n    ${(1 > ratio ? red : green)(
         colors,
         1 > ratio ? speedRatio(1 / checkDividend(ratio)) : speedRatio(ratio)
-      )} ± ${clr.blue(colors, errorMargin(ratioRmoe))} times ${
+      )} ± ${blue(colors, errorMargin(ratioRmoe))} times ${
         1 > ratio ? 'slower' : 'faster'
-      } than ${clr.bold(colors, clr.cyan(colors, benchmark.name))}`
+      } than ${bold(colors, cyan(colors, benchmark.name))}`
     })
     .join('')}`
 }
