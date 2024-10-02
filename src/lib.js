@@ -140,19 +140,11 @@ export const convertReportToBmf = report => {
         [name]: {
           latency: {
             value: stats?.avg,
-            lower_value: stats?.min,
-            upper_value: stats?.max,
+            lower_value: stats?.avg - stats?.sd,
+            upper_value: stats?.avg + stats?.sd,
           },
           throughput: {
             value: stats?.iters,
-            ...(typeof stats?.max === 'number' &&
-              stats.max > 0 && {
-                lower_value: 1e9 / checkDividend(stats.max),
-              }),
-            ...(typeof stats?.min === 'number' &&
-              stats.min > 0 && {
-                upper_value: 1e9 / checkDividend(stats.min),
-              }),
           },
         },
       }
