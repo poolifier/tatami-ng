@@ -3,7 +3,7 @@ import {
   tTable,
   tatamiNgGroup,
 } from '../constants.js'
-import { checkDividend } from '../lib.js'
+import { checkDividend, ratioStandardDeviation } from '../lib.js'
 import * as clr from './clr.js'
 import { duration, errorMargin, itersPerSecond, speedRatio } from './fmt.js'
 
@@ -175,13 +175,12 @@ export function summary(benchmarks, { colors = true }) {
     .filter(benchmark => benchmark !== baseline)
     .map(benchmark => {
       const ratio = benchmark.stats.avg / checkDividend(baseline.stats.avg)
-      // https://en.wikipedia.org/wiki/Propagation_of_uncertainty#Example_formulae
-      const ratioSd =
-        ratio *
-        Math.sqrt(
-          (baseline.stats.sd / checkDividend(baseline.stats.avg)) ** 2 +
-            (benchmark.stats.sd / checkDividend(benchmark.stats.avg)) ** 2
-        )
+      const ratioSd = ratioStandardDeviation(
+        benchmark.stats.avg,
+        benchmark.stats.sd,
+        baseline.stats.avg,
+        baseline.stats.sd
+      )
       const ratioSem =
         ratioSd /
         checkDividend(

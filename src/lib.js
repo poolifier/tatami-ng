@@ -136,6 +136,7 @@ export const gc = (() => {
 export const convertReportToBmf = report => {
   return report.benchmarks
     .map(({ name, stats }) => {
+      const throughputSd = ratioStandardDeviation(1e9, 0, stats.avg, stats.sd)
       return {
         [name]: {
           latency: {
@@ -145,6 +146,8 @@ export const convertReportToBmf = report => {
           },
           throughput: {
             value: stats?.iters,
+            lower_value: stats?.iters - throughputSd,
+            upper_value: stats?.iters + throughputSd,
           },
         },
       }
@@ -297,6 +300,13 @@ export async function measure(fn, opts = {}) {
   return buildStats(samples)
 }
 
+const variance = (samples, avg = average(samples)) => {
+  return (
+    samples.reduce((a, b) => a + (b - avg) ** 2, 0) /
+    checkDividend(samples.length - 1) // Bessel's correction
+  )
+}
+
 const quantileSorted = (samples, q) => {
   if (!Array.isArray(samples)) {
     throw new TypeError(`expected array, got ${samples.constructor.name}`)
@@ -358,9 +368,7 @@ const buildStats = samples => {
 
   const time = samples.reduce((a, b) => a + b, 0)
   const avg = time / samples.length
-  const vr =
-    samples.reduce((a, b) => a + (b - avg) ** 2, 0) /
-    checkDividend(samples.length - 1) // Bessel's correction
+  const vr = variance(samples, avg)
   const sd = Math.sqrt(vr)
   const sem = sd / Math.sqrt(samples.length)
   const critical =
@@ -385,4 +393,14 @@ const buildStats = samples => {
     mad: absoluteDeviation(samples, medianSorted),
     ss: samples.length >= minimumSamples,
   }
+}
+
+// https://en.wikipedia.org/wiki/Propagation_of_uncertainty#Example_formulae
+export const ratioStandardDeviation = (avgA, sdA, avgB, sdB) => {
+  return (
+    (avgA / checkDividend(avgB)) *
+    Math.sqrt(
+      (sdA / checkDividend(avgA)) ** 2 + (sdB / checkDividend(avgB)) ** 2
+    )
+  )
 }
