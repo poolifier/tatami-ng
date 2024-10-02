@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.3](https://github.com/poolifier/tatami-ng/compare/0.7.2...0.7.3) (2024-10-02)
+
+
+### 🐞 Bug Fixes
+
+* fix MAD display units ([6dea0b2](https://github.com/poolifier/tatami-ng/commit/6dea0b24f9983e5ead26583fbbea454a359c18a6))
+* refine TS types definition ([4ca5068](https://github.com/poolifier/tatami-ng/commit/4ca50682382bf7d87882882cd97d2a26679dbe89))
+
+
+### ✨ Polish
+
+* cleanup warning message ([4f02f2e](https://github.com/poolifier/tatami-ng/commit/4f02f2ecadedecd1b64691d06929b045b3666981))
+
 ## [0.7.2](https://github.com/poolifier/tatami-ng/compare/0.7.1...0.7.2) (2024-10-01)
 
 
