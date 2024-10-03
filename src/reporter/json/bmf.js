@@ -1,10 +1,9 @@
-import { ratioStandardDeviation } from '../../stats-utils.js'
-
 export const bmf = report => {
   return report.benchmarks
     .filter(benchmark => benchmark.error == null)
     .map(({ name, stats }) => {
-      const throughputSd = ratioStandardDeviation(1e9, 0, stats?.avg, stats?.sd)
+      // https://en.wikipedia.org/wiki/Propagation_of_uncertainty#Example_formulae
+      const throughputSd = (1e9 * stats?.sd) / stats?.avg ** 2
       return {
         [name]: {
           latency: {
