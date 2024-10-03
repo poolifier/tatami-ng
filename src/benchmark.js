@@ -340,6 +340,7 @@ export async function run(opts = {}) {
     throw new TypeError(
       `expected function as 'now' option, got ${opts.now.constructor.name}`
     )
+
   opts.silent = opts.silent ?? false
   opts.units = opts.units ?? false
   opts.colors = opts.colors ?? colors

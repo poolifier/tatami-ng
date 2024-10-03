@@ -1,5 +1,5 @@
 export const isFunction = fn => {
-  return [Function, AsyncFunction].includes(fn.constructor)
+  return typeof fn === 'function'
 }
 
 export const AsyncFunction = (async () => {}).constructor
