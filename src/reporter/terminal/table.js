@@ -12,6 +12,7 @@ import {
   dim,
   gray,
   green,
+  italic,
   magenta,
   red,
   white,
@@ -60,15 +61,19 @@ export function units({ colors = true } = {}) {
   )
 }
 
-export function header({
-  size,
-  avg = true,
-  iters = true,
-  rmoe = true,
-  min_max = true,
-  percentiles = true,
-}) {
-  return `${'benchmark'.padEnd(size, ' ')}${
+export function header(
+  report,
+  {
+    size,
+    avg = true,
+    iters = true,
+    colors = true,
+    rmoe = true,
+    min_max = true,
+    percentiles = true,
+  }
+) {
+  return `${dim(colors, white(colors, `cpu: ${report.cpu}`))}\n${dim(colors, white(colors, `runtime: ${report.runtime}`))}\n\n${'benchmark'.padEnd(size, ' ')}${
     !avg ? '' : 'time/iter'.padStart(14, ' ')
   }${!iters ? '' : 'iters/s'.padStart(14, ' ')}${
     !rmoe ? '' : 'error margin'.padStart(14, ' ')
@@ -77,6 +82,23 @@ export function header({
       ? ''
       : ` ${'p50/median'.padStart(20, ' ')} ${'p75'.padStart(9, ' ')} ${'p99'.padStart(9, ' ')} ${'p995'.padStart(9, ' ')}`
   }`
+}
+
+export function groupHeader(
+  name,
+  opts = {
+    size,
+    avg: true,
+    iters: true,
+    colors: true,
+    rmoe: true,
+    min_max: true,
+    percentiles: true,
+  }
+) {
+  // biome-ignore lint/style/noParameterAssign: <explanation>
+  if (name.startsWith(tatamiNgGroup)) name = italic(opts.colors, 'unnamed')
+  return `• ${bold(opts.colors, name)}\n${dim(opts.colors, white(opts.colors, br(opts)))}`
 }
 
 export function benchmarkReport(

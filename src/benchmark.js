@@ -21,15 +21,13 @@ import { bmf } from './reporter/json/index.js'
 import {
   benchmarkError,
   benchmarkReport,
-  bold,
   br,
-  dim,
+  groupHeader,
   header,
   size,
   summary,
   units,
   warning,
-  white,
 } from './reporter/terminal/index.js'
 import { runtime } from './runtime.js'
 import { now } from './time.js'
@@ -356,11 +354,7 @@ export async function run(opts = {}) {
   }
 
   if (!opts.json && benchmarks.length > 0) {
-    log(dim(opts.colors, white(opts.colors, `cpu: ${report.cpu}`)))
-    log(dim(opts.colors, white(opts.colors, `runtime: ${report.runtime}`)))
-
-    log('')
-    log(header(opts))
+    log(header(report, opts))
     log(br(opts))
   }
 
@@ -370,12 +364,10 @@ export async function run(opts = {}) {
     opts
   )
 
-  for (const [group, groupOpts] of groups) {
+  for (const [groupName, groupOpts] of groups) {
     if (!opts.json) {
       if (once) log('')
-      if (!group.startsWith(tatamiNgGroup)) log(`• ${bold(opts.colors, group)}`)
-      if (once || !group.startsWith(tatamiNgGroup))
-        log(dim(opts.colors, white(opts.colors, br(opts))))
+      log(groupHeader(groupName, opts))
     }
 
     isAsyncFunction(groupOpts.before)
@@ -383,7 +375,7 @@ export async function run(opts = {}) {
       : groupOpts.before()
 
     once = await executeBenchmarks(
-      benchmarks.filter(benchmark => benchmark.group === group),
+      benchmarks.filter(benchmark => benchmark.group === groupName),
       log,
       opts,
       groupOpts

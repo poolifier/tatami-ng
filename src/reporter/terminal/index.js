@@ -1,12 +1,8 @@
 export {
-  bold,
-  dim,
-  white,
-} from './clr.js'
-export {
   benchmarkError,
   benchmarkReport,
   br,
+  groupHeader,
   header,
   size,
   summary,
