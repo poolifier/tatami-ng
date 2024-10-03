@@ -6,6 +6,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.4](https://github.com/poolifier/tatami-ng/compare/0.7.3...0.7.4) (2024-10-03)
+
+
+### 🐞 Bug Fixes
+
+* add upper/lower values to BMF throughput ([406e14b](https://github.com/poolifier/tatami-ng/commit/406e14b2341a38029fc0d7efeb673d9e6a696f38))
+* fix BMF report upper/lower values ([0563f5b](https://github.com/poolifier/tatami-ng/commit/0563f5be27cffe522ecfd0a33c5b5a0cc0c3d423))
+
+
+### ✨ Polish
+
+* factor out function type detection helpers ([cada431](https://github.com/poolifier/tatami-ng/commit/cada431afae66f9b02b26653d699d761589aeaf6))
+* major restructuration to ease pluggable features ([25ac409](https://github.com/poolifier/tatami-ng/commit/25ac40973a9b769d9052e1da19039a3c11662c76))
+* **reporter:** simplify iters std dev computation ([c13fc14](https://github.com/poolifier/tatami-ng/commit/c13fc147080dff28644d7145a96f3020533099eb))
+* untangle terminal display primitives from main code ([40638ae](https://github.com/poolifier/tatami-ng/commit/40638ae81a9fe1136457a637f65a91225839e0db))
+
 ## [0.7.3](https://github.com/poolifier/tatami-ng/compare/0.7.2...0.7.3) (2024-10-02)
 
 
