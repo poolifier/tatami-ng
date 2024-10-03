@@ -18,9 +18,13 @@ import {
   variance,
 } from './stats-utils.js'
 import { now } from './time.js'
-import { checkDividend, isObject } from './utils.js'
-
-export const AsyncFunction = (async () => {}).constructor
+import {
+  AsyncFunction,
+  checkDividend,
+  isAsyncFunction,
+  isFunction,
+  isObject,
+} from './utils.js'
 
 export const version = (() => {
   return {
@@ -141,7 +145,7 @@ export const gc = (() => {
 })()
 
 export const checkBenchmarkArgs = (fn, opts = {}) => {
-  if (![Function, AsyncFunction].includes(fn.constructor))
+  if (!isFunction(fn))
     throw new TypeError(`expected function, got ${fn.constructor.name}`)
   if (!isObject(opts))
     throw new TypeError(`expected object, got ${opts.constructor.name}`)
@@ -165,17 +169,11 @@ export const checkBenchmarkArgs = (fn, opts = {}) => {
     throw new TypeError(
       `expected function as 'now' option, got ${opts.now.constructor.name}`
     )
-  if (
-    opts.before != null &&
-    ![Function, AsyncFunction].includes(opts.before.constructor)
-  )
+  if (opts.before != null && !isFunction(opts.before))
     throw new TypeError(
       `expected function as 'before' option, got ${opts.before.constructor.name}`
     )
-  if (
-    opts.after != null &&
-    ![Function, AsyncFunction].includes(opts.after.constructor)
-  )
+  if (opts.after != null && !isFunction(opts.after))
     throw new TypeError(
       `expected function as 'after' option, got ${opts.after.constructor.name}`
     )
@@ -209,7 +207,7 @@ export async function measure(fn, opts = {}) {
       `expected boolean as 'async' option, got ${opts.async.constructor.name}`
     )
 
-  opts.async = opts.async ?? AsyncFunction === fn.constructor
+  opts.async = opts.async ?? isAsyncFunction(fn)
   opts.time = opts.time ?? defaultTime
   opts.samples = opts.samples ?? defaultSamples
   opts.warmup =
@@ -222,8 +220,8 @@ export async function measure(fn, opts = {}) {
   opts.before = opts.before ?? emptyFunction
   opts.after = opts.after ?? emptyFunction
 
-  const asyncBefore = AsyncFunction === opts.before.constructor
-  const asyncAfter = AsyncFunction === opts.after.constructor
+  const asyncBefore = isAsyncFunction(opts.before)
+  const asyncAfter = isAsyncFunction(opts.after)
 
   const asyncFunction = opts.async || asyncBefore || asyncAfter
 

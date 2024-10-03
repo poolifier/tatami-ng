@@ -1,3 +1,13 @@
+export const isFunction = fn => {
+  return [Function, AsyncFunction].includes(fn.constructor)
+}
+
+export const AsyncFunction = (async () => {}).constructor
+
+export const isAsyncFunction = fn => {
+  return AsyncFunction === fn.constructor
+}
+
 export const isObject = value => {
   return Object.prototype.toString.call(value).slice(8, -1) === 'Object'
 }

@@ -7,7 +7,6 @@ import {
 } from './constants.js'
 import {
   os,
-  AsyncFunction,
   checkBenchmarkArgs,
   colors,
   cpuModel,
@@ -34,7 +33,7 @@ import {
 } from './reporter/terminal/index.js'
 import { runtime } from './runtime.js'
 import { now } from './time.js'
-import { isObject } from './utils.js'
+import { isAsyncFunction, isFunction, isObject } from './utils.js'
 
 let groupName = null
 const groups = new Map()
@@ -69,16 +68,16 @@ export function group(name, cb = undefined) {
     name != null &&
     'string' !== typeof name &&
     !isObject(name) &&
-    ![Function, AsyncFunction].includes(name.constructor)
+    !isFunction(name)
   )
     throw new TypeError(
       `expected string, object or function, got ${name.constructor.name}`
     )
-  if ([Function, AsyncFunction].includes(name.constructor)) {
+  if (isFunction(name)) {
     // biome-ignore lint/style/noParameterAssign: <explanation>
     cb = name
   }
-  if (![Function, AsyncFunction].includes(cb.constructor))
+  if (!isFunction(cb))
     throw new TypeError(`expected function, got ${cb.constructor.name}`)
   if (isObject(name)) {
     if (name.name != null && 'string' !== typeof name.name)
@@ -109,17 +108,11 @@ export function group(name, cb = undefined) {
       throw new TypeError(
         `expected function as 'now' option, got ${name.now.constructor.name}`
       )
-    if (
-      name.before != null &&
-      ![Function, AsyncFunction].includes(name.before.constructor)
-    )
+    if (name.before != null && !isFunction(name.before))
       throw new TypeError(
         `expected function as 'before' option, got ${name.before.constructor.name}`
       )
-    if (
-      name.after != null &&
-      ![Function, AsyncFunction].includes(name.after.constructor)
-    )
+    if (name.after != null && !isFunction(name.after))
       throw new TypeError(
         `expected function as 'after' option, got ${name.after.constructor.name}`
       )
@@ -138,7 +131,7 @@ export function group(name, cb = undefined) {
       before: name.before ?? emptyFunction,
       after: name.after ?? emptyFunction,
     })
-  if (AsyncFunction === cb.constructor) {
+  if (isAsyncFunction(cb)) {
     cb().then(() => {
       groupName = null
     })
@@ -162,7 +155,7 @@ export function group(name, cb = undefined) {
  * @param {CallbackType} [opts.after=()=>{}] after hook
  */
 export function bench(name, fn = undefined, opts = {}) {
-  if ([Function, AsyncFunction].includes(name.constructor)) {
+  if (isFunction(name)) {
     // biome-ignore lint/style/noParameterAssign: <explanation>
     fn = name
     // biome-ignore lint/style/noParameterAssign: <explanation>
@@ -183,7 +176,7 @@ export function bench(name, fn = undefined, opts = {}) {
     samples: opts.samples ?? defaultSamples,
     warmup: opts.warmup ?? true,
     baseline: false,
-    async: AsyncFunction === fn.constructor,
+    async: isAsyncFunction(fn),
   })
 }
 
@@ -202,7 +195,7 @@ export function bench(name, fn = undefined, opts = {}) {
  * @param {CallbackType} [opts.after=()=>{}] after hook
  */
 export function baseline(name, fn = undefined, opts = {}) {
-  if ([Function, AsyncFunction].includes(name.constructor)) {
+  if (isFunction(name)) {
     // biome-ignore lint/style/noParameterAssign: <explanation>
     fn = name
     // biome-ignore lint/style/noParameterAssign: <explanation>
@@ -223,7 +216,7 @@ export function baseline(name, fn = undefined, opts = {}) {
     samples: opts.samples ?? defaultSamples,
     warmup: opts.warmup ?? true,
     baseline: true,
-    async: AsyncFunction === fn.constructor,
+    async: isAsyncFunction(fn),
   })
 }
 
@@ -385,7 +378,7 @@ export async function run(opts = {}) {
         log(dim(opts.colors, white(opts.colors, br(opts))))
     }
 
-    AsyncFunction === groupOpts.before.constructor
+    isAsyncFunction(groupOpts.before)
       ? await groupOpts.before()
       : groupOpts.before()
 
@@ -396,7 +389,7 @@ export async function run(opts = {}) {
       groupOpts
     )
 
-    AsyncFunction === groupOpts.after.constructor
+    isAsyncFunction(groupOpts.after)
       ? await groupOpts.after()
       : groupOpts.after()
   }
