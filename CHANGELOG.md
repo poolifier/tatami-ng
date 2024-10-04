@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.1](https://github.com/poolifier/tatami-ng/compare/0.8.0...0.8.1) (2024-10-04)
+
+
+### 🐞 Bug Fixes
+
+* format iters/s warnings properly ([175d7f6](https://github.com/poolifier/tatami-ng/commit/175d7f65e86175e955d76972f906425555e34e87))
+
 ## [0.8.0](https://github.com/poolifier/tatami-ng/compare/0.7.4...0.8.0) (2024-10-04)
 
 
