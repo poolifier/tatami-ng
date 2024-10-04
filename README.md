@@ -137,11 +137,10 @@ await run({
   samples: 128, // minimum number of benchmark samples (default: 128)
   time: 1_000_000_000, // minimum benchmark execution time in nanoseconds (default: 1_000_000_000)
   warmup: true, // enable/disable benchmark warmup or set benchmark warmup run(s) (default: true)
-  avg: true, // enable/disable time/iter average column (default: true)
-  iters: true, // enable/disable iters/s column (default: true)
-  rmoe: true, // enable/disable error margin column (default: true)
-  min_max: true, // enable/disable (min...max) column (default: true)
-  percentiles: false, // enable/disable percentile columns (default: true)
+  latency: true, // enable/disable time/iter column (default: true)
+  throughput: true, // enable/disable iters/s column (default: true)
+  latencyMinMax: true, // enable/disable latency (min...max) column (default: true)
+  latencyPercentiles: false, // enable/disable latency percentile columns (default: true)
 })
 ```
 

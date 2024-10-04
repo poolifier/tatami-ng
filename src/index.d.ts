@@ -52,15 +52,29 @@ export function run(options?: {
   samples?: number // minimum number of samples
   time?: number // minimum execution time
   warmup?: number | boolean
-  avg?: boolean
-  iters?: boolean
-  min_max?: boolean
-  rmoe?: boolean
-  percentiles?: boolean
+  latency?: boolean
+  throughput?: boolean
+  latencyMinMax?: boolean
+  latencyPercentiles?: boolean
   json?: number | boolean | 'bmf'
   file?: string
   units?: boolean
 }): Promise<Report>
+
+export type Stats = {
+  min: number
+  max: number
+  p50: number // median
+  p75: number
+  p99: number
+  p995: number
+  avg: number // average
+  vr: number // variance
+  sd: number // standard deviation
+  rmoe: number // relative margin of error
+  aad: number // average time absolute deviation
+  mad: number // median time absolute deviation
+}
 
 export type BenchmarkReport = {
   cpu: string
@@ -82,20 +96,9 @@ export type BenchmarkReport = {
 
     stats?: {
       samples: number // number of samples
-      min: number
-      max: number
-      p50: number // median
-      p75: number
-      p99: number
-      p995: number
-      avg: number // average time per iteration
-      iters: number // iterations per second
-      vr: number // variance
-      sd: number // standard deviation
-      rmoe: number // relative margin of error
-      aad: number // average time absolute deviation
-      mad: number // median time absolute deviation
       ss: boolean // statistical significance
+      latency: Stats
+      throughput: Stats
     }
   }
 }

@@ -29,15 +29,14 @@ export function size(names) {
 
 export function br({
   size,
-  avg = true,
-  iters = true,
-  rmoe = true,
-  min_max = true,
-  percentiles = true,
+  latency = true,
+  throughput = true,
+  latencyMinMax = true,
+  latencyPercentiles = true,
 }) {
   return `${'-'.repeat(
-    size + 14 * avg + 14 * iters + 14 * rmoe + 24 * min_max
-  )}${!percentiles ? '' : ` ${'-'.repeat(20 + 10 + 10 + 10)}`}`
+    size + 20 * latency + 20 * throughput + 24 * latencyMinMax
+  )}${!latencyPercentiles ? '' : ` ${'-'.repeat(20 + 10 + 10 + 10)}`}`
 }
 
 export function benchmarkError(name, error, { size, colors = true }) {
@@ -65,20 +64,15 @@ export function header(
   report,
   {
     size,
-    avg = true,
-    iters = true,
+    latency = true,
+    throughput = true,
     colors = true,
-    rmoe = true,
-    min_max = true,
-    percentiles = true,
+    latencyMinMax = true,
+    latencyPercentiles = true,
   }
 ) {
-  return `${dim(colors, white(colors, `cpu: ${report.cpu}`))}\n${dim(colors, white(colors, `runtime: ${report.runtime}`))}\n\n${'benchmark'.padEnd(size, ' ')}${
-    !avg ? '' : 'time/iter'.padStart(14, ' ')
-  }${!iters ? '' : 'iters/s'.padStart(14, ' ')}${
-    !rmoe ? '' : 'error margin'.padStart(14, ' ')
-  }${!min_max ? '' : '(min … max)'.padStart(24, ' ')}${
-    !percentiles
+  return `${dim(colors, white(colors, `cpu: ${report.cpu}`))}\n${dim(colors, white(colors, `runtime: ${report.runtime}`))}\n\n${'benchmark'.padEnd(size, ' ')}${!latency ? '' : 'time/iter'.padStart(20, ' ')}${!throughput ? '' : 'iters/s'.padStart(20, ' ')}${!latencyMinMax ? '' : '(min … max)'.padStart(24, ' ')}${
+    !latencyPercentiles
       ? ''
       : ` ${'p50/median'.padStart(20, ' ')} ${'p75'.padStart(9, ' ')} ${'p99'.padStart(9, ' ')} ${'p995'.padStart(9, ' ')}`
   }`
@@ -88,12 +82,11 @@ export function groupHeader(
   name,
   opts = {
     size,
-    avg: true,
-    iters: true,
+    latency: true,
+    throughput: true,
     colors: true,
-    rmoe: true,
-    min_max: true,
-    percentiles: true,
+    latencyMinMax: true,
+    latencyPercentiles: true,
   }
 ) {
   // biome-ignore lint/style/noParameterAssign: <explanation>
@@ -106,50 +99,48 @@ export function benchmarkReport(
   stats,
   {
     size,
-    avg = true,
-    iters = true,
+    latency = true,
+    throughput = true,
     colors = true,
-    rmoe = true,
-    min_max = true,
-    percentiles = true,
+    latencyMixMax = true,
+    latencyPercentiles = true,
   }
 ) {
   return `${name.padEnd(size, ' ')}${
-    !avg
+    !latency
       ? ''
-      : `${yellow(colors, duration(stats.avg))}`.padStart(14 + 10 * colors, ' ')
-  }${
-    !iters
-      ? ''
-      : `${yellow(colors, itersPerSecond(stats.iters))}`.padStart(
-          14 + 10 * colors,
+      : `${yellow(colors, duration(stats.latency.avg))} ± ${(stats.latency.rmoe > highRelativeMarginOfError ? red : blue)(colors, errorMargin(stats.latency.rmoe))}`.padStart(
+          20 + 2 * 10 * colors,
           ' '
         )
   }${
-    !rmoe
+    !throughput
       ? ''
-      : `± ${(stats.rmoe > highRelativeMarginOfError ? red : blue)(colors, errorMargin(stats.rmoe))}`.padStart(
-          14 + 10 * colors,
+      : `${yellow(colors, itersPerSecond(stats.throughput.avg))} ± ${(stats.throughput.rmoe > highRelativeMarginOfError ? red : blue)(colors, errorMargin(stats.throughput.rmoe))}`.padStart(
+          20 + 2 * 10 * colors,
           ' '
         )
   }${
-    !min_max
+    !latencyMixMax
       ? ''
-      : `(${cyan(colors, duration(stats.min))} … ${magenta(
+      : `(${cyan(colors, duration(stats.latency.min))} … ${magenta(
           colors,
-          duration(stats.max)
+          duration(stats.latency.max)
         )})`.padStart(24 + 2 * 10 * colors, ' ')
   }${
-    !percentiles
+    !latencyPercentiles
       ? ''
       : ` ${
-          stats.mad > 0
-            ? `${green(colors, duration(stats.p50))} ± ${red(colors, duration(stats.mad))}`.padStart(
+          stats.latency.mad > 0
+            ? `${green(colors, duration(stats.latency.p50))} ± ${red(colors, duration(stats.latency.mad))}`.padStart(
                 20 + 2 * 10 * colors,
                 ' '
               )
-            : green(colors, duration(stats.p50)).padStart(20 + 10 * colors, ' ')
-        } ${green(colors, duration(stats.p75)).padStart(9 + 10 * colors, ' ')} ${green(colors, duration(stats.p99)).padStart(9 + 10 * colors, ' ')} ${green(colors, duration(stats.p995)).padStart(9 + 10 * colors, ' ')}`
+            : green(colors, duration(stats.latency.p50)).padStart(
+                20 + 10 * colors,
+                ' '
+              )
+        } ${green(colors, duration(stats.latency.p75)).padStart(9 + 10 * colors, ' ')} ${green(colors, duration(stats.latency.p99)).padStart(9 + 10 * colors, ' ')} ${green(colors, duration(stats.latency.p995)).padStart(9 + 10 * colors, ' ')}`
   }`
 }
 
@@ -164,14 +155,24 @@ export function warning(benchmarks, { colors = true }) {
         `${bold(colors, yellow(colors, 'Warning'))}: ${bold(colors, cyan(colors, benchmark.name))} has a sample size below statistical significance: ${red(colors, benchmark.samples)}`
       )
     }
-    if (benchmark.stats.rmoe > highRelativeMarginOfError) {
+    if (benchmark.stats.latency.rmoe > highRelativeMarginOfError) {
       warnings.push(
-        `${bold(colors, yellow(colors, 'Warning'))}: ${bold(colors, cyan(colors, benchmark.name))} has a high relative margin of error: ${red(colors, errorMargin(benchmark.stats.rmoe))}`
+        `${bold(colors, yellow(colors, 'Warning'))}: ${bold(colors, cyan(colors, benchmark.name))} has a high latency relative margin of error: ${red(colors, errorMargin(benchmark.stats.latency.rmoe))}`
       )
     }
-    if (benchmark.stats.mad > 0) {
+    if (benchmark.stats.throughput.rmoe > highRelativeMarginOfError) {
       warnings.push(
-        `${bold(colors, yellow(colors, 'Warning'))}: ${bold(colors, cyan(colors, benchmark.name))} has a non zero median absolute deviation: ${red(colors, duration(benchmark.stats.mad))}`
+        `${bold(colors, yellow(colors, 'Warning'))}: ${bold(colors, cyan(colors, benchmark.name))} has a high latency throughput margin of error: ${red(colors, errorMargin(benchmark.stats.throughput.rmoe))}`
+      )
+    }
+    if (benchmark.stats.latency.mad > 0) {
+      warnings.push(
+        `${bold(colors, yellow(colors, 'Warning'))}: ${bold(colors, cyan(colors, benchmark.name))} has a non zero latency median absolute deviation: ${red(colors, duration(benchmark.stats.latency.mad))}`
+      )
+    }
+    if (benchmark.stats.throughput.mad > 0) {
+      warnings.push(
+        `${bold(colors, yellow(colors, 'Warning'))}: ${bold(colors, cyan(colors, benchmark.name))} has a non zero throughput median absolute deviation: ${red(colors, duration(benchmark.stats.throughput.mad))}`
       )
     }
   }
@@ -191,7 +192,8 @@ export function summary(benchmarks, { colors = true }) {
     throw new Error('Cannot summarize less than two benchmarks')
   }
   benchmarks.sort(
-    (benchmarkA, benchmarkB) => benchmarkA.stats.avg - benchmarkB.stats.avg
+    (benchmarkA, benchmarkB) =>
+      benchmarkA.stats.latency.avg - benchmarkB.stats.latency.avg
   )
   const baseline =
     benchmarks.find(benchmark => benchmark.baseline) ?? benchmarks[0]
@@ -203,12 +205,13 @@ export function summary(benchmarks, { colors = true }) {
   }${bold(colors, white(colors, 'summary'))}`}\n  ${bold(colors, cyan(colors, baseline.name))}${benchmarks
     .filter(benchmark => benchmark !== baseline)
     .map(benchmark => {
-      const ratio = benchmark.stats.avg / checkDividend(baseline.stats.avg)
+      const ratio =
+        benchmark.stats.latency.avg / checkDividend(baseline.stats.latency.avg)
       const ratioSd = ratioStandardDeviation(
-        benchmark.stats.avg,
-        benchmark.stats.sd,
-        baseline.stats.avg,
-        baseline.stats.sd
+        benchmark.stats.latency.avg,
+        benchmark.stats.latency.sd,
+        baseline.stats.latency.avg,
+        baseline.stats.latency.sd
       )
       const ratioSem =
         ratioSd /

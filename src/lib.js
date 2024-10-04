@@ -267,39 +267,67 @@ export async function measure(fn, opts = {}) {
   return buildMeasurementStats(samples)
 }
 
-const buildMeasurementStats = samples => {
-  if (!Array.isArray(samples))
-    throw new TypeError(`expected array, got ${samples.constructor.name}`)
-  if (samples.length === 0)
+const buildMeasurementStats = latencySamples => {
+  if (!Array.isArray(latencySamples))
+    throw new TypeError(
+      `expected array, got ${latencySamples.constructor.name}`
+    )
+  if (latencySamples.length === 0)
     throw new Error('expected non-empty array, got empty array')
 
-  samples.sort((a, b) => a - b)
+  // Latency
+  latencySamples.sort((a, b) => a - b)
+  const latencyAvg = average(latencySamples)
+  const latencyVr = variance(latencySamples, latencyAvg)
+  const latencySd = Math.sqrt(latencyVr)
+  const latencySem = latencySd / Math.sqrt(latencySamples.length)
+  const latencyCritical =
+    tTable[(latencySamples.length - 1 || 1).toString()] || tTable.infinity
+  const latencyMoe = latencySem * latencyCritical
+  const latencyRmoe = (latencyMoe / checkDividend(latencyAvg)) * 100
 
-  const time = samples.reduce((a, b) => a + b, 0)
-  const avg = time / samples.length
-  const vr = variance(samples, avg)
-  const sd = Math.sqrt(vr)
-  const sem = sd / Math.sqrt(samples.length)
-  const critical =
-    tTable[(samples.length - 1 || 1).toString()] || tTable.infinity
-  const moe = sem * critical
-  const rmoe = (moe / checkDividend(avg)) * 100
+  // Throughput
+  const throughputSamples = latencySamples.map(sample => 1e9 / sample)
+  throughputSamples.sort((a, b) => a - b)
+  const throughputAvg = average(throughputSamples)
+  const throughputVr = variance(throughputSamples, throughputAvg)
+  const throughputSd = Math.sqrt(throughputVr)
+  const throughputSem = throughputSd / Math.sqrt(throughputSamples.length)
+  const throughputCritical =
+    tTable[(throughputSamples.length - 1 || 1).toString()] || tTable.infinity
+  const throughputMoe = throughputSem * throughputCritical
+  const throughputRmoe = (throughputMoe / checkDividend(throughputAvg)) * 100
 
   return {
-    samples: samples.length,
-    min: samples[0],
-    max: samples[samples.length - 1],
-    p50: medianSorted(samples),
-    p75: quantileSorted(samples, 0.75),
-    p99: quantileSorted(samples, 0.99),
-    p995: quantileSorted(samples, 0.995),
-    avg,
-    iters: (1e9 * samples.length) / checkDividend(time),
-    vr,
-    sd,
-    rmoe,
-    aad: absoluteDeviation(samples, average),
-    mad: absoluteDeviation(samples, medianSorted),
-    ss: samples.length >= minimumSamples,
+    samples: latencySamples.length,
+    ss: latencySamples.length >= minimumSamples,
+    latency: {
+      min: latencySamples[0],
+      max: latencySamples[latencySamples.length - 1],
+      p50: medianSorted(latencySamples),
+      p75: quantileSorted(latencySamples, 0.75),
+      p99: quantileSorted(latencySamples, 0.99),
+      p995: quantileSorted(latencySamples, 0.995),
+      avg: latencyAvg,
+      vr: latencyVr,
+      sd: latencySd,
+      rmoe: latencyRmoe,
+      aad: absoluteDeviation(latencySamples, average),
+      mad: absoluteDeviation(latencySamples, medianSorted),
+    },
+    throughput: {
+      min: throughputSamples[0],
+      max: throughputSamples[latencySamples.length - 1],
+      p50: medianSorted(throughputSamples),
+      p75: quantileSorted(throughputSamples, 0.75),
+      p99: quantileSorted(throughputSamples, 0.99),
+      p995: quantileSorted(throughputSamples, 0.995),
+      avg: throughputAvg,
+      vr: throughputVr,
+      sd: throughputSd,
+      rmoe: throughputRmoe,
+      aad: absoluteDeviation(throughputSamples, average),
+      mad: absoluteDeviation(throughputSamples, medianSorted),
+    },
   }
 }

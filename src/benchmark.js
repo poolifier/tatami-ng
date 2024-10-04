@@ -286,11 +286,10 @@ const executeBenchmarks = async (
  * @param {Number} [opts.samples=128] minimum number of benchmark samples
  * @param {Number} [opts.time=1_000_000_000] minimum benchmark execution time in nanoseconds
  * @param {Boolean|Number} [opts.warmup=true] enable/disable benchmark warmup or set benchmark warmup run(s)
- * @param {Boolean} [opts.avg=true] enable/disable time/iter average column
- * @param {Boolean} [opts.iters=true] enable/disable iters/s column
- * @param {Boolean} [opts.rmoe=true] enable/disable error margin column
- * @param {Boolean} [opts.min_max=true] enable/disable (min...max) column
- * @param {Boolean} [opts.percentiles=true] enable/disable percentile columns
+ * @param {Boolean} [opts.latency=true] enable/disable time/iter column
+ * @param {Boolean} [opts.throughput=true] enable/disable iters/s column
+ * @param {Boolean} [opts.latencyMinMax=true] enable/disable latency (min...max) column
+ * @param {Boolean} [opts.latencyPercentiles=true] enable/disable latency percentile columns
  * @returns {Promise<Object>} defined benchmarks report
  */
 export async function run(opts = {}) {

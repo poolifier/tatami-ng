@@ -82,29 +82,24 @@ const {
       description: 'No colors in output',
       type: 'boolean',
     },
-    'no-avg': {
+    'no-latency': {
       listGroup: 'Output options',
-      description: 'No time/iter average column',
+      description: 'No time/iter column',
       type: 'boolean',
     },
-    'no-iters': {
+    'no-throughput': {
       listGroup: 'Output options',
       description: 'No iters/s column',
       type: 'boolean',
     },
-    'no-min_max': {
+    'no-latency-min_max': {
       listGroup: 'Output options',
-      description: 'No (min...max) column',
+      description: 'No latency (min...max) column',
       type: 'boolean',
     },
-    'no-rmoe': {
+    'no-latency-percentiles': {
       listGroup: 'Output options',
-      description: 'No error margin column',
-      type: 'boolean',
-    },
-    'no-percentiles': {
-      listGroup: 'Output options',
-      description: 'No percentile columns',
+      description: 'No latency percentile columns',
       type: 'boolean',
     },
     units: {
@@ -166,12 +161,15 @@ await run({
   ...(flags.json != null && { json: flags.json }),
   ...(flags.file != null && { file: flags.file }),
   ...(flags['no-colors'] != null && { colors: !flags['no-colors'] }),
-  ...(flags['no-avg'] != null && { avg: !flags['no-avg'] }),
-  ...(flags['no-rmoe'] != null && { rmoe: !flags['no-rmoe'] }),
-  ...(flags['no-iters'] != null && { iters: !flags['no-iters'] }),
-  ...(flags['no-min_max'] != null && { min_max: !flags['no-min_max'] }),
-  ...(flags['no-percentiles'] != null && {
-    percentiles: !flags['no-percentiles'],
+  ...(flags['no-latency'] != null && { latency: !flags['no-latency'] }),
+  ...(flags['no-throughput'] != null && {
+    throughput: !flags['no-throughput'],
+  }),
+  ...(flags['no-latency-min_max'] != null && {
+    latencyMinMax: !flags['no-latency-min_max'],
+  }),
+  ...(flags['no-latency-percentiles'] != null && {
+    latencyPercentiles: !flags['no-latency-percentiles'],
   }),
   ...(flags.units != null && { units: flags.units }),
 })
