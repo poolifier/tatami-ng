@@ -45,6 +45,8 @@ export function baseline(
   options?: BenchmarkOptions
 ): void
 
+export function ReporterType<T>(report: Report): T
+
 export function run<T = Report>(options?: {
   now?: () => number
   silent?: boolean
@@ -58,7 +60,7 @@ export function run<T = Report>(options?: {
   latencyPercentiles?: boolean
   json?: number | boolean
   file?: string
-  reporter?: <T>(report: Report) => T // custom reporter
+  reporter?: ReporterType<T> // custom reporter
   units?: boolean
 }): Promise<T>
 

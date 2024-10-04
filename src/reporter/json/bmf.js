@@ -1,3 +1,9 @@
+/**
+ * Bencher Metric Format (BMF).
+ *
+ * @param {Object} report tatami-ng report
+ * @returns {Object} BMF report
+ */
 export const bmf = report => {
   return report.benchmarks
     .filter(benchmark => benchmark.error == null)
