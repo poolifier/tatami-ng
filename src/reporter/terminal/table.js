@@ -4,7 +4,7 @@ import {
   tatamiNgGroup,
 } from '../../constants.js'
 import { ratioStandardDeviation } from '../../stats-utils.js'
-import { checkDividend } from '../../utils.js'
+import { checkDividend, roundDuration } from '../../utils.js'
 import {
   blue,
   bold,
@@ -131,7 +131,7 @@ export function benchmarkReport(
     !latencyPercentiles
       ? ''
       : ` ${
-          stats.latency.mad > 0
+          roundDuration(stats.latency.mad) > 0
             ? `${green(colors, duration(stats.latency.p50))} ± ${red(colors, duration(stats.latency.mad))}`.padStart(
                 20 + 2 * 10 * colors,
                 ' '
@@ -171,7 +171,7 @@ export function warning(
         `${bold(colors, yellow(colors, 'Warning'))}: ${bold(colors, cyan(colors, benchmark.name))} has a high latency throughput margin of error: ${red(colors, itersPerSecond(benchmark.stats.throughput.rmoe))}`
       )
     }
-    if (latency && benchmark.stats.latency.mad > 0) {
+    if (latency && roundDuration(benchmark.stats.latency.mad) > 0) {
       warnings.push(
         `${bold(colors, yellow(colors, 'Warning'))}: ${bold(colors, cyan(colors, benchmark.name))} has a non zero latency median absolute deviation: ${red(colors, duration(benchmark.stats.latency.mad))}`
       )
