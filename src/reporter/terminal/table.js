@@ -71,7 +71,7 @@ export function header(
     latencyPercentiles = true,
   }
 ) {
-  return `${dim(colors, white(colors, `cpu: ${report.cpu}`))}\n${dim(colors, white(colors, `runtime: ${report.runtime}`))}\n\n${'benchmark'.padEnd(size, ' ')}${!latency ? '' : 'time/iter'.padStart(20, ' ')}${!throughput ? '' : 'iters/s'.padStart(20, ' ')}${!latencyMinMax ? '' : '(min … max)'.padStart(24, ' ')}${
+  return `${dim(colors, white(colors, `cpu: ${report.cpu}`))}\n${dim(colors, white(colors, `runtime: ${report.runtime}`))}\n\n${'benchmark'.padEnd(size, ' ')}${!latency ? '' : 'time/iter'.padStart(20, ' ')}${!throughput ? '' : 'iters/s'.padStart(20, ' ')}${!latencyMinMax ? '' : '(min … max time/iter)'.padStart(24, ' ')}${
     !latencyPercentiles
       ? ''
       : ` ${'p50/median'.padStart(20, ' ')} ${'p75'.padStart(9, ' ')} ${'p99'.padStart(9, ' ')} ${'p995'.padStart(9, ' ')}`
@@ -144,7 +144,10 @@ export function benchmarkReport(
   }`
 }
 
-export function warning(benchmarks, { colors = true }) {
+export function warning(
+  benchmarks,
+  { latency = true, throughput = true, colors = true }
+) {
   if (benchmarks.some(benchmark => benchmark.error != null)) {
     throw new Error('Cannot display warning on benchmarks with error')
   }
@@ -155,22 +158,25 @@ export function warning(benchmarks, { colors = true }) {
         `${bold(colors, yellow(colors, 'Warning'))}: ${bold(colors, cyan(colors, benchmark.name))} has a sample size below statistical significance: ${red(colors, benchmark.samples)}`
       )
     }
-    if (benchmark.stats.latency.rmoe > highRelativeMarginOfError) {
+    if (latency && benchmark.stats.latency.rmoe > highRelativeMarginOfError) {
       warnings.push(
         `${bold(colors, yellow(colors, 'Warning'))}: ${bold(colors, cyan(colors, benchmark.name))} has a high latency relative margin of error: ${red(colors, errorMargin(benchmark.stats.latency.rmoe))}`
       )
     }
-    if (benchmark.stats.throughput.rmoe > highRelativeMarginOfError) {
+    if (
+      throughput &&
+      benchmark.stats.throughput.rmoe > highRelativeMarginOfError
+    ) {
       warnings.push(
         `${bold(colors, yellow(colors, 'Warning'))}: ${bold(colors, cyan(colors, benchmark.name))} has a high latency throughput margin of error: ${red(colors, errorMargin(benchmark.stats.throughput.rmoe))}`
       )
     }
-    if (benchmark.stats.latency.mad > 0) {
+    if (latency && benchmark.stats.latency.mad > 0) {
       warnings.push(
         `${bold(colors, yellow(colors, 'Warning'))}: ${bold(colors, cyan(colors, benchmark.name))} has a non zero latency median absolute deviation: ${red(colors, duration(benchmark.stats.latency.mad))}`
       )
     }
-    if (benchmark.stats.throughput.mad > 0) {
+    if (throughput && benchmark.stats.throughput.mad > 0) {
       warnings.push(
         `${bold(colors, yellow(colors, 'Warning'))}: ${bold(colors, cyan(colors, benchmark.name))} has a non zero throughput median absolute deviation: ${red(colors, duration(benchmark.stats.throughput.mad))}`
       )

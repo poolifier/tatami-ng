@@ -103,7 +103,7 @@ import {
 
 ```js
 // adapt import to the targeted JS runtime
-import { baseline, bench, group, run } from 'tatami-ng'
+import { baseline, bench, group, run, bmf } from 'tatami-ng'
 
 bench('noop', () => {})
 bench('noop2', () => {})
@@ -130,7 +130,8 @@ group({ name: 'group2', summary: false }, () => {
 await run({
   units: false, // print units cheatsheet (default: false)
   silent: false, // enable/disable stdout output (default: false)
-  json: false, // enable/disable json output or set json output format (default: false)
+  json: false, // enable/disable json output or set json output indentation (default: false)
+  reporter: bmf // custom reporter function (default: undefined)
   file: 'results.json', // write json output to file (default: undefined)
   colors: true, // enable/disable colors (default: true)
   now: () => 1e6 * performance.now.bind(performance)(), // custom nanoseconds timestamp function to replace default one (default: undefined)

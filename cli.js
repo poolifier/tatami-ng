@@ -62,7 +62,7 @@ const {
     },
     silent: {
       listGroup: 'Output options',
-      description: 'No stdout output',
+      description: 'No standard output',
       type: 'boolean',
     },
     json: {

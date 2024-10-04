@@ -45,7 +45,7 @@ export function baseline(
   options?: BenchmarkOptions
 ): void
 
-export function run(options?: {
+export function run<T = Report>(options?: {
   now?: () => number
   silent?: boolean
   colors?: boolean
@@ -56,10 +56,11 @@ export function run(options?: {
   throughput?: boolean
   latencyMinMax?: boolean
   latencyPercentiles?: boolean
-  json?: number | boolean | 'bmf'
+  json?: number | boolean
   file?: string
+  reporter?: <T>(report: Report) => T // custom reporter
   units?: boolean
-}): Promise<Report>
+}): Promise<T>
 
 export type Stats = {
   min: number
@@ -71,9 +72,10 @@ export type Stats = {
   avg: number // average
   vr: number // variance
   sd: number // standard deviation
+  moe: number // margin of error
   rmoe: number // relative margin of error
-  aad: number // average time absolute deviation
-  mad: number // median time absolute deviation
+  aad: number // average absolute deviation
+  mad: number // median absolute deviation
 }
 
 export type BenchmarkReport = {

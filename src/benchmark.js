@@ -2,7 +2,6 @@ import {
   defaultSamples,
   defaultTime,
   emptyFunction,
-  jsonOutputFormat,
   tatamiNgGroup,
 } from './constants.js'
 import {
@@ -17,7 +16,6 @@ import {
   writeFileSync,
 } from './lib.js'
 import { logger } from './logger.js'
-import { bmf } from './reporter/json/index.js'
 import {
   benchmarkError,
   benchmarkReport,
@@ -279,7 +277,8 @@ const executeBenchmarks = async (
  * @param {Object} [opts={}] options object
  * @param {Boolean} [opts.units=false] print units cheatsheet
  * @param {Boolean} [opts.silent=false] enable/disable stdout output
- * @param {Boolean|Number|'bmf'} [opts.json=false] enable/disable json output or set json output format
+ * @param {Boolean|Number} [opts.json=false] enable/disable json output or set json output indentation
+ * @param {Function} [opts.reporter=undefined] custom reporter function
  * @param {String} [opts.file=undefined] write json output to file
  * @param {NowType} [opts.now=undefined] custom nanoseconds timestamp function to replace default one
  * @param {Boolean} [opts.colors=true] enable/disable colors
@@ -314,20 +313,14 @@ export async function run(opts = {}) {
   if (
     opts.json != null &&
     'number' !== typeof opts.json &&
-    'boolean' !== typeof opts.json &&
-    'string' !== typeof opts.json
+    'boolean' !== typeof opts.json
   )
     throw new TypeError(
-      `expected number or boolean or string as 'json' option, got ${opts.json.constructor.name}`
+      `expected number or boolean as 'json' option, got ${opts.json.constructor.name}`
     )
-  if (
-    'string' === typeof opts.json &&
-    !Object.values(jsonOutputFormat).includes(opts.json)
-  )
+  if (opts.reporter != null && !isFunction(opts.reporter))
     throw new TypeError(
-      `expected one of ${Object.values(jsonOutputFormat).join(
-        ', '
-      )} as 'json' option, got ${opts.json}`
+      `expected function as 'reporter' option, got ${opts.reporter.constructor.name}`
     )
   if (opts.file != null && 'string' !== typeof opts.file)
     throw new TypeError(
@@ -335,7 +328,7 @@ export async function run(opts = {}) {
     )
   if ('string' === typeof opts.file && opts.file.trim().length === 0)
     throw new TypeError(`expected non-empty string as 'file' option`)
-  if (opts.now != null && Function !== opts.now.constructor)
+  if (opts.now != null && !isFunction(opts.now))
     throw new TypeError(
       `expected function as 'now' option, got ${opts.now.constructor.name}`
     )
@@ -347,7 +340,7 @@ export async function run(opts = {}) {
 
   const log = opts.silent === true ? emptyFunction : logger
 
-  const report = {
+  let report = {
     benchmarks,
     cpu: `${cpuModel}`,
     runtime: `${runtime} ${version} (${os})`,
@@ -386,20 +379,15 @@ export async function run(opts = {}) {
       : groupOpts.after()
   }
 
+  report = isFunction(opts.reporter) ? opts.reporter(report) : report
+
   if (!opts.json && opts.units) log(units(opts))
   if (opts.json || opts.file) {
-    let jsonReport
-    switch (opts.json) {
-      case jsonOutputFormat.bmf:
-        jsonReport = JSON.stringify(bmf(report))
-        break
-      default:
-        jsonReport = JSON.stringify(
-          report,
-          undefined,
-          'number' !== typeof opts.json ? 0 : opts.json
-        )
-    }
+    const jsonReport = JSON.stringify(
+      report,
+      undefined,
+      'number' !== typeof opts.json ? 0 : opts.json
+    )
     if (opts.json) log(jsonReport)
     if (opts.file) writeFileSync(opts.file, jsonReport)
   }

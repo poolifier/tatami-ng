@@ -161,7 +161,7 @@ export const checkBenchmarkArgs = (fn, opts = {}) => {
     throw new TypeError(
       `expected number or boolean as 'warmup' option, got ${opts.warmup.constructor.name}`
     )
-  if (opts.now != null && Function !== opts.now.constructor)
+  if (opts.now != null && !isFunction(opts.now))
     throw new TypeError(
       `expected function as 'now' option, got ${opts.now.constructor.name}`
     )
@@ -311,6 +311,7 @@ const buildMeasurementStats = latencySamples => {
       avg: latencyAvg,
       vr: latencyVr,
       sd: latencySd,
+      moe: latencyMoe,
       rmoe: latencyRmoe,
       aad: absoluteDeviation(latencySamples, average),
       mad: absoluteDeviation(latencySamples, medianSorted),
@@ -325,6 +326,7 @@ const buildMeasurementStats = latencySamples => {
       avg: throughputAvg,
       vr: throughputVr,
       sd: throughputSd,
+      moe: throughputMoe,
       rmoe: throughputRmoe,
       aad: absoluteDeviation(throughputSamples, average),
       mad: absoluteDeviation(throughputSamples, medianSorted),

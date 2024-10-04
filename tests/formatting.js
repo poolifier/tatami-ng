@@ -103,7 +103,8 @@ group({ summary: true }, () => {
 await run({
   units: true, // print units cheatsheet (default: false)
   latency: true, // enable/disable time/iter column (default: true)
-  json: false, // enable/disable json output or set json output format (default: false)
+  throughput: true, // enable/disable iters/s column (default: true)
+  json: false, // enable/disable json output or set json output indentation (default: false)
   colors: true, // enable/disable colors (default: true)
   latencyMinMax: true, // enable/disable latency (min...max) column (default: true)
   latencyPercentiles: true, // enable/disable latency percentile columns (default: true)
