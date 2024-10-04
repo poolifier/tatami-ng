@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.2](https://github.com/poolifier/tatami-ng/compare/0.8.1...0.8.2) (2024-10-04)
+
+
+### 🐞 Bug Fixes
+
+* refine latency MAD display and warning conditions ([ab2cf96](https://github.com/poolifier/tatami-ng/commit/ab2cf96fabcf18dfe0c1bf85296d796eebeb4261))
+* refine throughput warning condition ([5d19f0a](https://github.com/poolifier/tatami-ng/commit/5d19f0a999411ee55029763a64eeeb8c0cf6552d))
+
 ## [0.8.1](https://github.com/poolifier/tatami-ng/compare/0.8.0...0.8.1) (2024-10-04)
 
 
