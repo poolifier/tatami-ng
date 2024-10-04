@@ -6,6 +6,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.0](https://github.com/poolifier/tatami-ng/compare/0.7.4...0.8.0) (2024-10-04)
+
+
+### ⚠ BREAKING CHANGES
+
+* add custom benchmark reporter support
+* untangle latency and throughput (stats, display, ...)
+
+### 🚀 Features
+
+* add custom benchmark reporter support ([4c16a3a](https://github.com/poolifier/tatami-ng/commit/4c16a3a7ccd865a957da83c9dc1883eb52a0f00b)), closes [#29](https://github.com/poolifier/tatami-ng/issues/29)
+
+
+### 🐞 Bug Fixes
+
+* fix reporter type definition ([6c2979c](https://github.com/poolifier/tatami-ng/commit/6c2979ce1fd0ec14820e3cfd5d856b8752c30111))
+
+
+### ✨ Polish
+
+* cleanup isFunction() helper implementation ([8c679f4](https://github.com/poolifier/tatami-ng/commit/8c679f485c7e9eaafed2a567d41d25fbdba5a681))
+* untangle latency and throughput (stats, display, ...) ([683588f](https://github.com/poolifier/tatami-ng/commit/683588fe5a8b167b9fba2f68a95e6309a4e68b53))
+* use isFunction() in more code paths ([57e0b32](https://github.com/poolifier/tatami-ng/commit/57e0b32940a31d294e1eff49d7120e17a9ed04e0))
+
 ## [0.7.4](https://github.com/poolifier/tatami-ng/compare/0.7.3...0.7.4) (2024-10-03)
 
 
