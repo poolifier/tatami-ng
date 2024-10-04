@@ -176,7 +176,7 @@ export function warning(
         `${bold(colors, yellow(colors, 'Warning'))}: ${bold(colors, cyan(colors, benchmark.name))} has a non zero latency median absolute deviation: ${red(colors, duration(benchmark.stats.latency.mad))}`
       )
     }
-    if (throughput && benchmark.stats.throughput.mad > 0) {
+    if (throughput && Math.trunc(benchmark.stats.throughput.mad) > 0) {
       warnings.push(
         `${bold(colors, yellow(colors, 'Warning'))}: ${bold(colors, cyan(colors, benchmark.name))} has a non zero throughput median absolute deviation: ${red(colors, itersPerSecond(benchmark.stats.throughput.mad))}`
       )
