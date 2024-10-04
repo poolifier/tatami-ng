@@ -48,7 +48,7 @@ group({ name: 'group2', summary: false }, () => {
 
 const report = await run({
   latency: true, // enable/disable time/iter column (default: true)
-  throughput: false, // enable/disable iters/s column (default: true)
+  throughput: true, // enable/disable iters/s column (default: true)
   json: false, // enable/disable json output or set json output indentation (default: false)
   colors: true, // enable/disable colors (default: true)
   latencyMinMax: true, // enable/disable latency (min...max) column (default: true)
