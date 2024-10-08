@@ -4,15 +4,17 @@
   "type": "module",
   "license": "MIT",
   "version": "0.8.2",
-  "packageManager": "bun@1.1.29",
+  "packageManager": "bun@1.1.30",
   "bin": {
     "tatami": "cli.js"
   },
   "types": "./src/index.d.ts",
-  "main": "./src/index.js",
+  "main": "./dist/cjs/index.js",
+  "module": "./src/index.js",
   "browser": "./dist/browser/index.js",
   "exports": {
     "types": "./src/index.d.ts",
+    "require": "./dist/cjs/index.js",
     "import": "./src/index.js",
     "browser": "./dist/browser/index.js"
   },
