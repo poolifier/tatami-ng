@@ -3,7 +3,7 @@
   "name": "tatami-ng",
   "type": "module",
   "license": "MIT",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "packageManager": "bun@1.1.30",
   "bin": {
     "tatami": "cli.js"
@@ -20,7 +20,13 @@
   },
   "description": "Cross JavaScript runtime benchmarking library and CLI",
   "homepage": "https://github.com/poolifier/tatami-ng#readme",
-  "keywords": ["benchmark", "browser", "bun", "deno", "node"],
+  "keywords": [
+    "benchmark",
+    "browser",
+    "bun",
+    "deno",
+    "node"
+  ],
   "bugs": {
     "url": "https://github.com/poolifier/tatami-ng/issues"
   },
@@ -28,7 +34,10 @@
     "type": "git",
     "url": "git+https://github.com/poolifier/tatami-ng.git"
   },
-  "files": ["src", "dist"],
+  "files": [
+    "src",
+    "dist"
+  ],
   "scripts": {
     "prepare": "bun prepare.ts",
     "format": "biome format . --write",

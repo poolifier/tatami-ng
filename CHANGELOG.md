@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.3](https://github.com/poolifier/tatami-ng/compare/0.8.2...0.8.3) (2024-10-08)
+
+
+### 🚀 Features
+
+* add CommonJS support ([8825565](https://github.com/poolifier/tatami-ng/commit/88255658b563bf7d7a926ab524f341bab24f2241))
+
 ## [0.8.2](https://github.com/poolifier/tatami-ng/compare/0.8.1...0.8.2) (2024-10-04)
 
 
