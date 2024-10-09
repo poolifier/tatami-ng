@@ -3,7 +3,7 @@ import { baseline, bench, group, run } from '../src/index.js'
 bench('noop', () => {}, {
   samples: 64,
   time: 1000,
-  now: () => 1e6 * performance.now.bind(performance)(),
+  now: () => 1e6 * performance.now(),
   before: () => {},
   after: () => {},
 })

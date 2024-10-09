@@ -134,7 +134,7 @@ await run({
   reporter: bmf // custom reporter function (default: undefined)
   file: 'results.json', // write json output to file (default: undefined)
   colors: true, // enable/disable colors (default: true)
-  now: () => 1e6 * performance.now.bind(performance)(), // custom nanoseconds timestamp function to replace default one (default: undefined)
+  now: () => 1e6 * performance.now(), // custom nanoseconds timestamp function to replace default one (default: undefined)
   samples: 128, // minimum number of benchmark samples (default: 128)
   time: 1_000_000_000, // minimum benchmark execution time in nanoseconds (default: 1_000_000_000)
   warmup: true, // enable/disable benchmark warmup or set benchmark warmup run(s) (default: true)
