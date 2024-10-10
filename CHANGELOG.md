@@ -6,6 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.4](https://github.com/poolifier/tatami-ng/compare/0.8.3...0.8.4) (2024-10-10)
+
+
+### 🐞 Bug Fixes
+
+* handle divide by zero in throughput samples ([7d6d9fe](https://github.com/poolifier/tatami-ng/commit/7d6d9feb134ba5a5341537c5cb53c7a48ac5c582))
+
+
+### ✨ Polish
+
+* cleanup custom now() ([4b041d2](https://github.com/poolifier/tatami-ng/commit/4b041d269b5ddf4df13df00d1c403892f687fc76))
+
+
+### 🤖 Automation
+
+* **ci:** switch to deno 2.x.x ([cf495ef](https://github.com/poolifier/tatami-ng/commit/cf495efeaa1cf78c33dc5bf074bbb1f4c40f6eae))
+
 ## [0.8.3](https://github.com/poolifier/tatami-ng/compare/0.8.2...0.8.3) (2024-10-08)
 
 
