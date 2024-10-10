@@ -287,7 +287,9 @@ const buildMeasurementStats = latencySamples => {
   const latencyRmoe = (latencyMoe / checkDividend(latencyAvg)) * 100
 
   // Throughput
-  const throughputSamples = latencySamples.map(sample => 1e9 / sample)
+  const throughputSamples = latencySamples.map(
+    sample => (sample !== 0 ? 1e9 / sample : 1e9 / latencyAvg) // Use latency average as imputed sample
+  )
   throughputSamples.sort((a, b) => a - b)
   const throughputAvg = average(throughputSamples)
   const throughputVr = variance(throughputSamples, throughputAvg)
