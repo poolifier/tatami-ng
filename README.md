@@ -103,7 +103,7 @@ import {
 
 ```js
 // adapt import to the targeted JS runtime
-import { baseline, bench, group, run, bmf } from 'tatami-ng'
+import { baseline, bench, bmf, group, run } from 'tatami-ng'
 
 bench('noop', () => {})
 bench('noop2', () => {})
