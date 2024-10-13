@@ -14,7 +14,7 @@ export const tatamiNgGroup = '$tatami-ng_group'
 /**
  * Student t-distribution two-tailed critical values for 95% confidence level.
  */
-export const tTable = {
+export const tTable = Object.freeze({
   1: 12.706204736432102,
   2: 4.3026527299112765,
   3: 3.182446305284264,
@@ -1040,7 +1040,7 @@ export const tTable = {
   1023: 1.9622856196472673,
   1024: 1.962283349789597,
   infinity: 1.96,
-}
+})
 
 // Student two-tailed t-distribution has no minimum samples size.
 // But for 95% confidence level and 80% statistical power on samples with unknown previous standard deviation, 128 samples are recommended.
