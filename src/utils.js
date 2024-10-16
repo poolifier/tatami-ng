@@ -5,7 +5,7 @@ export const isFunction = fn => {
 export const AsyncFunction = (async () => {}).constructor
 
 export const isAsyncFunction = fn => {
-  return AsyncFunction === fn.constructor
+  return AsyncFunction === fn?.constructor
 }
 
 export const isObject = value => {
