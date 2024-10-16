@@ -6,6 +6,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.5](https://github.com/poolifier/tatami-ng/compare/0.8.4...0.8.5) (2024-10-16)
+
+
+### 🐞 Bug Fixes
+
+* properly handle nullish arg in isAsyncFunction() ([79aa988](https://github.com/poolifier/tatami-ng/commit/79aa98808c2969678657c0c9c5cb8bdb58d92c00))
+* properly handle promises in benchmark ([f7ee29e](https://github.com/poolifier/tatami-ng/commit/f7ee29e737d3a78a2f0f2479bc543142b63a9137))
+
+
+### ✨ Polish
+
+* freeze Student tTable ([d7d3b8f](https://github.com/poolifier/tatami-ng/commit/d7d3b8f01f99c9771b815093e976314b58e0ccce))
+
+
+### 📚 Documentation
+
+* **README.md:** refine example code ([0d9762d](https://github.com/poolifier/tatami-ng/commit/0d9762d2c4f02afdb482880e7134b2818985c74d))
+
 ## [0.8.4](https://github.com/poolifier/tatami-ng/compare/0.8.3...0.8.4) (2024-10-10)
 
 
