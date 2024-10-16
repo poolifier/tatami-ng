@@ -9,10 +9,11 @@ bench('noop', () => {}, {
 })
 bench('async noop', async () => {})
 baseline('baseline noop', () => {})
-bench('async noop2', async () => Promise.resolve())
+bench('async promise noop', () => Promise.resolve())
 bench('error', () => {
   throw new Error('error')
 })
+bench('async promise reject', () => Promise.reject(new Error('reject')))
 
 group(() => {
   bench('a', () => {})
@@ -20,6 +21,7 @@ group(() => {
   bench('e', () => {
     throw new Error("error 'e'")
   })
+  bench('r', () => Promise.reject(new Error("reject 'r'")))
 })
 
 group('group', () => {

@@ -29,7 +29,7 @@ import {
 } from './reporter/terminal/index.js'
 import { runtime } from './runtime.js'
 import { now } from './time.js'
-import { isAsyncFunction, isFunction, isObject } from './utils.js'
+import { isAsyncFnResource, isFunction, isObject } from './utils.js'
 
 let groupName = null
 const groups = new Map()
@@ -127,7 +127,7 @@ export function group(name, cb = undefined) {
       before: name.before ?? emptyFunction,
       after: name.after ?? emptyFunction,
     })
-  if (isAsyncFunction(cb)) {
+  if (isAsyncFnResource(cb)) {
     cb().then(() => {
       groupName = null
     })
@@ -172,7 +172,7 @@ export function bench(name, fn = undefined, opts = {}) {
     samples: opts.samples ?? defaultSamples,
     warmup: opts.warmup ?? true,
     baseline: false,
-    async: isAsyncFunction(fn),
+    async: isAsyncFnResource(fn),
   })
 }
 
@@ -212,7 +212,7 @@ export function baseline(name, fn = undefined, opts = {}) {
     samples: opts.samples ?? defaultSamples,
     warmup: opts.warmup ?? true,
     baseline: true,
-    async: isAsyncFunction(fn),
+    async: isAsyncFnResource(fn),
   })
 }
 
@@ -362,8 +362,7 @@ export async function run(opts = {}) {
       if (once) log('')
       log(groupHeader(groupName, opts))
     }
-
-    isAsyncFunction(groupOpts.before)
+    isAsyncFnResource(groupOpts.before)
       ? await groupOpts.before()
       : groupOpts.before()
 
@@ -373,8 +372,7 @@ export async function run(opts = {}) {
       opts,
       groupOpts
     )
-
-    isAsyncFunction(groupOpts.after)
+    isAsyncFnResource(groupOpts.after)
       ? await groupOpts.after()
       : groupOpts.after()
   }

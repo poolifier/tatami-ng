@@ -21,7 +21,7 @@ import { now } from './time.js'
 import {
   AsyncFunction,
   checkDividend,
-  isAsyncFunction,
+  isAsyncFnResource,
   isFunction,
   isObject,
 } from './utils.js'
@@ -185,7 +185,7 @@ export const overrideBenchmarkOptions = (benchmark, opts) => {
 /**
  * Measure a function runtime.
  *
- * @param {Function} [fn] function to measure
+ * @param {Function} fn function to measure
  * @param {Object} [opts={}] options object
  * @param {Boolean} [opts.async=undefined] function is async
  * @param {Number} [opts.samples=128] minimum number of benchmark samples
@@ -194,7 +194,7 @@ export const overrideBenchmarkOptions = (benchmark, opts) => {
  * @param {Function} [opts.now=undefined] nanoseconds timestamp function
  * @param {Function} [opts.before=()=>{}] before function hook
  * @param {Function} [opts.after=()=>{}] after function hook
- * @returns {Object} benchmark stats
+ * @returns {Promise<Object>} benchmark stats
  */
 export async function measure(fn, opts = {}) {
   checkBenchmarkArgs(fn, opts)
@@ -203,7 +203,7 @@ export async function measure(fn, opts = {}) {
       `expected boolean as 'async' option, got ${opts.async.constructor.name}`
     )
 
-  opts.async = opts.async ?? isAsyncFunction(fn)
+  opts.async = opts.async ?? isAsyncFnResource(fn)
   opts.time = opts.time ?? defaultTime
   opts.samples = opts.samples ?? defaultSamples
   opts.warmup =
@@ -216,8 +216,8 @@ export async function measure(fn, opts = {}) {
   opts.before = opts.before ?? emptyFunction
   opts.after = opts.after ?? emptyFunction
 
-  const asyncBefore = isAsyncFunction(opts.before)
-  const asyncAfter = isAsyncFunction(opts.after)
+  const asyncBefore = isAsyncFnResource(opts.before)
+  const asyncAfter = isAsyncFnResource(opts.after)
 
   const asyncFunction = opts.async || asyncBefore || asyncAfter
 
