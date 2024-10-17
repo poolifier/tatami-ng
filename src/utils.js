@@ -27,7 +27,7 @@ export const AsyncFunction = (async () => {}).constructor
  * @param {Function} fn the function to check
  * @returns {Boolean} true if the function is an async function
  */
-const isAsyncFunction = fn => {
+export const isAsyncFunction = fn => {
   return AsyncFunction === fn?.constructor
 }
 
@@ -49,7 +49,7 @@ export const isAsyncFnResource = fn => {
     const promiseLike = isPromiseLike(fnCall)
     if (promiseLike) {
       // silence promise rejection
-      fnCall.catch(() => {})
+      fnCall.then(() => {}).catch(() => {})
     }
     return promiseLike
   } catch {

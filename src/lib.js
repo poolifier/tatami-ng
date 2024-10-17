@@ -22,6 +22,7 @@ import {
   AsyncFunction,
   checkDividend,
   isAsyncFnResource,
+  isAsyncFunction,
   isFunction,
   isObject,
 } from './utils.js'
@@ -216,8 +217,8 @@ export async function measure(fn, opts = {}) {
   opts.before = opts.before ?? emptyFunction
   opts.after = opts.after ?? emptyFunction
 
-  const asyncBefore = isAsyncFnResource(opts.before)
-  const asyncAfter = isAsyncFnResource(opts.after)
+  const asyncBefore = isAsyncFunction(opts.before)
+  const asyncAfter = isAsyncFunction(opts.after)
 
   const asyncFunction = opts.async || asyncBefore || asyncAfter
 

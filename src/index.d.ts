@@ -9,12 +9,9 @@ export type GroupOptions = {
   after?: () => void | Promise<void>
 }
 
-export function group(cb: () => void | Promise<void>): void
-export function group(name: string, cb: () => void | Promise<void>): void
-export function group(
-  options: GroupOptions,
-  cb: () => void | Promise<void>
-): void
+export function group(cb: () => void): void
+export function group(name: string, cb: () => void): void
+export function group(options: GroupOptions, cb: () => void): void
 
 export type BenchmarkOptions = {
   samples?: number // minimum number of samples
