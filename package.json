@@ -4,7 +4,7 @@
   "type": "module",
   "license": "MIT",
   "version": "0.8.6",
-  "packageManager": "bun@1.1.30",
+  "packageManager": "bun@1.1.31",
   "bin": {
     "tatami": "cli.js"
   },
@@ -57,7 +57,7 @@
     "@types/bun": "^1.1.11",
     "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
-    "npm-run-all2": "^6.2.3",
+    "npm-run-all2": "^6.2.4",
     "prettier": "^3.3.3"
   },
   "peerDependencies": {
