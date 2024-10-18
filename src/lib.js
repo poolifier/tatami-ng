@@ -220,50 +220,63 @@ export async function measure(fn, opts = {}) {
   const asyncBefore = isAsyncFunction(opts.before)
   const asyncAfter = isAsyncFunction(opts.after)
 
-  const asyncFunction = opts.async || asyncBefore || asyncAfter
+  let samples = []
+  let time = 0
 
-  const benchmark = new (asyncFunction ? AsyncFunction : Function)(
-    '$fn',
-    '$before',
-    '$after',
-    '$now',
-    `
-    ${
-      !opts.warmup
-        ? ''
-        : `
-          ${asyncBefore ? 'await' : ''} $before.call(this);
-          for (let i = 0; i < ${opts.warmup}; i++) {
-            const t0 = $now();
-            ${opts.async ? 'await' : ''} $fn.call(this);
-            const t1 = $now();
-          }
-          ${asyncAfter ? 'await' : ''} $after.call(this);
-          `
+  if (opts.warmup) {
+    if (asyncBefore) {
+      await opts.before.call(this)
+    } else {
+      opts.before.call(this)
     }
-
-    const samples = new Array();
-    let time = 0;
-
-    ${asyncBefore ? 'await' : ''} $before.call(this);
-    while (time < ${opts.time} || ${opts.samples} > samples.length) {
-      const t0 = $now();
-      ${opts.async ? 'await' : ''} $fn.call(this);
-      const t1 = $now();
-
-      const diff = t1 - t0;
-      time += diff;
-      samples.push(diff);
+    for (let i = 0; i < opts.warmup; i++) {
+      let diff
+      if (opts.async) {
+        const ts = opts.now()
+        await fn.call(this)
+        diff = opts.now() - ts
+      } else {
+        const ts = opts.now()
+        fn.call(this)
+        diff = opts.now() - ts
+      }
+      samples.push(diff)
+      time += diff
     }
-    ${asyncAfter ? 'await' : ''} $after.call(this);
+    if (asyncAfter) {
+      await opts.after.call(this)
+    } else {
+      opts.after.call(this)
+    }
+  }
 
-    return samples;
-  `
-  )
+  samples = []
+  time = 0
 
-  const samples = asyncFunction
-    ? await benchmark(fn, opts.before, opts.after, opts.now)
-    : benchmark(fn, opts.before, opts.after, opts.now)
+  if (asyncBefore) {
+    await opts.before.call(this)
+  } else {
+    opts.before.call(this)
+  }
+  while (time < opts.time || opts.samples > samples.length) {
+    let diff
+    if (opts.async) {
+      const ts = opts.now()
+      await fn.call(this)
+      diff = opts.now() - ts
+    } else {
+      const ts = opts.now()
+      fn.call(this)
+      diff = opts.now() - ts
+    }
+    samples.push(diff)
+    time += diff
+  }
+  if (asyncAfter) {
+    await opts.after.call(this)
+  } else {
+    opts.after.call(this)
+  }
 
   return buildMeasurementStats(samples)
 }
