@@ -202,8 +202,8 @@ export const overrideBenchmarkOptions = (benchmark, opts) => {
  * @param {Function} [opts.now=undefined] nanoseconds timestamp function
  * @param {Function} [opts.before=()=>{}] before function hook
  * @param {Function} [opts.after=()=>{}] after function hook
- * @param {Function} [opts.beforeEach=()=>{}] beforeEach function hook
- * @param {Function} [opts.afterEach=()=>{}] afterEach function hook
+ * @param {Function} [opts.beforeEach=()=>{}] beforeEach iteration function hook
+ * @param {Function} [opts.afterEach=()=>{}] afterEach iteration function hook
  * @returns {Promise<Object>} benchmark stats
  */
 export async function measure(fn, opts = {}) {
