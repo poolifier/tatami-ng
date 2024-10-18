@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.7](https://github.com/poolifier/tatami-ng/compare/0.8.6...0.8.7) (2024-10-18)
+
+
+### 🐞 Bug Fixes
+
+* handle corner case promise like benchmark function ([ad9c3be](https://github.com/poolifier/tatami-ng/commit/ad9c3becc72359b8b89330fc324eef61040b84ba))
+* promise like rejection without catch handling ([57de829](https://github.com/poolifier/tatami-ng/commit/57de82906b809f4949ba0e300a98409aa0c7a756))
+
 ## [0.8.6](https://github.com/poolifier/tatami-ng/compare/0.8.5...0.8.6) (2024-10-17)
 
 
