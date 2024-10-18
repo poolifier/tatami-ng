@@ -232,30 +232,30 @@ export async function measure(fn, opts = {}) {
       !opts.warmup
         ? ''
         : `
-          ${asyncBefore ? 'await' : ''} $before();
+          ${asyncBefore ? 'await' : ''} $before.call(this);
           for (let i = 0; i < ${opts.warmup}; i++) {
             const t0 = $now();
-            ${opts.async ? 'await' : ''} $fn();
+            ${opts.async ? 'await' : ''} $fn.call(this);
             const t1 = $now();
           }
-          ${asyncAfter ? 'await' : ''} $after();
+          ${asyncAfter ? 'await' : ''} $after.call(this);
           `
     }
 
     const samples = new Array();
     let time = 0;
 
-    ${asyncBefore ? 'await' : ''} $before();
+    ${asyncBefore ? 'await' : ''} $before.call(this);
     while (time < ${opts.time} || ${opts.samples} > samples.length) {
       const t0 = $now();
-      ${opts.async ? 'await' : ''} $fn();
+      ${opts.async ? 'await' : ''} $fn.call(this);
       const t1 = $now();
 
       const diff = t1 - t0;
       time += diff;
       samples.push(diff);
     }
-    ${asyncAfter ? 'await' : ''} $after();
+    ${asyncAfter ? 'await' : ''} $after.call(this);
 
     return samples;
   `
