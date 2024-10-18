@@ -21,9 +21,9 @@ import { now } from './time.js'
 import {
   AsyncFunction,
   checkDividend,
-  isAsyncFnResource,
   isAsyncFunction,
   isFunction,
+  isFunctionAsyncResource,
   isObject,
 } from './utils.js'
 
@@ -204,7 +204,7 @@ export async function measure(fn, opts = {}) {
       `expected boolean as 'async' option, got ${opts.async.constructor.name}`
     )
 
-  opts.async = opts.async ?? isAsyncFnResource(fn)
+  opts.async = opts.async ?? isFunctionAsyncResource(fn)
   opts.time = opts.time ?? defaultTime
   opts.samples = opts.samples ?? defaultSamples
   opts.warmup =

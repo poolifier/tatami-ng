@@ -30,9 +30,9 @@ import {
 import { runtime } from './runtime.js'
 import { now } from './time.js'
 import {
-  isAsyncFnResource,
   isAsyncFunction,
   isFunction,
+  isFunctionAsyncResource,
   isObject,
 } from './utils.js'
 
@@ -175,7 +175,7 @@ export function bench(name, fn = undefined, opts = {}) {
     samples: opts.samples ?? defaultSamples,
     warmup: opts.warmup ?? true,
     baseline: false,
-    async: isAsyncFnResource(fn),
+    async: isFunctionAsyncResource(fn),
   })
 }
 
@@ -215,7 +215,7 @@ export function baseline(name, fn = undefined, opts = {}) {
     samples: opts.samples ?? defaultSamples,
     warmup: opts.warmup ?? true,
     baseline: true,
-    async: isAsyncFnResource(fn),
+    async: isFunctionAsyncResource(fn),
   })
 }
 
