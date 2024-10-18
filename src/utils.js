@@ -19,8 +19,6 @@ export const isFunction = fn => {
   return typeof fn === 'function'
 }
 
-export const AsyncFunction = (async () => {}).constructor
-
 /**
  * An async function check helper only considering runtime support async syntax.
  *
@@ -28,7 +26,7 @@ export const AsyncFunction = (async () => {}).constructor
  * @returns {Boolean} true if the function is an async function
  */
 export const isAsyncFunction = fn => {
-  return AsyncFunction === fn?.constructor
+  return (async () => {}).constructor === fn?.constructor
 }
 
 /**

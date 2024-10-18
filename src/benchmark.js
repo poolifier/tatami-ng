@@ -152,6 +152,8 @@ export function group(name, cb = undefined) {
  * @param {NowType} [opts.now=undefined] custom nanoseconds timestamp function to replace default one
  * @param {CallbackType} [opts.before=()=>{}] before hook
  * @param {CallbackType} [opts.after=()=>{}] after hook
+ * @param {CallbackType} [opts.beforeEach=()=>{}] beforeEach iteration hook
+ * @param {CallbackType} [opts.afterEach=()=>{}] afterEach iteration hook
  */
 export function bench(name, fn = undefined, opts = {}) {
   if (isFunction(name)) {
@@ -166,7 +168,9 @@ export function bench(name, fn = undefined, opts = {}) {
 
   benchmarks.push({
     before: opts.before ?? emptyFunction,
+    beforeEach: opts.beforeEach ?? emptyFunction,
     fn,
+    afterEach: opts.afterEach ?? emptyFunction,
     after: opts.after ?? emptyFunction,
     name,
     now: opts.now ?? now,
@@ -192,6 +196,8 @@ export function bench(name, fn = undefined, opts = {}) {
  * @param {NowType} [opts.now=undefined] custom nanoseconds timestamp function to replace default one
  * @param {CallbackType} [opts.before=()=>{}] before hook
  * @param {CallbackType} [opts.after=()=>{}] after hook
+ * @param {CallbackType} [opts.beforeEach=()=>{}] beforeEach iteration hook
+ * @param {CallbackType} [opts.afterEach=()=>{}] afterEach iteration hook
  */
 export function baseline(name, fn = undefined, opts = {}) {
   if (isFunction(name)) {
@@ -206,7 +212,9 @@ export function baseline(name, fn = undefined, opts = {}) {
 
   benchmarks.push({
     before: opts.before ?? emptyFunction,
+    beforeEach: opts.beforeEach ?? emptyFunction,
     fn,
+    afterEach: opts.afterEach ?? emptyFunction,
     after: opts.after ?? emptyFunction,
     name,
     now: opts.now ?? now,
@@ -248,6 +256,8 @@ const executeBenchmarks = async (
         now: benchmark.now,
         before: benchmark.before,
         after: benchmark.after,
+        beforeEach: benchmark.beforeEach,
+        afterEach: benchmark.afterEach,
       })
       if (!opts.json)
         logFn(benchmarkReport(benchmark.name, benchmark.stats, opts))

@@ -19,7 +19,6 @@ import {
 } from './stats-utils.js'
 import { now } from './time.js'
 import {
-  AsyncFunction,
   checkDividend,
   isAsyncFunction,
   isFunction,
@@ -170,9 +169,17 @@ export const checkBenchmarkArgs = (fn, opts = {}) => {
     throw new TypeError(
       `expected function as 'before' option, got ${opts.before.constructor.name}`
     )
+  if (opts.beforeEach != null && !isFunction(opts.beforeEach))
+    throw new TypeError(
+      `expected function as 'beforeEach' option, got ${opts.beforeEach.constructor.name}`
+    )
   if (opts.after != null && !isFunction(opts.after))
     throw new TypeError(
       `expected function as 'after' option, got ${opts.after.constructor.name}`
+    )
+  if (opts.afterEach != null && !isFunction(opts.afterEach))
+    throw new TypeError(
+      `expected function as 'afterEach' option, got ${opts.afterEach.constructor.name}`
     )
 }
 
@@ -195,6 +202,8 @@ export const overrideBenchmarkOptions = (benchmark, opts) => {
  * @param {Function} [opts.now=undefined] nanoseconds timestamp function
  * @param {Function} [opts.before=()=>{}] before function hook
  * @param {Function} [opts.after=()=>{}] after function hook
+ * @param {Function} [opts.beforeEach=()=>{}] beforeEach function hook
+ * @param {Function} [opts.afterEach=()=>{}] afterEach function hook
  * @returns {Promise<Object>} benchmark stats
  */
 export async function measure(fn, opts = {}) {
@@ -215,13 +224,41 @@ export async function measure(fn, opts = {}) {
         : 0
   opts.now = opts.now ?? now
   opts.before = opts.before ?? emptyFunction
+  opts.beforeEach = opts.beforeEach ?? emptyFunction
   opts.after = opts.after ?? emptyFunction
+  opts.afterEach = opts.afterEach ?? emptyFunction
 
   const asyncBefore = isAsyncFunction(opts.before)
+  const asyncBeforeEach = isAsyncFunction(opts.beforeEach)
   const asyncAfter = isAsyncFunction(opts.after)
+  const asyncAfterEach = isAsyncFunction(opts.afterEach)
 
   let samples = []
   let time = 0
+
+  const measureFn = async () => {
+    if (asyncBeforeEach) {
+      await opts.beforeEach.call(this)
+    } else {
+      opts.beforeEach.call(this)
+    }
+    let diff
+    if (opts.async) {
+      const ts = opts.now()
+      await fn.call(this)
+      diff = opts.now() - ts
+    } else {
+      const ts = opts.now()
+      fn.call(this)
+      diff = opts.now() - ts
+    }
+    if (asyncAfterEach) {
+      await opts.afterEach.call(this)
+    } else {
+      opts.afterEach.call(this)
+    }
+    return diff
+  }
 
   if (opts.warmup) {
     if (asyncBefore) {
@@ -230,16 +267,7 @@ export async function measure(fn, opts = {}) {
       opts.before.call(this)
     }
     for (let i = 0; i < opts.warmup; i++) {
-      let diff
-      if (opts.async) {
-        const ts = opts.now()
-        await fn.call(this)
-        diff = opts.now() - ts
-      } else {
-        const ts = opts.now()
-        fn.call(this)
-        diff = opts.now() - ts
-      }
+      const diff = await measureFn()
       samples.push(diff)
       time += diff
     }
@@ -259,16 +287,7 @@ export async function measure(fn, opts = {}) {
     opts.before.call(this)
   }
   while (time < opts.time || opts.samples > samples.length) {
-    let diff
-    if (opts.async) {
-      const ts = opts.now()
-      await fn.call(this)
-      diff = opts.now() - ts
-    } else {
-      const ts = opts.now()
-      fn.call(this)
-      diff = opts.now() - ts
-    }
+    const diff = await measureFn()
     samples.push(diff)
     time += diff
   }

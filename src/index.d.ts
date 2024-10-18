@@ -20,6 +20,8 @@ export type BenchmarkOptions = {
   now?: () => number
   before?: () => void | Promise<void>
   after?: () => void | Promise<void>
+  beforeEach?: () => void | Promise<void>
+  afterEach?: () => void | Promise<void>
 }
 
 export function bench(
@@ -83,6 +85,7 @@ export type BenchmarkReport = {
 
   benchmarks: {
     name: string
+    fn: () => void | Promise<void>
     samples: number // minimum number of samples
     time: number // minimum execution time
     warmup: number | boolean
@@ -91,7 +94,9 @@ export type BenchmarkReport = {
     group: string | null
     now: () => number
     before: () => void | Promise<void>
+    beforeEach: () => void | Promise<void>
     after: () => void | Promise<void>
+    afterEach: () => void | Promise<void>
 
     error?: Error
 
