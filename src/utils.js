@@ -50,7 +50,7 @@ export const isFunctionAsyncResource = fn => {
     if (promiseLike) {
       // silence promise rejection
       try {
-        fnCall.then(() => {}).catch(() => {})
+        fnCall.then(() => {})?.catch(() => {})
       } catch {
         // ignore
       }
