@@ -233,9 +233,6 @@ export async function measure(fn, opts = {}) {
   const asyncAfter = isAsyncFunction(opts.after)
   const asyncAfterEach = isAsyncFunction(opts.afterEach)
 
-  let samples = []
-  let time = 0
-
   const measureFn = async () => {
     if (asyncBeforeEach) {
       await opts.beforeEach.call(this)
@@ -259,6 +256,9 @@ export async function measure(fn, opts = {}) {
     }
     return diff
   }
+
+  let samples = []
+  let time = 0
 
   if (opts.warmup) {
     if (asyncBefore) {

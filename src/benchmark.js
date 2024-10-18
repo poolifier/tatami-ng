@@ -376,8 +376,8 @@ export async function run(opts = {}) {
       log(groupHeader(groupName, opts))
     }
     isAsyncFunction(groupOpts.before)
-      ? await groupOpts.before()
-      : groupOpts.before()
+      ? await groupOpts.before.call(this)
+      : groupOpts.before.call(this)
 
     once = await executeBenchmarks(
       benchmarks.filter(benchmark => benchmark.group === groupName),
@@ -386,8 +386,8 @@ export async function run(opts = {}) {
       groupOpts
     )
     isAsyncFunction(groupOpts.after)
-      ? await groupOpts.after()
-      : groupOpts.after()
+      ? await groupOpts.after.call(this)
+      : groupOpts.after.call(this)
   }
 
   report = isFunction(opts.reporter) ? opts.reporter(report) : report
