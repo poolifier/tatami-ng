@@ -6,6 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.9](https://github.com/poolifier/tatami-ng/compare/0.8.8...0.8.9) (2024-10-18)
+
+
+### 🚀 Features
+
+* add after/before each function iteration hooks ([c7543ae](https://github.com/poolifier/tatami-ng/commit/c7543aed21a23651f5ae993669a623808330e1a5))
+
+
+### ✨ Polish
+
+* cleanup benchmark building ([aff9b96](https://github.com/poolifier/tatami-ng/commit/aff9b96eebc05761079e0628f051024947c4b854))
+
+
+### 📚 Documentation
+
+* refine measure() comment ([b3910a0](https://github.com/poolifier/tatami-ng/commit/b3910a0b6aeb03d8045d58ad997e616da9fb3a07))
+
 ## [0.8.8](https://github.com/poolifier/tatami-ng/compare/0.8.7...0.8.8) (2024-10-18)
 
 
