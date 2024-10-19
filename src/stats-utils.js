@@ -47,12 +47,15 @@ export const average = samples => {
   return samples.reduce((a, b) => a + b, 0) / samples.length
 }
 
-export const absoluteDeviation = (samples, aggFn) => {
-  const value = aggFn(samples)
+export const absoluteDeviation = (
+  samples,
+  aggFn,
+  aggValue = aggFn(samples)
+) => {
   const absoluteDeviations = []
 
   for (const sample of samples) {
-    absoluteDeviations.push(Math.abs(sample - value))
+    absoluteDeviations.push(Math.abs(sample - aggValue))
   }
 
   return aggFn(absoluteDeviations)

@@ -310,14 +310,6 @@ const buildMeasurementStats = latencySamples => {
 
   // Latency
   latencySamples.sort((a, b) => a - b)
-  const latencyAvg = average(latencySamples)
-  const latencyVr = variance(latencySamples, latencyAvg)
-  const latencySd = Math.sqrt(latencyVr)
-  const latencySem = latencySd / Math.sqrt(latencySamples.length)
-  const latencyCritical =
-    tTable[(latencySamples.length - 1 || 1).toString()] || tTable.infinity
-  const latencyMoe = latencySem * latencyCritical
-  const latencyRmoe = (latencyMoe / checkDividend(latencyAvg)) * 100
 
   // Throughput
   const throughputSamples = latencySamples
@@ -325,47 +317,39 @@ const buildMeasurementStats = latencySamples => {
       sample => (sample !== 0 ? 1e9 / sample : 1e9 / latencyAvg) // Use latency average as imputed sample
     )
     .sort((a, b) => a - b)
-  const throughputAvg = average(throughputSamples)
-  const throughputVr = variance(throughputSamples, throughputAvg)
-  const throughputSd = Math.sqrt(throughputVr)
-  const throughputSem = throughputSd / Math.sqrt(throughputSamples.length)
-  const throughputCritical =
-    tTable[(throughputSamples.length - 1 || 1).toString()] || tTable.infinity
-  const throughputMoe = throughputSem * throughputCritical
-  const throughputRmoe = (throughputMoe / checkDividend(throughputAvg)) * 100
 
   return {
     samples: latencySamples.length,
     ss: latencySamples.length >= minimumSamples,
-    latency: {
-      min: latencySamples[0],
-      max: latencySamples[latencySamples.length - 1],
-      p50: medianSorted(latencySamples),
-      p75: quantileSorted(latencySamples, 0.75),
-      p99: quantileSorted(latencySamples, 0.99),
-      p995: quantileSorted(latencySamples, 0.995),
-      avg: latencyAvg,
-      vr: latencyVr,
-      sd: latencySd,
-      moe: latencyMoe,
-      rmoe: latencyRmoe,
-      aad: absoluteDeviation(latencySamples, average),
-      mad: absoluteDeviation(latencySamples, medianSorted),
-    },
-    throughput: {
-      min: throughputSamples[0],
-      max: throughputSamples[latencySamples.length - 1],
-      p50: medianSorted(throughputSamples),
-      p75: quantileSorted(throughputSamples, 0.75),
-      p99: quantileSorted(throughputSamples, 0.99),
-      p995: quantileSorted(throughputSamples, 0.995),
-      avg: throughputAvg,
-      vr: throughputVr,
-      sd: throughputSd,
-      moe: throughputMoe,
-      rmoe: throughputRmoe,
-      aad: absoluteDeviation(throughputSamples, average),
-      mad: absoluteDeviation(throughputSamples, medianSorted),
-    },
+    latency: getStatsSorted(latencySamples),
+    throughput: getStatsSorted(throughputSamples),
+  }
+}
+
+const getStatsSorted = samples => {
+  const avg = average(samples)
+  const vr = variance(samples, avg)
+  const sd = Math.sqrt(vr)
+  const sem = sd / Math.sqrt(samples.length)
+  const df = samples.length - 1
+  const critical = tTable[(df || 1).toString()] || tTable.infinity
+  const moe = sem * critical
+  const rmoe = (moe / checkDividend(avg)) * 100
+  const p50 = medianSorted(samples)
+
+  return {
+    min: samples[0],
+    max: samples[df],
+    p50,
+    p75: quantileSorted(samples, 0.75),
+    p99: quantileSorted(samples, 0.99),
+    p995: quantileSorted(samples, 0.995),
+    avg,
+    vr,
+    sd,
+    moe,
+    rmoe,
+    aad: absoluteDeviation(samples, average, avg),
+    mad: absoluteDeviation(samples, medianSorted, p50),
   }
 }
