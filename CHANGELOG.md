@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.10](https://github.com/poolifier/tatami-ng/compare/0.8.9...0.8.10) (2024-10-19)
+
+
+### ✨ Polish
+
+* factor out statistics computation from samples ([3c2a41f](https://github.com/poolifier/tatami-ng/commit/3c2a41f3e811f40c1e96f93b7e3005f2b15c3063))
+
 ## [0.8.9](https://github.com/poolifier/tatami-ng/compare/0.8.8...0.8.9) (2024-10-18)
 
 
