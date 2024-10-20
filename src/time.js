@@ -28,16 +28,16 @@ export const now = (() => {
 
       return () => {
         const now = performance.now.bind(performance)
-        return 1e6 * now()
+        return () => 1e6 * now()
       }
     },
-    node: () => () => {
-      const hrtimeNow = process.hrtime.bigint.bind(process)
-      return Number(hrtimeNow())
+    node: () => {
+      const hrtimeBigint = process.hrtime.bigint.bind(process.bigint)
+      return () => Number(hrtimeBigint())
     },
-    deno: () => () => {
+    deno: () => {
       const now = performance.now.bind(performance)
-      return 1e6 * now()
+      return () => 1e6 * now()
     },
     bun: () => {
       const now = Bun.nanoseconds.bind(Bun)
