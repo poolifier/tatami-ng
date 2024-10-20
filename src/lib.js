@@ -33,10 +33,6 @@ export const version = (() => {
     node: () => globalThis.process.version,
     deno: () => globalThis.Deno.version.deno,
     bun: () => globalThis.process.versions.bun,
-    // hermes: () =>
-    //   globalThis.HermesInternal?.getRuntimeProperties?.()?.[
-    //     'OSS Release Version'
-    //   ],
   }[runtime]()
 })()
 

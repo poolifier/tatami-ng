@@ -9,7 +9,8 @@ export const now = (() => {
 
         return () => 1e6 * now()
       } catch {
-        return () => 1e6 * Date.now()
+        const now = Date.now.bind(Date)
+        return () => 1e6 * now()
       }
     },
     browser: () => {
@@ -25,10 +26,22 @@ export const now = (() => {
         return () => 1e6 * $262.agent.monotonicNow()
       } catch {}
 
-      return () => 1e6 * performance.now()
+      return () => {
+        const now = performance.now.bind(performance)
+        return 1e6 * now()
+      }
     },
-    node: () => () => Number(process.hrtime.bigint()),
-    deno: () => () => 1e6 * performance.now(),
-    bun: () => Bun.nanoseconds,
+    node: () => () => {
+      const hrtimeNow = process.hrtime.bigint.bind(process)
+      return Number(hrtimeNow())
+    },
+    deno: () => () => {
+      const now = performance.now.bind(performance)
+      return 1e6 * now()
+    },
+    bun: () => {
+      const now = Bun.nanoseconds.bind(Bun)
+      return now
+    },
   }[runtime]()
 })()

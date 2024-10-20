@@ -7,7 +7,7 @@ export const runtimes = {
   browser: 'browser',
 }
 
-export const emptyFunction = () => {}
+export const emptyFunction = Object.freeze(() => {})
 
 export const tatamiNgGroup = '$tatami-ng_group'
 

@@ -1,3 +1,5 @@
+import { emptyFunction } from './constants.js'
+
 /**
  * Checks if a value is a promise-like object.
  *
@@ -48,7 +50,7 @@ export const isFunctionAsyncResource = fn => {
     if (promiseLike) {
       // silence promise rejection
       try {
-        fnCall.then(() => {})?.catch(() => {})
+        fnCall.then(emptyFunction)?.catch(emptyFunction)
       } catch {
         // ignore
       }
