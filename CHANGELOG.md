@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.11](https://github.com/poolifier/tatami-ng/compare/0.8.10...0.8.11) (2024-10-20)
+
+
+### 🐞 Bug Fixes
+
+* bind timestamping method to their modules once ([3cfcc9b](https://github.com/poolifier/tatami-ng/commit/3cfcc9ba527d635d08ad0943d5c488b5140a3e5c))
+
+
+### ⚡ Performance
+
+* bind timestamping functions to their module ([dffe3f0](https://github.com/poolifier/tatami-ng/commit/dffe3f0d06c854b9002ef89b0d97632d8cc32db7))
+
 ## [0.8.10](https://github.com/poolifier/tatami-ng/compare/0.8.9...0.8.10) (2024-10-19)
 
 
