@@ -1,6 +1,7 @@
 import {
   defaultSamples,
   defaultTime,
+  defaultWarmupTime,
   emptyFunction,
   tatamiNgGroup,
 } from './constants.js'
@@ -58,7 +59,8 @@ const benchmarks = []
  * @param {Boolean} [name.summary=true] display summary
  * @param {Number} [name.samples=128] minimum number of benchmark samples
  * @param {Number} [name.time=1_000_000_000] minimum benchmark execution time in nanoseconds
- * @param {Boolean|Number} [name.warmup=true] enable/disable benchmark warmup or set benchmark warmup run(s)
+ * @param {Boolean|Number} [name.warmup=true] enable/disable benchmark warmup or set benchmark minimum warmup run(s)
+ * @param {Number} [opts.warmupTime=250_000_000] minimum benchmark warmup execution time in nanoseconds
  * @param {NowType} [name.now=undefined] custom nanoseconds timestamp function to replace default one
  * @param {CallbackType} [name.before=()=>{}] before hook
  * @param {CallbackType} [name.after=()=>{}] after hook
@@ -109,6 +111,10 @@ export function group(name, cb = undefined) {
       throw new TypeError(
         `expected number or boolean as 'warmup' option, got ${name.warmup.constructor.name}`
       )
+    if (name.warmupTime != null && 'number' !== typeof name.warmupTime)
+      throw new TypeError(
+        `expected number as 'warmupTime' option, got ${name.warmupTime.constructor.name}`
+      )
     if (name.now != null && Function !== name.now.constructor)
       throw new TypeError(
         `expected function as 'now' option, got ${name.now.constructor.name}`
@@ -132,6 +138,7 @@ export function group(name, cb = undefined) {
       samples: name.samples ?? defaultSamples,
       time: name.time ?? defaultTime,
       warmup: name.warmup ?? true,
+      warmupTime: name.warmupTime ?? defaultWarmupTime,
       now: name.now ?? now,
       before: name.before ?? emptyFunction,
       after: name.after ?? emptyFunction,
@@ -148,7 +155,8 @@ export function group(name, cb = undefined) {
  * @param {Object} [opts={}] options object
  * @param {Number} [opts.samples=128] minimum number of benchmark samples
  * @param {Number} [opts.time=1_000_000_000] minimum benchmark execution time in nanoseconds
- * @param {Boolean|Number} [opts.warmup=true] enable/disable benchmark warmup or set benchmark warmup run(s)
+ * @param {Boolean|Number} [opts.warmup=true] enable/disable benchmark warmup or set benchmark minimum warmup run(s)
+ * @param {Number} [opts.warmupTime=250_000_000] minimum benchmark warmup execution time in nanoseconds
  * @param {NowType} [opts.now=undefined] custom nanoseconds timestamp function to replace default one
  * @param {CallbackType} [opts.before=()=>{}] before hook
  * @param {CallbackType} [opts.after=()=>{}] after hook
@@ -178,6 +186,7 @@ export function bench(name, fn = undefined, opts = {}) {
     time: opts.time ?? defaultTime,
     samples: opts.samples ?? defaultSamples,
     warmup: opts.warmup ?? true,
+    warmupTime: opts.warmupTime ?? defaultWarmupTime,
     baseline: false,
     async: isFunctionAsyncResource(fn),
   })
@@ -192,7 +201,8 @@ export function bench(name, fn = undefined, opts = {}) {
  * @param {Object} [opts={}] options object
  * @param {Number} [opts.samples=128] minimum number of benchmark samples
  * @param {Number} [opts.time=1_000_000_000] minimum benchmark execution time in nanoseconds
- * @param {Boolean|Number} [opts.warmup=true] enable/disable benchmark warmup or set benchmark warmup run(s)
+ * @param {Boolean|Number} [opts.warmup=true] enable/disable benchmark warmup or set benchmark minimum warmup run(s)
+ * @param {Number} [opts.warmupTime=250_000_000] minimum benchmark warmup execution time in nanoseconds
  * @param {NowType} [opts.now=undefined] custom nanoseconds timestamp function to replace default one
  * @param {CallbackType} [opts.before=()=>{}] before hook
  * @param {CallbackType} [opts.after=()=>{}] after hook
@@ -222,6 +232,7 @@ export function baseline(name, fn = undefined, opts = {}) {
     time: opts.time ?? defaultTime,
     samples: opts.samples ?? defaultSamples,
     warmup: opts.warmup ?? true,
+    warmupTime: opts.warmupTime ?? defaultWarmupTime,
     baseline: true,
     async: isFunctionAsyncResource(fn),
   })
@@ -253,6 +264,7 @@ const executeBenchmarks = async (
         samples: benchmark.samples,
         time: benchmark.time,
         warmup: benchmark.warmup,
+        warmupTime: benchmark.warmupTime,
         now: benchmark.now,
         before: benchmark.before,
         after: benchmark.after,
@@ -297,7 +309,8 @@ const executeBenchmarks = async (
  * @param {Boolean} [opts.colors=true] enable/disable colors
  * @param {Number} [opts.samples=128] minimum number of benchmark samples
  * @param {Number} [opts.time=1_000_000_000] minimum benchmark execution time in nanoseconds
- * @param {Boolean|Number} [opts.warmup=true] enable/disable benchmark warmup or set benchmark warmup run(s)
+ * @param {Boolean|Number} [opts.warmup=true] enable/disable benchmark warmup or set benchmark minimum warmup run(s)
+ * @param {Number} [opts.warmupTime=250_000_000] minimum benchmark warmup execution time in nanoseconds
  * @param {Boolean} [opts.latency=true] enable/disable time/iter column
  * @param {Boolean} [opts.throughput=true] enable/disable iters/s column
  * @param {Boolean} [opts.latencyMinMax=true] enable/disable latency (min...max) column
@@ -322,6 +335,10 @@ export async function run(opts = {}) {
   )
     throw new TypeError(
       `expected number or boolean as 'warmup' option, got ${opts.warmup.constructor.name}`
+    )
+  if (opts.warmupTime != null && 'number' !== typeof opts.warmupTime)
+    throw new TypeError(
+      `expected number as 'warmupTime' option, got ${opts.warmupTime.constructor.name}`
     )
   if (
     opts.json != null &&

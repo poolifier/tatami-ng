@@ -5,6 +5,7 @@ import {
   defaultSamples,
   defaultTime,
   defaultWarmupRuns,
+  defaultWarmupTime,
   emptyFunction,
   minimumSamples,
   tTable,
@@ -157,6 +158,10 @@ export const checkBenchmarkArgs = (fn, opts = {}) => {
     throw new TypeError(
       `expected number or boolean as 'warmup' option, got ${opts.warmup.constructor.name}`
     )
+  if (opts.warmupTime != null && 'number' !== typeof opts.warmupTime)
+    throw new TypeError(
+      `expected number as 'warmupTime' option, got ${opts.warmupTime.constructor.name}`
+    )
   if (opts.now != null && !isFunction(opts.now))
     throw new TypeError(
       `expected function as 'now' option, got ${opts.now.constructor.name}`
@@ -184,6 +189,7 @@ export const overrideBenchmarkOptions = (benchmark, opts) => {
   benchmark.samples = opts.samples ?? benchmark.samples
   benchmark.time = opts.time ?? benchmark.time
   benchmark.warmup = opts.warmup ?? benchmark.warmup
+  benchmark.warmupTime = opts.warmupTime ?? benchmark.warmupTime
 }
 
 /**
@@ -194,7 +200,8 @@ export const overrideBenchmarkOptions = (benchmark, opts) => {
  * @param {Boolean} [opts.async=undefined] function is async
  * @param {Number} [opts.samples=128] minimum number of benchmark samples
  * @param {Number} [opts.time=1_000_000_000] minimum benchmark execution time in nanoseconds
- * @param {Boolean|Number} [opts.warmup=true] benchmark warmup or benchmark warmup run(s)
+ * @param {Boolean|Number} [opts.warmup=true] benchmark warmup or benchmark minimum warmup run(s)
+ * @param {Number} [opts.warmupTime=250_000_000] benchmark warmup minimum execution time in nanoseconds
  * @param {Function} [opts.now=undefined] nanoseconds timestamp function
  * @param {Function} [opts.before=()=>{}] before function hook
  * @param {Function} [opts.after=()=>{}] after function hook
@@ -218,6 +225,7 @@ export async function measure(fn, opts = {}) {
       : opts.warmup === true
         ? defaultWarmupRuns
         : 0
+  opts.warmupTime = opts.warmupTime ?? defaultWarmupTime
   opts.now = opts.now ?? now
   opts.before = opts.before ?? emptyFunction
   opts.beforeEach = opts.beforeEach ?? emptyFunction
@@ -229,69 +237,50 @@ export async function measure(fn, opts = {}) {
   const asyncAfter = isAsyncFunction(opts.after)
   const asyncAfterEach = isAsyncFunction(opts.afterEach)
 
-  const measureFn = async () => {
-    if (asyncBeforeEach) {
-      await opts.beforeEach.call(this)
-    } else {
-      opts.beforeEach.call(this)
-    }
-    let diff
-    if (opts.async) {
-      const ts = opts.now()
-      await fn.call(this)
-      diff = opts.now() - ts
-    } else {
-      const ts = opts.now()
-      fn.call(this)
-      diff = opts.now() - ts
-    }
-    if (asyncAfterEach) {
-      await opts.afterEach.call(this)
-    } else {
-      opts.afterEach.call(this)
-    }
-    return diff
-  }
-
-  let samples = []
-  let time = 0
-
-  if (opts.warmup) {
+  const measureFn = async (samples, time) => {
     if (asyncBefore) {
       await opts.before.call(this)
     } else {
       opts.before.call(this)
     }
-    for (let i = 0; i < opts.warmup; i++) {
-      const diff = await measureFn()
-      samples.push(diff)
-      time += diff
+    const executionSamples = []
+    let executionTime = 0
+    while (executionTime < time || samples > executionSamples.length) {
+      if (asyncBeforeEach) {
+        await opts.beforeEach.call(this)
+      } else {
+        opts.beforeEach.call(this)
+      }
+      let diff
+      if (opts.async) {
+        const ts = opts.now()
+        await fn.call(this)
+        diff = opts.now() - ts
+      } else {
+        const ts = opts.now()
+        fn.call(this)
+        diff = opts.now() - ts
+      }
+      executionSamples.push(diff)
+      executionTime += diff
+      if (asyncAfterEach) {
+        await opts.afterEach.call(this)
+      } else {
+        opts.afterEach.call(this)
+      }
     }
     if (asyncAfter) {
       await opts.after.call(this)
     } else {
       opts.after.call(this)
     }
+    return executionSamples
   }
 
-  samples = []
-  time = 0
-
-  if (asyncBefore) {
-    await opts.before.call(this)
-  } else {
-    opts.before.call(this)
+  if (opts.warmup) {
+    await measureFn(opts.warmup, opts.warmupTime)
   }
-  while (time < opts.time || opts.samples > samples.length) {
-    const diff = await measureFn()
-    samples.push(diff)
-    time += diff
-  }
-  if (asyncAfter) {
-    await opts.after.call(this)
-  } else {
-    opts.after.call(this)
-  }
+  const samples = await measureFn(opts.samples, opts.time)
 
   return buildMeasurementStats(samples)
 }

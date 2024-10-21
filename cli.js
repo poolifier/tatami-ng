@@ -41,9 +41,14 @@ const {
     },
     warmup: {
       listGroup: 'Benchmark options',
-      description: 'Number of warmup run(s)',
+      description: 'Minimum number of warmup run(s)',
       type: 'string',
       short: 'w',
+    },
+    'warmup-time': {
+      listGroup: 'Benchmark options',
+      description: 'Minimum warmup run(s) time in nanoseconds',
+      type: 'string',
     },
     prepare: {
       listGroup: 'Benchmark options',
@@ -58,6 +63,16 @@ const {
     after: {
       listGroup: 'Benchmark options',
       description: 'Command after each benchmark',
+      type: 'string',
+    },
+    'before-each': {
+      listGroup: 'Benchmark options',
+      description: 'Command before each iteration',
+      type: 'string',
+    },
+    'after-each': {
+      listGroup: 'Benchmark options',
+      description: 'Command after each iteration',
       type: 'string',
     },
     silent: {
@@ -124,6 +139,12 @@ if (baseline != null) {
     {
       ...(flags.before != null && { before: () => spawnSync(flags.before) }),
       ...(flags.after != null && { after: () => spawnSync(flags.after) }),
+      ...(flags['before-each'] != null && {
+        beforeEach: () => spawnSync(flags['before-each']),
+      }),
+      ...(flags['after-each'] != null && {
+        afterEach: () => spawnSync(flags['after-each']),
+      }),
     }
   )
 }
@@ -137,6 +158,12 @@ if (bench != null) {
       {
         ...(flags.before != null && { before: () => spawnSync(flags.before) }),
         ...(flags.after != null && { after: () => spawnSync(flags.after) }),
+        ...(flags['before-each'] != null && {
+          beforeEach: () => spawnSync(flags['before-each']),
+        }),
+        ...(flags['after-each'] != null && {
+          afterEach: () => spawnSync(flags['after-each']),
+        }),
       }
     )
   }
@@ -157,6 +184,9 @@ await run({
   ...(flags.samples != null && { samples: Number.parseInt(flags.samples) }),
   ...(flags.time != null && { time: Number.parseFloat(flags.time) }),
   ...(flags.warmup != null && { warmup: Number.parseInt(flags.warmup) }),
+  ...(flags['warmup-time'] != null && {
+    warmupTime: Number.parseFloat(flags['warmup-time']),
+  }),
   ...(flags.silent != null && { silent: flags.silent }),
   ...(flags.json != null && { json: flags.json }),
   ...(flags.file != null && { file: flags.file }),

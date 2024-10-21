@@ -3,7 +3,8 @@ export type GroupOptions = {
   summary?: boolean
   samples?: number // minimum number of samples
   time?: number // minimum execution time
-  warmup?: number | boolean
+  warmup?: number | boolean // warmup enablement or minimum number of runs
+  warmupTime?: number // warmup minimum execution time
   now?: () => number
   before?: () => void | Promise<void>
   after?: () => void | Promise<void>
@@ -16,7 +17,8 @@ export function group(options: GroupOptions, cb: () => void): void
 export type BenchmarkOptions = {
   samples?: number // minimum number of samples
   time?: number // minimum execution time
-  warmup?: number | boolean
+  warmup?: number | boolean // warmup enablement or minimum number of runs
+  warmupTime?: number // warmup minimum execution time
   now?: () => number
   before?: () => void | Promise<void>
   after?: () => void | Promise<void>
@@ -52,7 +54,8 @@ export function run<T = Report>(options?: {
   colors?: boolean
   samples?: number // minimum number of samples
   time?: number // minimum execution time
-  warmup?: number | boolean
+  warmup?: number | boolean // warmup enablement or minimum number of runs
+  warmupTime?: number // warmup minimum execution time
   latency?: boolean
   throughput?: boolean
   latencyMinMax?: boolean
@@ -88,7 +91,8 @@ export type BenchmarkReport = {
     fn: () => void | Promise<void>
     samples: number // minimum number of samples
     time: number // minimum execution time
-    warmup: number | boolean
+    warmup: number | boolean // warmup enablement or minimum number of runs
+    warmupTime: number // warmup minimum execution time
     async: boolean
     baseline: boolean
     group: string | null

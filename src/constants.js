@@ -1050,6 +1050,8 @@ export const defaultSamples = minimumSamples
 
 export const defaultTime = 1e9 // ns
 
-export const defaultWarmupRuns = 12
+export const defaultWarmupRuns = 16
+
+export const defaultWarmupTime = 25e7 // ns
 
 export const highRelativeMarginOfError = 8
