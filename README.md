@@ -138,6 +138,7 @@ await run({
   samples: 128, // minimum number of benchmark samples (default: 128)
   time: 1_000_000_000, // minimum benchmark execution time in nanoseconds (default: 1_000_000_000)
   warmup: true, // enable/disable benchmark warmup or set benchmark warmup run(s) (default: true)
+  warmupTime: 250_000_000, // minimum warmup execution time in nanoseconds (default: 250_000_000)
   latency: true, // enable/disable time/iter column (default: true)
   throughput: true, // enable/disable iters/s column (default: true)
   latencyMinMax: true, // enable/disable latency (min...max) column (default: true)
