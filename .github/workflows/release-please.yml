@@ -138,7 +138,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish Beta Release
+      - name: Publish Alpha Release
         if: ${{ contains(steps.package-version.outputs.version, '-alpha') == true }}
         run: npm publish --tag alpha
         env:
