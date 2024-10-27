@@ -295,18 +295,19 @@ const buildMeasurementStats = latencySamples => {
 
   // Latency
   latencySamples.sort((a, b) => a - b)
+  const latencyStats = getStatsSorted(latencySamples)
 
   // Throughput
   const throughputSamples = latencySamples
     .map(
-      sample => (sample !== 0 ? 1e9 / sample : 1e9 / latencyAvg) // Use latency average as imputed sample
+      sample => (sample !== 0 ? 1e9 / sample : 1e9 / latencyStats.avg) // Use latency average as imputed sample
     )
     .sort((a, b) => a - b)
 
   return {
     samples: latencySamples.length,
     ss: latencySamples.length >= minimumSamples,
-    latency: getStatsSorted(latencySamples),
+    latency: latencyStats,
     throughput: getStatsSorted(throughputSamples),
   }
 }
