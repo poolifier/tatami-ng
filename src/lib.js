@@ -294,8 +294,7 @@ const buildMeasurementStats = latencySamples => {
     throw new Error('expected non-empty array, got empty array')
 
   // Latency
-  latencySamples.sort((a, b) => a - b)
-  const latencyStats = getStatsSorted(latencySamples)
+  const latencyStats = getStatsSorted(latencySamples.sort((a, b) => a - b))
 
   // Throughput
   const throughputSamples = latencySamples
