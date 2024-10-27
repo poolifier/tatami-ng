@@ -6,6 +6,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.13](https://github.com/poolifier/tatami-ng/compare/0.8.12...0.8.13) (2024-10-27)
+
+
+### 🐞 Bug Fixes
+
+* fix throughput samples imputation in corner case ([8de3cc7](https://github.com/poolifier/tatami-ng/commit/8de3cc7805fb7d9df59151a9e163c99053bd3841))
+
+
+### ✨ Polish
+
+* avoid variable affectation ([eb35407](https://github.com/poolifier/tatami-ng/commit/eb35407a7fdbfa3b034cf72602116299d27f0079))
+
+
+### 📚 Documentation
+
+* **README.md:** add missing warmupTime options ([356d72d](https://github.com/poolifier/tatami-ng/commit/356d72d01a442d0f6230fdd1680e7d7bd35cd302))
+
+
+### 🤖 Automation
+
+* **ci:** handle various release type on npm registry ([7cf519d](https://github.com/poolifier/tatami-ng/commit/7cf519d5d0243541c42850673986a8cfd8b9d725))
+
 ## [0.8.12](https://github.com/poolifier/tatami-ng/compare/0.8.11...0.8.12) (2024-10-21)
 
 
