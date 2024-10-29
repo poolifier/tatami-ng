@@ -1,4 +1,4 @@
-export const runtimes = {
+export const JSRuntime = {
   bun: 'bun',
   deno: 'deno',
   node: 'node',
