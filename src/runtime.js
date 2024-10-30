@@ -5,7 +5,7 @@ const isDeno = !!globalThis.Deno
 const isNode = globalThis.process?.release?.name === 'node'
 // const isHermes = !!globalThis.HermesInternal
 // const isWorkerd = globalThis.navigator?.userAgent === 'Cloudflare-Workers'
-const isBrowser = !!globalThis.navigator
+const isBrowser = !!globalThis.window && !!globalThis.navigator
 
 export const runtime = (() => {
   if (isBun) return JSRuntime.bun
