@@ -32,8 +32,8 @@ export const now = (() => {
       }
     },
     node: () => {
-      const hrtimeBigint = process.hrtime.bigint.bind(process.bigint)
-      return () => Number(hrtimeBigint())
+      const now = performance.now.bind(performance)
+      return () => 1e6 * now()
     },
     deno: () => {
       const now = performance.now.bind(performance)
