@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.14](https://github.com/poolifier/tatami-ng/compare/0.8.13...0.8.14) (2024-11-18)
+
+
+### 🐞 Bug Fixes
+
+* use performance.now() for timestamping with node ([0497b2c](https://github.com/poolifier/tatami-ng/commit/0497b2c79bec5da5164d16770e991b67e102d86a))
+
+
+### ✨ Polish
+
+* cleanup JS runtime detection code ([66310b4](https://github.com/poolifier/tatami-ng/commit/66310b4dc982de6e9708f279f954e22d990e18f1))
+* refine browser JS runtime detection ([7537b2b](https://github.com/poolifier/tatami-ng/commit/7537b2ba3ac273eb50b99d184d1e9ac9deb4e3e5))
+
 ## [0.8.13](https://github.com/poolifier/tatami-ng/compare/0.8.12...0.8.13) (2024-10-27)
 
 
