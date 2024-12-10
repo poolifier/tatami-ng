@@ -56,7 +56,7 @@
     "@commitlint/config-conventional": "^19.6.0",
     "@types/bun": "^1.1.14",
     "husky": "^9.1.7",
-    "lint-staged": "^15.2.10",
+    "lint-staged": "^15.2.11",
     "npm-run-all2": "^7.0.1",
     "prettier": "^3.4.2"
   },
