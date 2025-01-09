@@ -207,4 +207,4 @@ The JavaScript runtime environment used for development is [bun](https://bun.sh/
 
 ## License
 
-MIT © [Evan](https://github.com/evanwashere), [Jerome Benoit](https://github.com/jerome-benoit)
+MIT © [evanwashere](https://github.com/evanwashere), [Jerome Benoit](https://github.com/jerome-benoit)
