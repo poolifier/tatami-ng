@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.15](https://github.com/poolifier/tatami-ng/compare/0.8.14...0.8.15) (2025-01-29)
+
+
+### 🐞 Bug Fixes
+
+* median absolute deviation computation ([7779175](https://github.com/poolifier/tatami-ng/commit/7779175667e39496a08d79e1ff822cce6f3c97a1))
+
+
+### 🤖 Automation
+
+* **deps:** bump autofix-ci/action ([#48](https://github.com/poolifier/tatami-ng/issues/48)) ([e7e85f7](https://github.com/poolifier/tatami-ng/commit/e7e85f718a936b0c2f077eb3bb3ee438ffa6fb62))
+
 ## [0.8.14](https://github.com/poolifier/tatami-ng/compare/0.8.13...0.8.14) (2024-11-18)
 
 
