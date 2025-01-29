@@ -132,7 +132,7 @@ export function benchmarkReport(
       ? ''
       : ` ${
           roundDuration(stats.latency.mad) > 0
-            ? `${green(colors, duration(stats.latency.p50))} ± ${red(colors, duration(stats.latency.mad))}`.padStart(
+            ? `${green(colors, duration(stats.latency.p50))} ± ${green(colors, duration(stats.latency.mad))}`.padStart(
                 20 + 2 * 10 * colors,
                 ' '
               )
@@ -169,16 +169,6 @@ export function warning(
     ) {
       warnings.push(
         `${bold(colors, yellow(colors, 'Warning'))}: ${bold(colors, cyan(colors, benchmark.name))} has a high latency throughput margin of error: ${red(colors, itersPerSecond(benchmark.stats.throughput.rmoe))}`
-      )
-    }
-    if (latency && roundDuration(benchmark.stats.latency.mad) > 0) {
-      warnings.push(
-        `${bold(colors, yellow(colors, 'Warning'))}: ${bold(colors, cyan(colors, benchmark.name))} has a non zero latency median absolute deviation: ${red(colors, duration(benchmark.stats.latency.mad))}`
-      )
-    }
-    if (throughput && Math.trunc(benchmark.stats.throughput.mad) > 0) {
-      warnings.push(
-        `${bold(colors, yellow(colors, 'Warning'))}: ${bold(colors, cyan(colors, benchmark.name))} has a non zero throughput median absolute deviation: ${red(colors, itersPerSecond(benchmark.stats.throughput.mad))}`
       )
     }
   }
