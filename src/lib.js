@@ -14,6 +14,7 @@ import { runtime } from './runtime.js'
 import {
   absoluteDeviation,
   average,
+  median,
   medianSorted,
   quantileSorted,
   variance,
@@ -335,6 +336,6 @@ const getStatsSorted = samples => {
     moe,
     rmoe,
     aad: absoluteDeviation(samples, average, avg),
-    mad: absoluteDeviation(samples, medianSorted, p50),
+    mad: absoluteDeviation(samples, median, p50),
   }
 }
