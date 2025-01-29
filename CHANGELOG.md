@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.16](https://github.com/poolifier/tatami-ng/compare/0.8.15...0.8.16) (2025-01-29)
+
+
+### 🐞 Bug Fixes
+
+* silence warnings related to MAD threshold ([fb50f31](https://github.com/poolifier/tatami-ng/commit/fb50f3159cda1ead28f3d438f64f41fc26b91683))
+
 ## [0.8.15](https://github.com/poolifier/tatami-ng/compare/0.8.14...0.8.15) (2025-01-29)
 
 
