@@ -52,8 +52,8 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@commitlint/cli": "^19.6.1",
-    "@commitlint/config-conventional": "^19.6.0",
+    "@commitlint/cli": "^19.7.1",
+    "@commitlint/config-conventional": "^19.7.1",
     "@types/bun": "^1.2.2",
     "husky": "^9.1.7",
     "lint-staged": "^15.4.3",
