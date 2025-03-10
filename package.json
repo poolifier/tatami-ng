@@ -52,13 +52,13 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@commitlint/cli": "^19.7.1",
-    "@commitlint/config-conventional": "^19.7.1",
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
     "@types/bun": "^1.2.4",
     "husky": "^9.1.7",
     "lint-staged": "^15.4.3",
     "npm-run-all2": "^7.0.2",
-    "prettier": "^3.5.2"
+    "prettier": "^3.5.3"
   },
   "peerDependencies": {
     "typescript": "^5.4.3"
