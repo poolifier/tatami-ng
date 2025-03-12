@@ -4,7 +4,7 @@
   "type": "module",
   "license": "MIT",
   "version": "0.8.16",
-  "packageManager": "bun@1.2.4",
+  "packageManager": "bun@1.2.5",
   "bin": {
     "tatami": "cli.js"
   },
