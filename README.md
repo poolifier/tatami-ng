@@ -62,7 +62,7 @@ npx jsr add @poolifier/tatami-ng
 ### Deno
 
 ```shell
-deno add @poolifier/tatami-ng
+deno add jsr:@poolifier/tatami-ng
 ```
 
 Deno versions >= 1.40.x are supported.
