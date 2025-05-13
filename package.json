@@ -56,8 +56,8 @@
     "@commitlint/config-conventional": "^19.8.1",
     "@types/bun": "^1.2.13",
     "husky": "^9.1.7",
-    "lint-staged": "^15.5.2",
-    "npm-run-all2": "^7.0.2",
+    "lint-staged": "^16.0.0",
+    "npm-run-all2": "^8.0.1",
     "prettier": "^3.5.3"
   },
   "peerDependencies": {
