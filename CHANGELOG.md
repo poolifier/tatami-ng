@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.17](https://github.com/poolifier/tatami-ng/compare/0.8.16...0.8.17) (2025-05-27)
+
+
+### 📚 Documentation
+
+* **README.md:** add jsr package registry prefix to add command ([bd59af9](https://github.com/poolifier/tatami-ng/commit/bd59af948cb4c94cb745cd5c899ade5b7d191cab))
+
 ## [0.8.16](https://github.com/poolifier/tatami-ng/compare/0.8.15...0.8.16) (2025-01-29)
 
 
