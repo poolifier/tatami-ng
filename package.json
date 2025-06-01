@@ -4,7 +4,7 @@
   "type": "module",
   "license": "MIT",
   "version": "0.8.16",
-  "packageManager": "bun@1.2.14",
+  "packageManager": "bun@1.2.15",
   "bin": {
     "tatami": "cli.js"
   },
@@ -54,9 +54,9 @@
     "@biomejs/biome": "^1.9.4",
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
-    "@types/bun": "^1.2.14",
+    "@types/bun": "^1.2.15",
     "husky": "^9.1.7",
-    "lint-staged": "^16.0.0",
+    "lint-staged": "^16.1.0",
     "npm-run-all2": "^8.0.4",
     "prettier": "^3.5.3"
   },
