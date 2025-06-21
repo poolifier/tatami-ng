@@ -1,7 +1,7 @@
 import {
   highRelativeMarginOfError,
-  tTable,
   tatamiNgGroup,
+  tTable,
 } from '../../constants.js'
 import { ratioStandardDeviation } from '../../stats-utils.js'
 import { checkDividend, roundDuration } from '../../utils.js'
@@ -89,7 +89,7 @@ export function groupHeader(
     latencyPercentiles: true,
   }
 ) {
-  // biome-ignore lint/style/noParameterAssign: <explanation>
+  // biome-ignore lint/style/noParameterAssign: explanation
   if (name.startsWith(tatamiNgGroup)) name = italic(opts.colors, 'unnamed')
   return `• ${bold(opts.colors, name)}\n${dim(opts.colors, white(opts.colors, br(opts)))}`
 }

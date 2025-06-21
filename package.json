@@ -20,7 +20,13 @@
   },
   "description": "Cross JavaScript runtime benchmarking library and CLI",
   "homepage": "https://github.com/poolifier/tatami-ng#readme",
-  "keywords": ["benchmark", "browser", "bun", "deno", "node"],
+  "keywords": [
+    "benchmark",
+    "browser",
+    "bun",
+    "deno",
+    "node"
+  ],
   "bugs": {
     "url": "https://github.com/poolifier/tatami-ng/issues"
   },
@@ -28,7 +34,10 @@
     "type": "git",
     "url": "git+https://github.com/poolifier/tatami-ng.git"
   },
-  "files": ["src", "dist"],
+  "files": [
+    "src",
+    "dist"
+  ],
   "scripts": {
     "prepare": "bun prepare.ts",
     "format": "biome format . --write",
@@ -51,7 +60,7 @@
     "peowly": "^1.3.2"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
+    "@biomejs/biome": "^2.0.4",
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
     "@types/bun": "^1.2.17",

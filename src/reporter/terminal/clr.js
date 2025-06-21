@@ -29,7 +29,7 @@ function init(x, y) {
 
   return (e, txt) => {
     if (!e || txt == null) return txt
-    // biome-ignore lint/style/noParameterAssign: <explanation>
+    // biome-ignore lint/style/noParameterAssign: explanation
     txt = txt.toString()
     return `${open}${
       txt.includes(close) ? txt.replace(rgx, close + open) : txt

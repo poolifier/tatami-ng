@@ -6,12 +6,12 @@ import {
   tatamiNgGroup,
 } from './constants.js'
 import {
-  os,
   checkBenchmarkArgs,
   colors,
   cpuModel,
   gc,
   measure,
+  os,
   overrideBenchmarkOptions,
   version,
   writeFileSync,
@@ -77,7 +77,7 @@ export function group(name, cb = undefined) {
       `expected string, object or function, got ${name.constructor.name}`
     )
   if (isFunction(name)) {
-    // biome-ignore lint/style/noParameterAssign: <explanation>
+    // biome-ignore lint/style/noParameterAssign: explanation
     cb = name
   }
   if (!isFunction(cb))
@@ -165,13 +165,13 @@ export function group(name, cb = undefined) {
  */
 export function bench(name, fn = undefined, opts = {}) {
   if (isFunction(name)) {
-    // biome-ignore lint/style/noParameterAssign: <explanation>
+    // biome-ignore lint/style/noParameterAssign: explanation
     fn = name
-    // biome-ignore lint/style/noParameterAssign: <explanation>
+    // biome-ignore lint/style/noParameterAssign: explanation
     name = fn.name
   }
   checkBenchmarkArgs(fn, opts)
-  // biome-ignore lint/style/noParameterAssign: <explanation>
+  // biome-ignore lint/style/noParameterAssign: explanation
   name = name.trim()
 
   benchmarks.push({
@@ -211,13 +211,13 @@ export function bench(name, fn = undefined, opts = {}) {
  */
 export function baseline(name, fn = undefined, opts = {}) {
   if (isFunction(name)) {
-    // biome-ignore lint/style/noParameterAssign: <explanation>
+    // biome-ignore lint/style/noParameterAssign: explanation
     fn = name
-    // biome-ignore lint/style/noParameterAssign: <explanation>
+    // biome-ignore lint/style/noParameterAssign: explanation
     name = fn.name
   }
   checkBenchmarkArgs(fn, opts)
-  // biome-ignore lint/style/noParameterAssign: <explanation>
+  // biome-ignore lint/style/noParameterAssign: explanation
   name = name.trim()
 
   benchmarks.push({
@@ -279,7 +279,7 @@ const executeBenchmarks = async (
         logFn(benchmarkError(benchmark.name, benchmark.error, opts))
     }
   }
-  // biome-ignore lint/style/noParameterAssign: <explanation>
+  // biome-ignore lint/style/noParameterAssign: explanation
   benchmarks = benchmarks.filter(benchmark => benchmark.error == null)
   if (!opts.json && warning(benchmarks, opts)) {
     logFn('')

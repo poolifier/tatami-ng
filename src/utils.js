@@ -74,19 +74,19 @@ export const isObject = value => {
 export function roundDuration(ns) {
   if (ns < 1) return (ns * 1e3).toFixed(2)
   if (ns < 1e3) return ns.toFixed(2)
-  // biome-ignore lint/style/noParameterAssign: <explanation>
+  // biome-ignore lint/style/noParameterAssign: explanation
   ns /= 1000
   if (ns < 1e3) return ns.toFixed(2)
-  // biome-ignore lint/style/noParameterAssign: <explanation>
+  // biome-ignore lint/style/noParameterAssign: explanation
   ns /= 1000
   if (ns < 1e3) return ns.toFixed(2)
-  // biome-ignore lint/style/noParameterAssign: <explanation>
+  // biome-ignore lint/style/noParameterAssign: explanation
   ns /= 1000
   if (ns < 1e3) return ns.toFixed(2)
-  // biome-ignore lint/style/noParameterAssign: <explanation>
+  // biome-ignore lint/style/noParameterAssign: explanation
   ns /= 60
   if (ns < 1e3) return ns.toFixed(2)
-  // biome-ignore lint/style/noParameterAssign: <explanation>
+  // biome-ignore lint/style/noParameterAssign: explanation
   ns /= 60
   return ns.toFixed(2)
 }
