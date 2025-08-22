@@ -1,6 +1,12 @@
 import { checkDividend } from './utils.js'
 
 export const variance = (samples, avg = average(samples)) => {
+  if (!Array.isArray(samples)) {
+    throw new TypeError(`expected array, got ${samples.constructor.name}`)
+  }
+  if (samples.length <= 1) {
+    return 0
+  }
   return (
     samples.reduce((a, b) => a + (b - avg) ** 2, 0) /
     checkDividend(samples.length - 1) // Bessel's correction
