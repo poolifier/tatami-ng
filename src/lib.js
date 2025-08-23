@@ -300,7 +300,12 @@ const buildMeasurementStats = latencySamples => {
   // Throughput
   const throughputSamples = latencySamples
     .map(
-      sample => (sample !== 0 ? 1e9 / sample : 1e9 / latencyStats.avg) // Use latency average as imputed sample
+      sample =>
+        sample !== 0
+          ? 1e9 / sample
+          : latencyStats.avg !== 0
+            ? 1e9 / latencyStats.avg
+            : 0 // Use latency average as imputed sample
     )
     .sort((a, b) => a - b)
 
