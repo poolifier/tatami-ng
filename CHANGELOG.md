@@ -6,6 +6,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.17](https://github.com/poolifier/tatami-ng/compare/0.8.16...0.8.17) (2025-08-23)
+
+
+### 🐞 Bug Fixes
+
+* ensure median() implementation does not sort array in place ([10c32dc](https://github.com/poolifier/tatami-ng/commit/10c32dc5cb190e16d2df3e3443b5fed867fb59b8))
+
+
+### ✨ Polish
+
+* add input guards ([cf7c2bc](https://github.com/poolifier/tatami-ng/commit/cf7c2bc0cdcb015cdd3b90efaedeabf591a98c49))
+
+
+### 📚 Documentation
+
+* **README.md:** add jsr package registry prefix to add command ([bd59af9](https://github.com/poolifier/tatami-ng/commit/bd59af948cb4c94cb745cd5c899ade5b7d191cab))
+
+
+### 🤖 Automation
+
+* **deps:** bump actions/checkout from 4 to 5 ([#53](https://github.com/poolifier/tatami-ng/issues/53)) ([7d62f54](https://github.com/poolifier/tatami-ng/commit/7d62f5427de586545ea0744e69536aca1142d1bb))
+* **deps:** bump autofix-ci/action ([#52](https://github.com/poolifier/tatami-ng/issues/52)) ([e67cf84](https://github.com/poolifier/tatami-ng/commit/e67cf8476bc8595f85a0b3c763f993be7f70f3e1))
+
 ## [0.8.16](https://github.com/poolifier/tatami-ng/compare/0.8.15...0.8.16) (2025-01-29)
 
 
