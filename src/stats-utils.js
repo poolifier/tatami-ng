@@ -42,7 +42,8 @@ export const quantileSorted = (samples, q) => {
 
 export const medianSorted = samples => quantileSorted(samples, 0.5)
 
-export const median = samples => medianSorted(samples.sort((a, b) => a - b))
+export const median = samples =>
+  medianSorted([...samples].sort((a, b) => a - b))
 
 export const average = samples => {
   if (!Array.isArray(samples)) {
