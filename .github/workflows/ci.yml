@@ -37,4 +37,4 @@ jobs:
       - name: Bundle
         run: bun bundle
       - name: Run Tests
-        run: bun run test
+        run: bun test
