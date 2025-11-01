@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.19](https://github.com/poolifier/tatami-ng/compare/0.8.18...0.8.19) (2025-11-01)
+
+
+### 🤖 Automation
+
+* **deps:** bump actions/setup-node from 4 to 5 ([#55](https://github.com/poolifier/tatami-ng/issues/55)) ([87401e5](https://github.com/poolifier/tatami-ng/commit/87401e50878dd06525d3899165cb8b5879331934))
+* **deps:** bump actions/setup-node from 5 to 6 ([#57](https://github.com/poolifier/tatami-ng/issues/57)) ([79ac075](https://github.com/poolifier/tatami-ng/commit/79ac07589d0f0c9de258e9611cec84e3bfbeea31))
+
 ## [0.8.18](https://github.com/poolifier/tatami-ng/compare/0.8.17...0.8.18) (2025-08-23)
 
 
