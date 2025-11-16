@@ -40,7 +40,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 22.x
+          node-version: 24.x
 
       - name: Setup Deno
         uses: denoland/setup-deno@v2
@@ -78,7 +78,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 22.x
+          node-version: 24.x
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
@@ -104,7 +104,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 22.x
+          node-version: 24.x
           registry-url: https://registry.npmjs.org/
 
       - name: Setup Bun
