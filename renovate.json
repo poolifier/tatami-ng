@@ -7,6 +7,11 @@
   "packageRules": [
     {
       "matchFileNames": ["**/package.json"],
+      "matchDepTypes": [
+        "dependencies",
+        "devDependencies",
+        "optionalDependencies"
+      ],
       "rangeStrategy": "bump"
     }
   ]
