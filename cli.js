@@ -170,7 +170,7 @@ if (bench != null) {
 }
 
 if (flags.json != null) {
-  const json = Number.parseInt(flags.json)
+  const json = Number.parseInt(flags.json, 10)
   if (!Number.isNaN(json)) {
     flags.json = json
   }
@@ -181,9 +181,9 @@ if (flags.prepare != null) {
 }
 
 await run({
-  ...(flags.samples != null && { samples: Number.parseInt(flags.samples) }),
+  ...(flags.samples != null && { samples: Number.parseInt(flags.samples, 10) }),
   ...(flags.time != null && { time: Number.parseFloat(flags.time) }),
-  ...(flags.warmup != null && { warmup: Number.parseInt(flags.warmup) }),
+  ...(flags.warmup != null && { warmup: Number.parseInt(flags.warmup, 10) }),
   ...(flags['warmup-time'] != null && {
     warmupTime: Number.parseFloat(flags['warmup-time']),
   }),
